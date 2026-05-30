@@ -46,7 +46,7 @@ for sid in chain:
     if s.get("branch"):
         run(["git", "-C", repo, "branch", "-D", s["branch"]], stderr=subprocess.DEVNULL)
     s["status"] = "discarded"           # ‏שומר ‏רשומה, ‏לא ‏מוחק
-    for sub in ("dispatches", "logs", "sentinels", "heartbeats", "blocked"):
+    for sub in ("dispatches", "logs", "sentinels", "heartbeats", "outcomes"):
         for f in (state_dir / sub).glob(f"{sid}.*"):
             f.unlink()
     print(f"discarded: {sid}")

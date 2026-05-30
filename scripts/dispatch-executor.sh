@@ -4,7 +4,7 @@
 set -euo pipefail
 PROJECT="$1"; SLICE="$2"; WORKTREE="$3"; AGENT="${4:-eliezer}"
 STATE="$HOME/.local/state/brief-driven-slices/$PROJECT"
-mkdir -p "$STATE"/{dispatches,logs,sentinels,heartbeats,crashes,archived,blocked}
+mkdir -p "$STATE"/{dispatches,logs,sentinels,heartbeats,crashes,archived,blocked,outcomes}
 
 PROMPT="$STATE/dispatches/$SLICE.prompt"
 LOG="$STATE/logs/$SLICE.log"
@@ -17,7 +17,7 @@ OPENCODE_BIN="$HOME/.opencode/bin/opencode"
 # ‏לא whitelist ‏של ‏שמות ‏מפורשים (‏שדולף ‏על vars ‏עתידיים כמו OPENCODE_GEMINI_PROJECT_ID).
 SCRUB=$(env | grep -o '^OPENCODE_[^=]*' | sed 's/^/-u /' | tr '\n' ' ')
 
-# ‏ה-prompt ‏מועבר ‏דרך stdin (‏תיקון N6). BDS_* ‏ל-heartbeat + blocked.json (‏תיקון M2/#E).
+# ‏ה-prompt ‏מועבר ‏דרך stdin (‏תיקון N6). BDS_* ‏ל-heartbeat + outcomes/<slice>.json.
 # BDS_STATE_DIR ‏מוזרק ‏מפורשות ‏כדי ‏שאליעזר ‏לא ‏יבנה path ‏ידנית (‏מקור ‏לבאגים).
 tmux new-session -d -s "bds-$PROJECT-$SLICE" \
   "cd '$WORKTREE' && \

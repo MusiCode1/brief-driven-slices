@@ -137,11 +137,12 @@ NEED: <החלטה? spec חדש? לדלג?>
 
 ### ‏ב-Mode 2 (tmux מ-יתרו, `$BDS_SLICE` מוגדר)
 
-‏כתוב קובץ וסיים:
+‏כתוב קובץ outcomes וסיים:
 ```bash
-cat > "$BDS_STATE_DIR/blocked/$BDS_SLICE.blocked.json" << 'EOF'
+cat > "$BDS_STATE_DIR/outcomes/$BDS_SLICE.json" << 'EOF'
 {
   "slice": "$BDS_SLICE",
+  "status": "blocked",
   "issue": "...",
   "source": "...",
   "tried": "...",
@@ -149,7 +150,7 @@ cat > "$BDS_STATE_DIR/blocked/$BDS_SLICE.blocked.json" << 'EOF'
 }
 EOF
 ```
-‏יתרו בודק קיום הקובץ לפני exit code → status=blocked.
+‏יתרו בודק `outcomes/<slice>.json` לפני exit code → `status=blocked` → ‏עצור ענף.
 
 ---
 

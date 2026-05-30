@@ -9,8 +9,8 @@ description: >
 
   Can run as subagent (via Task from Mordechai) or as primary session
   (via opencode run --agent eliezer, dispatched by Yetro in tmux).
-  In Mode 2 (tmux/async), writes blocked.json on BLOCKED instead of
-  returning a Task result.
+  In Mode 2 (tmux/async), writes outcomes/<slice>.json (status=blocked
+  or completed) instead of returning a Task result.
 
   Invoke with: Task(subagent_type="eliezer", prompt="...")
   OR: opencode run --agent eliezer < prompt.txt (via dispatch-executor.sh)
@@ -56,11 +56,12 @@ tools:
 date +%s > "$BDS_STATE_DIR/heartbeats/$BDS_SLICE.last"
 ```
 
-**‏BLOCKED ב-Mode 2**: ‏אל תחזיר STATUS: BLOCKED — ‏כתוב קובץ במקום:
+**‏BLOCKED ב-Mode 2**: ‏אל תחזיר STATUS: BLOCKED — ‏כתוב קובץ outcomes במקום:
 ```bash
-cat > "$BDS_STATE_DIR/blocked/$BDS_SLICE.blocked.json" << 'EOF'
+cat > "$BDS_STATE_DIR/outcomes/$BDS_SLICE.json" << 'EOF'
 {
   "slice": "<BDS_SLICE>",
+  "status": "blocked",
   "issue": "<one sentence>",
   "source": "<file:line | brief section>",
   "tried": "<what you tried>",
@@ -68,7 +69,7 @@ cat > "$BDS_STATE_DIR/blocked/$BDS_SLICE.blocked.json" << 'EOF'
 }
 EOF
 ```
-‏ואז סיים את הסשן רגיל. ‏יתרו יבדוק קיום הקובץ ויסמן status=blocked.
+‏ואז סיים את הסשן רגיל. ‏יתרו יבדוק `outcomes/<slice>.json` ‏ויסמן status=blocked.
 
 # ‏מה אתה כן עושה
 
@@ -224,7 +225,7 @@ mode: phase
 
 ‏הכלל החשוב ביותר: **‏אתה לא צריך לפתור בעיות**. ‏אתה מבצע brief.
 
-‏אם נתקלת במשהו שדורש יותר ממיומנות מכנית — **‏עצור ותדווח**. ‏ב-Mode 1 (Task) — ‏החזר STATUS: BLOCKED. ‏ב-Mode 2 (tmux, כש-`$BDS_SLICE` מוגדר) — ‏כתוב `blocked.json` וסיים.
+‏אם נתקלת במשהו שדורש יותר ממיומנות מכנית — **‏עצור ותדווח**. ‏ב-Mode 1 (Task) — ‏החזר STATUS: BLOCKED. ‏ב-Mode 2 (tmux, כש-`$BDS_SLICE` מוגדר) — ‏כתוב `outcomes/$BDS_SLICE.json` (status=blocked) וסיים.
 
 **‏עצור ותדווח** אם:
 
@@ -256,10 +257,11 @@ TRIED: <what you tried>
 NEED: <decision? new spec? skip?>
 ```
 
-**‏ב-Mode 2 (tmux)** — ‏כתוב `$BDS_STATE_DIR/blocked/$BDS_SLICE.blocked.json` ‏וסיים:
+**‏ב-Mode 2 (tmux)** — ‏כתוב `$BDS_STATE_DIR/outcomes/$BDS_SLICE.json` ‏וסיים:
 ```json
 {
   "slice": "<id>",
+  "status": "blocked",
   "issue": "<one sentence>",
   "source": "<file:line | brief section>",
   "tried": "<what you tried>",
@@ -272,6 +274,19 @@ NEED: <decision? new spec? skip?>
 - [ ] ‏עדכן `docs/walkthrough.md` ‏עם entry סופי (‏לפי הסקיל `update-walkthrough`) — ‏סיכום כל ה-slice
 - [ ] ‏עדכן ספירת tests + commits ב-final summary
 - [ ] ‏עדכן סטטוס ‏ב-`docs/plans/<slice>.md` ‏→ "הושלם"
+- [ ] **‏כתוב outcome (Mode 2 בלבד — כש-`$BDS_SLICE` מוגדר)**:
+  ```bash
+  cat > "$BDS_STATE_DIR/outcomes/$BDS_SLICE.json" << 'EOF'
+  {
+    "slice": "<id>",
+    "status": "completed",
+    "commits": "<base>..HEAD",
+    "calev_report": "<path or inline verdict>",
+    "deviations": [],
+    "notes": "<הערות שנצברו במהלך הריצה>"
+  }
+  EOF
+  ```
 - [ ] **‏הרץ calev (verifier-slice)** — ‏חובה, ‏גם אם הרצת phase verifier על כל phase:
 ```ts
 Task({

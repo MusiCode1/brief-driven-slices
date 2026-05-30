@@ -79,22 +79,25 @@ tools:
     exit_code=$(bash ~/projects/brief-driven-slices/scripts/wait-for-slice.sh \
      <project> <slice> 120)
    │
-   ▼ [‏טיפול בתוצאה — סדר חשוב]
-   (1) ‏קיים $STATE/blocked/<slice>.blocked.json?   ← ‏הבדיקה הראשונה!
-       ‏כן → ‏קרא → status=blocked → ‏עצור ענף (‏לא מריץ כלב)
-   (2) exit_code == 124? → status=timed-out → ‏עצור ענף
-   (3) exit_code == 125? → status=crashed → ‏שמור crash log → ‏עצור ענף
-   (4) exit_code != 0 ‏אחר? → status=failed:infra → ‏עצור ענף
-   (5) exit_code == 0 ‏ואין blocked.json → ‏הפעל כלב:
-         ‏כלב GO → status=verified → ‏ארכב brief (ב-branch) → ‏slice הבא
-         ‏כלב NO → status=needs-revision → ‏עצור ענף (worktree נשאר)
+    ▼ [‏טיפול בתוצאה — סדר חשוב]
+    (1) ‏קיים $STATE/outcomes/<slice>.json?   ← ‏הבדיקה הראשונה!
+        ‏לא קיים → status=crashed (אליעזר לא סיים לכתוב — קריסה שקטה) → ‏עצור ענף
+        ‏קיים → ‏קרא status:
+           status=="blocked"   → status=blocked → ‏עצור ענף (‏לא מריץ כלב)
+           status=="completed" → ‏המשך לבדיקת exit code:
+    (2) exit_code == 124? → status=timed-out → ‏עצור ענף
+    (3) exit_code == 125? → status=crashed → ‏שמור crash log → ‏עצור ענף
+    (4) exit_code != 0 ‏אחר? → status=failed:infra → ‏עצור ענף
+    (5) exit_code == 0 + status==completed → ‏הפעל כלב:
+          ‏כלב GO → status=verified → ‏ארכב brief (ב-branch) → ‏slice הבא
+          ‏כלב NO → status=needs-revision → ‏עצור ענף (worktree נשאר)
    │
    ▼ [‏סוף]
-   ‏כתוב runs/<date>.summary.md:
-     - ‏מה עבר (verified)
-     - ‏מה blocked (+ ‏סיבה מ-blocked.json)
-     - ‏מה נכשל/crashed/timed-out
-     - ‏מה ממתין ל-merge
+    ‏כתוב runs/<date>.summary.md:
+      - ‏מה עבר (verified)
+      - ‏מה blocked (+ ‏סיבה מ-outcomes/<slice>.json)
+      - ‏מה נכשל/crashed/timed-out
+      - ‏מה ממתין ל-merge
    ‏שחרר flock
 ```
 
@@ -173,16 +176,20 @@ Project: <project>
 ‏heartbeat: date +%s > "$BDS_STATE_DIR/heartbeats/$BDS_SLICE.last" ‏אחרי כל commit.
 ```
 
-## ‏קריאת blocked.json
+## ‏קריאת outcomes
 
 ```python
 import json
 from pathlib import Path
 
-blocked_file = Path(state_dir) / "blocked" / f"{slice_id}.blocked.json"
-if blocked_file.exists():
-    blocked = json.loads(blocked_file.read_text())
-    # ‏blocked["issue"], blocked["need"] → ‏לsummary
+outcomes_file = Path(state_dir) / "outcomes" / f"{slice_id}.json"
+if outcomes_file.exists():
+    outcome = json.loads(outcomes_file.read_text())
+    # ‏outcome["status"] → "completed" | "blocked"
+    # ‏outcome["issue"], outcome["need"] → ‏לsummary (כשstatus==blocked)
+else:
+    # ‏היעדר outcomes = קריסה שקטה
+    pass
 ```
 
 # ‏פורמט summary.md
@@ -195,7 +202,7 @@ if blocked_file.exists():
 | slice | status | issue |
 |-------|--------|-------|
 | 20 | ✅ verified | — |
-| 17 | 🛑 blocked | <issue מ-blocked.json> |
+| 17 | 🛑 blocked | <issue מ-outcomes/17.json> |
 | 15d | ⏱️ timed-out | heartbeat stale 130min |
 
 ## ✅ מוכנים ל-merge (בסדר)
@@ -223,7 +230,7 @@ if blocked_file.exists():
 
 - ❌ **‏להחליט לתקן כשל** — ‏אתה מתעד, ‏מרדכי מחליט.
 - ❌ **‏להריץ slice שנכשל שוב** — ‏רק מרדכי יכול לאשר re-dispatch.
-- ❌ **‏לבדוק exit code לפני blocked.json** — ‏הסדר קריטי (‏תיקון #9/#10).
+- ❌ **‏לבדוק exit code לפני outcomes** — ‏הסדר קריטי: outcomes ראשון, אחר כך exit code. ‏היעדר outcomes = קריסה שקטה.
 - ❌ **‏למחוק worktrees** — ‏רק cleanup_state.py בתחילת סשן (‏ל-merged בלבד).
 - ❌ **‏להשאיר flock נעול** — ‏אם הסשן נגמר — ‏flock משתחרר אוטומטית.
 - ❌ **‏להריץ שני executors במקביל** — ‏יתרו סדרתי בכוונה. ‏בלילה אין לחץ זמן.

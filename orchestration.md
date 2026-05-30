@@ -87,7 +87,7 @@
 | `verified` | ‏יתרו | ‏כלב אישר (GO) |
 | `merged` | ‏מרדכי | ‏מוזג ל-dev |
 | `needs-revision` | ‏יתרו | ‏כלב סירב |
-| `blocked` | ‏יתרו | ‏אליעזר כתב blocked.json |
+| `blocked` | ‏יתרו | ‏אליעזר כתב outcomes/<slice>.json עם status=blocked |
 | `blocked-by:<id>` | ‏יתרו | ‏תלות שלו נכשלה |
 | `timed-out` | ‏יתרו | ‏אין heartbeat > 2h |
 | `crashed` | ‏יתרו | tmux ‏מת ללא sentinel |
@@ -126,14 +126,30 @@
 
 ---
 
-## §5 — ‏מנגנון BLOCKED
+## §5 — ‏מנגנון BLOCKED + COMPLETED (outcomes)
 
-‏אליעזר, ‏כשהוא מחליט BLOCKED ‏ב-Mode 2 (‏מזהה לפי `$BDS_SLICE` מוגדר):
+‏אליעזר כותב **תמיד** ‏ב-Mode 2 (‏מזהה לפי `$BDS_SLICE` מוגדר). ‏קובץ outcomes הוא ה-signal:
 
+**‏בסיום מוצלח**:
 ```bash
-cat > "$BDS_STATE_DIR/blocked/$BDS_SLICE.blocked.json" << 'EOF'
+cat > "$BDS_STATE_DIR/outcomes/$BDS_SLICE.json" << 'EOF'
 {
   "slice": "<id>",
+  "status": "completed",
+  "commits": "<base>..HEAD",
+  "calev_report": "<path or inline verdict>",
+  "deviations": [],
+  "notes": ""
+}
+EOF
+```
+
+**‏בחסימה** (BLOCKED):
+```bash
+cat > "$BDS_STATE_DIR/outcomes/$BDS_SLICE.json" << 'EOF'
+{
+  "slice": "<id>",
+  "status": "blocked",
   "issue": "<one sentence>",
   "source": "<file:line | brief section>",
   "tried": "<what you tried>",
@@ -142,9 +158,12 @@ cat > "$BDS_STATE_DIR/blocked/$BDS_SLICE.blocked.json" << 'EOF'
 EOF
 ```
 
-‏יתרו בודק קיום הקובץ ‏**‏לפני** ‏exit code. ‏אם קיים → status=blocked, ‏לא מריץ כלב.
+‏יתרו בודק `outcomes/<slice>.json` ‏**‏לפני** ‏exit code:
+- ‏לא קיים → crashed (‏אליעזר לא סיים לכתוב — קריסה שקטה)
+- status==blocked → status=blocked, ‏לא מריץ כלב
+- status==completed → ‏המשך לבדיקת exit code, ‏אז הרץ כלב
 
-**‏למה לא exit code**: `opencode run` ‏תמיד מחזיר exit 0. ‏file-existence הוא ה-signal.
+**‏למה לא exit code בלבד**: `opencode run` ‏תמיד מחזיר exit 0. ‏outcome-file הוא ה-signal.
 
 ---
 
@@ -168,7 +187,7 @@ EOF
 ├── dispatches/<slice>.prompt     # ‏ה-prompt שנשלח
 ├── logs/<slice>.log              # ‏stdout/stderr
 ├── sentinels/<slice>.done        # exit code
-├── blocked/<slice>.blocked.json  # ‏אם אליעזר BLOCKED
+├── outcomes/<slice>.json         # ‏תמיד — completed | blocked (היעדר = קריסה שקטה)
 ├── heartbeats/<slice>.last       # ‏timestamp פר commit
 ├── crashes/<slice>-<ts>.log      # crash logs
 └── archived/                     # ‏אחרי merge
