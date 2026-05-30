@@ -20,7 +20,7 @@ orchestration/
 ```bash
 # 1. ‏צור state dir לכל פרויקט
 mkdir -p ~/.local/state/brief-driven-slices/<project>
-cp ~/projects/brief-driven-slices/briefs/state.template.json \
+cp ~/projects/brief-driven-slices/main/briefs/state.template.json \
    ~/.local/state/brief-driven-slices/<project>/state.json
 # ‏ערוך state.json: project, repo_root, base_branch, dev_tip, slices
 

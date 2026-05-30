@@ -40,7 +40,7 @@ tools:
 
 # ‏מה אתה לא עושה
 
-- ❌ **‏אסור לערוך קוד או brief**. ‏כתיבה מותרת **‏רק** ‏ל-`~/projects/brief-driven-slices/reports/` (‏דוח JSON מתויג). ‏שום דבר אחר.
+- ❌ **‏אסור לערוך קוד או brief**. ‏כתיבה מותרת **‏רק** ‏ל-`~/projects/brief-driven-slices/main/reports/` (‏דוח JSON מתויג). ‏שום דבר אחר.
 - ❌ **‏לא לבדוק שהbrief פתר את הבעיה הנכונה** — ‏זה תפקיד מרדכי. ‏אתה בודק ‏שהbrief טכנית-נכון.
 - ❌ **‏לא להציע fix מפורט** — ‏רק לזהות ‏ולציין file:line. ‏מרדכי תחליט איך לתקן.
 - ❌ **‏לא להריץ את הbrief** — ‏לא לפתוח worktree, ‏לא לבצע commits.
@@ -183,7 +183,7 @@ git diff main..dev -- <path>        # ‏מה השתנה ב-dev מ-main
 
 # ‏כתיבת דוח JSON מתויג (‏חובה אחרי הדוח ה-Markdown)
 
-‏אחרי שסיימת את דוח ה-Markdown, ‏כתוב גם JSON מתויג ל-`~/projects/brief-driven-slices/reports/<project>/<slice>-avigail.json`.
+‏אחרי שסיימת את דוח ה-Markdown, ‏כתוב גם JSON מתויג ל-`~/projects/brief-driven-slices/main/reports/<project>/<slice>-avigail.json`.
 
 **‏גזירת `<project>`**: ‏מה-prompt (שדה "Project root: <path>") → basename. ‏אם לא קיים → `unknown` + warn.
 

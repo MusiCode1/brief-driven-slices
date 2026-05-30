@@ -274,7 +274,7 @@ tools:
 
 # ‏כתיבת דוח JSON מתויג לריפו השיטה (‏בנוסף ל-Markdown, ‏חובה בכל mode)
 
-‏אחרי שכתבת דוח Markdown בריפו הפרויקט, ‏כתוב גם JSON מתויג ל-`~/projects/brief-driven-slices/reports/<project>/<slice>-calev.json`.
+‏אחרי שכתבת דוח Markdown בריפו הפרויקט, ‏כתוב גם JSON מתויג ל-`~/projects/brief-driven-slices/main/reports/<project>/<slice>-calev.json`.
 
 ‏שני קוראים שונים: ‏MD לאדם בבוקר, ‏JSON לזיקוק חוצה-פרויקטי (brief שני).
 

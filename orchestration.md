@@ -212,15 +212,15 @@ EOF
 ```bash
 # ‏צור state dir לפרויקט
 mkdir -p ~/.local/state/brief-driven-slices/<project>
-cp ~/projects/brief-driven-slices/briefs/state.template.json \
+cp ~/projects/brief-driven-slices/main/briefs/state.template.json \
    ~/.local/state/brief-driven-slices/<project>/state.json
 # ‏ערוך state.json לפי הפרויקט
 
 # ‏צור פרויקט הבית של יתרו (מ-template)
-cp -r ~/projects/brief-driven-slices/orchestration-project/ \
+cp -r ~/projects/brief-driven-slices/main/orchestration-project/ \
       ~/projects/orchestration/
 # ‏ערוך projects.json
 
 # ‏התקן symlinks לסוכנים (אחרי בדיקה!)
-bash ~/projects/brief-driven-slices/scripts/install-agents.sh
+bash ~/projects/brief-driven-slices/main/scripts/install-agents.sh
 ```

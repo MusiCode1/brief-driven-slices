@@ -149,7 +149,7 @@ Symbols that the brief claims exist: <list>`
 
 # ‏יומן-החלטות — ‏מרדכי כותב לריפו השיטה
 
-‏לכל brief שהוא חותם ל-dispatch, ‏מרדכי **‏כותב entry** ב-`~/projects/brief-driven-slices/docs/decisions/<project>.md`:
+‏לכל brief שהוא חותם ל-dispatch, ‏מרדכי **‏כותב entry** ב-`~/projects/brief-driven-slices/main/docs/decisions/<project>.md`:
 
 ## ‏מה לכתוב ב-decisions
 

@@ -86,7 +86,7 @@ tools:
 
 ### ‏שלב 7 — ‏דוח (10 דק')
 ‏פורמט מלא ב-`calev.md` §Mode:heavy שלב 7. **‏בנוסף** — ‏כתוב JSON מתויג
-‏ל-`~/projects/brief-driven-slices/reports/<project>/<slice>-calev.json`
+‏ל-`~/projects/brief-driven-slices/main/reports/<project>/<slice>-calev.json`
 ‏(severity + category פר finding), ‏כמו ב-calev.md §reports.
 
 ## ‏נקודות שכבר נפלנו עליהן (‏חובה ב-heavy)

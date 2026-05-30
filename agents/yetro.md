@@ -48,7 +48,7 @@ tools:
    │
    ▼ [‏ניקוי תחילי — פר פרויקט]
    ‏קרא projects.json → ‏לכל פרויקט פעיל:
-      python3 ~/projects/brief-driven-slices/scripts/cleanup_state.py <project>
+      python3 ~/projects/brief-driven-slices/main/scripts/cleanup_state.py <project>
    │
    ▼ [‏לכל פרויקט ב-queue, סדרתית]
    ‏קרא state.json
@@ -72,11 +72,11 @@ tools:
    git worktree add <repo>/.worktrees/<slice> -b <slice> <base>
    ‏כתוב prompt → $STATE/dispatches/<slice>.prompt
    ‏עדכן state.json: status=in-progress, branch=<slice>, worktree=<path>, started=<ts>
-    bash ~/projects/brief-driven-slices/scripts/dispatch-executor.sh \
+    bash ~/projects/brief-driven-slices/main/scripts/dispatch-executor.sh \
      <project> <slice> <worktree>
    │
    ▼ [‏המתנה]
-    exit_code=$(bash ~/projects/brief-driven-slices/scripts/wait-for-slice.sh \
+    exit_code=$(bash ~/projects/brief-driven-slices/main/scripts/wait-for-slice.sh \
      <project> <slice> 120)
    │
     ▼ [‏טיפול בתוצאה — סדר חשוב]

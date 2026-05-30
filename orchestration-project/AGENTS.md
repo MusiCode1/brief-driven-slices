@@ -6,9 +6,9 @@
 
 ‏ה-projects.json בתיקייה הזו מגדיר אילו פרויקטים לעבד. ‏לכל פרויקט `active: true`:
 
-1. ‏הרץ `python3 ~/projects/brief-driven-slices/scripts/cleanup_state.py <project>`
+1. ‏הרץ `python3 ~/projects/brief-driven-slices/main/scripts/cleanup_state.py <project>`
 2. ‏קרא `~/.local/state/brief-driven-slices/<project>/state.json`
-3. ‏פעל לפי הלולאה ב-`~/projects/brief-driven-slices/agents/yetro.md`
+3. ‏פעל לפי הלולאה ב-`~/projects/brief-driven-slices/main/agents/yetro.md`
 
 ‏סיכומי ריצה נכתבים ל-`runs/<date>.summary.md` ‏בתיקייה זו.
 
@@ -28,5 +28,5 @@
 ## ‏נתיב הסקריפטים
 
 ```
-~/projects/brief-driven-slices/scripts/
+~/projects/brief-driven-slices/main/scripts/
 ```

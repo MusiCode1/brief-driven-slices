@@ -47,7 +47,7 @@ description: |
 > ‏על brief סטטי, ‏כלב-heavy על edge-cases/regressions/patterns). ‏Sonnet למקום
 > ‏שהאמת מגיעה מ**‏הרצה** (אליעזר ביצוע, ‏יתרו מכני, ‏כלב phase/light — runtime).
 
-‏להתקנת symlinks: `bash ~/projects/brief-driven-slices/scripts/install-agents.sh`
+‏להתקנת symlinks: `bash ~/projects/brief-driven-slices/main/scripts/install-agents.sh`
 
 ## ‏שלושת מצבי ‏ההפעלה
 

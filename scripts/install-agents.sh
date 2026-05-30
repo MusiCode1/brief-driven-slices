@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-SRC="$HOME/projects/brief-driven-slices/agents"
+SRC="$HOME/projects/brief-driven-slices/main/agents"
 DST="$HOME/.config/opencode/agents"
 mkdir -p "$DST"
 for agent in mordechai yetro eliezer avigail calev calev-heavy; do
