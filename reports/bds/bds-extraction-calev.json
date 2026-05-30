@@ -1,0 +1,69 @@
+{
+  "project": "bds",
+  "slice": "bds-extraction-and-reporting",
+  "verifier": "calev",
+  "date": "2026-05-30T00:00:00Z",
+  "mode": "heavy",
+  "verdict": "NO-GO",
+  "summary": "14/16 DoD items עוברים. 2 blockers: (1) orchestration-design §9 טבלת זיהוי עדיין מציינת blocked.json במקום outcomes; (2) dispatch-executor.sh שומר את 'blocked' ב-mkdir (לצד outcomes) — אמור להוסיף outcomes בלבד לפי אופציה A. לא blockers קריטיים על הכלים הפעילים (eliezer/yetro/discard_chain עודכנו נכון), אבל inconsistency מסוכנת בתיעוד §9 שיתרו קורא.",
+  "findings": [
+    {
+      "id": 1,
+      "severity": "blocker",
+      "category": "spec-drift",
+      "summary": "orchestration-design §9 טבלת זיהוי (שורה 617) עדיין מציינת 'קיים blocked/<slice>.blocked.json' במקום outcomes/<slice>.json",
+      "source_brief": "DoD 8c — 'orchestration-design §7/§9 (344-358)'",
+      "source_code": "docs/plans/orchestration-design.md:617",
+      "cost_estimate": "5-10min",
+      "evidence": "§7 (שורה 345) עודכן נכון לoutcomes. §9 טבלה (שורה 617) לא עודכנה — עדיין כותבת 'blocked/<slice>.blocked.json'. גם §9.1 (שורה 653) וה-DoD table הפנימי (שורות 716,727,729,745) עדיין מפנים ל-blocked.json. אמנם orchestration-design נמצא ב-docs/plans/ (תיקיה שה-grep מחריג), אבל DoD 8c ביקש שינוי מפורש בו."
+    },
+    {
+      "id": 2,
+      "severity": "minor",
+      "category": "spec-drift",
+      "summary": "dispatch-executor.sh mkdir כולל גם 'blocked' (שורה 7) לצד outcomes החדש — אופציה A אמורה להחליף blocked, לא להוסיף outcomes בנוסף",
+      "source_brief": "DoD 6 + §4 Commit B step 1: 'blocked,outcomes' vs 'outcomes' בלבד",
+      "source_code": "scripts/dispatch-executor.sh:7",
+      "cost_estimate": "2-5min",
+      "evidence": "שורה 7: mkdir -p \"$STATE\"/{dispatches,logs,sentinels,heartbeats,crashes,archived,blocked,outcomes} — blocked נשאר. לפי אופציה A המבוחרת blocked/ מבוטל. בפועל זה לא שובר דבר (blocked/ פשוט לא ישומש), אבל לא עקבי עם ה-brief ועלול לבלבל."
+    },
+    {
+      "id": 3,
+      "severity": "minor",
+      "category": "spec-drift",
+      "summary": "yetro.md שורה 63 ו-161 עדיין כוללות 'blocked' כסטטוס ב-state machine — לא ברור אם מדובר בsymantic state-name או בnested blocked.json",
+      "source_brief": "DoD 8c — שינויי yetro.md",
+      "source_code": "agents/yetro.md:63,161",
+      "cost_estimate": "2min",
+      "evidence": "שורה 63: '(תלות ב-failed/blocked/crashed → סמן blocked-by:<id>, דלג)' — כאן 'blocked' הוא state-name לגיטימי (slice במצב blocked), לא הפניה ל-blocked.json. שורה 161 אותו דבר. זה לא באג אמיתי אלא עמימות שמאפשרת קריאה שגויה."
+    }
+  ],
+  "dod_items": [
+    { "id": 1, "item": "~/projects/brief-driven-slices/ קיים עם git", "status": "pass", "evidence": "git log -1 → c6513b8" },
+    { "id": 2, "item": "symlink skill → מיקום חדש", "status": "pass", "evidence": "readlink -f → /home/user/projects/brief-driven-slices" },
+    { "id": 3, "item": "5 symlinks agents → מיקום חדש", "status": "pass", "evidence": "כל 5 מצביעים ל-/home/user/projects/brief-driven-slices/agents/" },
+    { "id": 4, "item": "אין my-skills/brief-driven-slices hardcoded בקוד פעיל", "status": "pass", "evidence": "grep נקי — אפס תוצאות מחוץ ל-docs/plans/" },
+    { "id": 5, "item": "install-agents.sh:3 SRC= מיקום חדש", "status": "pass", "evidence": "SRC=\"$HOME/projects/brief-driven-slices/agents\"" },
+    { "id": 6, "item": "dispatch-executor.sh יוצר outcomes/", "status": "pass", "evidence": "שורה 7 כוללת outcomes — אם כי גם blocked נשאר (finding 2)" },
+    { "id": 7, "item": "eliezer כותב outcome תמיד ב-Mode 2", "status": "pass", "evidence": "שורות 59-72 (blocked) + 277-289 (completed) — שניהם כותבים outcomes/" },
+    { "id": 8, "item": "yetro בודק outcomes ראשון, היעדר=קריסה", "status": "pass", "evidence": "שורה 83: '(1) קיים $STATE/outcomes/<slice>.json? ← הבדיקה הראשונה!'" },
+    { "id": "8b", "item": "סדר deployment: dispatch→eliezer→yetro", "status": "pass", "evidence": "מתועד ב-brief ובdecisions/bds.md; שלושתם באותו commit (50fbce4)" },
+    { "id": "8c", "item": "קבצים פעילים הוסבו מ-blocked ל-outcomes (כולל orchestration-design §7/§9)", "status": "partial", "evidence": "eliezer/yetro/discard_chain/EXECUTOR_DISPATCH ✅; orchestration-design §7 ✅; orchestration-design §9 טבלה ❌ (עדיין blocked.json)" },
+    { "id": "8d", "item": "blocked.json רק ב-docs/plans/ — לא בקוד פעיל", "status": "partial", "evidence": "בקבצים פעילים (eliezer/yetro/discard_chain) — ✅ נקי. orchestration-design (ב-docs/plans/) — מכיל הרבה, אבל זה היסטורי+docs/plans" },
+    { "id": 9, "item": "avigail write:true + כותב JSON ל-reports/", "status": "pass", "evidence": "frontmatter write: true (שורה 29); הוראת JSON בשורות 186-214" },
+    { "id": 10, "item": "calev כותב JSON מתויג ל-reports/ בנוסף ל-MD", "status": "pass", "evidence": "הוראה בשורות 267-298" },
+    { "id": 11, "item": "מבנה דוח כולל severity + category", "status": "pass", "evidence": "שניהם: severity (6 ערכים) + category (avigail 8 ערכים, calev 8 ערכים)" },
+    { "id": 12, "item": "reports/ + docs/decisions/ עם README/.gitkeep", "status": "pass", "evidence": "reports/README.md ✅; docs/decisions/README.md ✅; docs/decisions/bds.md ✅" },
+    { "id": 13, "item": "הפרדת יומנים: update-walkthrough=ביצוע, mordechai=החלטות", "status": "pass", "evidence": "update-walkthrough SKILL.md שורות 28-35 ✅; mordechai.md שורות 150-175 ✅" },
+    { "id": 14, "item": "2 סטיות ב-bds.md; SOUL.md אומת; סוכנים ישנים אומתו", "status": "pass", "evidence": "bds.md ✅; SOUL.md שורה 29 קיימת ✅; ~/.config/opencode/agents/ — אין executor/plan-verifier/verifier-* ✅" },
+    { "id": 15, "item": "סקריפטים מתפרסים: bash -n ל-.sh, ast.parse ל-.py", "status": "pass", "evidence": "כל 5 סקריפטים עוברים ✅" },
+    { "id": 16, "item": "(אופציונלי) smoke: opencode run --agent eliezer לא נופל ל-build", "status": "skip", "evidence": "אופציונלי — לא הורץ (סביבה ללא server)" }
+  ],
+  "happy_path": {
+    "description": "קרא agents/eliezer.md → בדוק outcomes mode → קרא agents/yetro.md → בדוק סדר בדיקה → הפעל discard_chain.py → בדוק 'outcomes' במקום 'blocked'",
+    "result": "pass",
+    "notes": "הflow הפעיל עובד נכון. orchestration-design §9 לא עדכני אך לא מפעיל קוד ישיר."
+  },
+  "regressions": [],
+  "calev_verdict_rationale": "שני blockers — finding 1 הוא inconsistency בתיעוד שיתרו קורא (orchestration-design §9), finding 2 הוא עמימות קטנה. אף אחד מהם לא שובר פעולה בפועל (eliezer/yetro/discard_chain עודכנו נכון), אבל finding 1 מסוכן כי יתרו עלול לקרוא §9 ולהתלבל. verdict NO-GO עם תיקון קל."
+}
