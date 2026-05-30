@@ -1,0 +1,207 @@
+# ‏אורקסטרציה — יתרו והלולאה הלילית
+
+‏מסמך זה מסביר כיצד שכבת האורקסטרציה עובדת, ‏כולל state machine, ‏שרשור worktrees, ‏טיפול בכשלים, ‏ומנגנון BLOCKED.
+
+‏למידע מלא על תכנון המערכת: `docs/plans/orchestration-design.md`
+
+---
+
+## §1 — ‏שלושת מצבי ‏ההפעלה
+
+### Mode 1 — ‏סינכרוני (‏מרדכי → ‏אליעזר ישיר)
+
+```
+‏המשתמשת → ‏מרדכי: "‏בצע slice X"
+‏מרדכי → Task(subagent_type="eliezer", ...)   [‏חוסם]
+‏אליעזר מבצע, ‏מפעיל כלב (verifier), ‏מחזיר
+‏מרדכי מציג למשתמשת → ‏המשתמשת מאשרת → ‏מרדכי עושה merge
+```
+
+‏אין שימוש ב-state.json. ‏מהיר, ‏אינטראקטיבי.
+
+### Mode 2 — ‏לילי (‏יתרו מריץ queue)
+
+```
+‏ערב:   ‏המשתמשת + ‏מרדכי כותבים briefs, ‏אביגיל מאמתת, ‏מסמנים dispatch_ready=true ב-state.json
+‏לילה:  ‏המשתמשת פותחת session יתרו → "‏הרץ את ה-queue"
+         ‏יתרו: ‏ניקוי → ‏מוצא slice dispatch-ready → tmux dispatch אליעזר → poll
+               → ‏כלב verifier GO → ‏ארכב brief → ‏slice הבא
+‏בוקר:  ‏המשתמשת פותחת session מרדכי → ‏קורא summary → ‏עושה merges מאושרים
+```
+
+‏state.json מנוהל לאורך כל הלילה. ‏אסינכרוני.
+
+### Mode 3 — ‏ישיר (‏המשתמשת → ‏אליעזר)
+
+```
+‏המשתמשת → session אליעזר ישיר: "‏בצע docs/plans/slice-X.md"
+‏אליעזר מבצע ישירות
+```
+
+‏לגיטימי אבל לא המסלול הראשי. ‏אליעזר עדיין לא ממזג.
+
+---
+
+## §2 — ‏הצוות
+
+| ‏שם | ‏תפקיד | ‏Mode | ‏מודל | merge? |
+|-----|-------|-------|------|--------|
+| **‏מרדכי** | planner | primary | Opus | ✅ ‏אחרי אישור |
+| **‏יתרו** | orchestrator | primary | Sonnet | ❌ ‏לעולם לא |
+| **‏אליעזר** | executor | all | Sonnet | ❌ ‏לעולם לא |
+| **‏אביגיל** | plan-verifier | subagent | Opus | ❌ |
+| **‏כלב** | runtime-verifier | subagent | Sonnet | ❌ |
+
+---
+
+## §3 — STATE Schema (JSON)
+
+‏מיקום: `~/.local/state/brief-driven-slices/<project>/state.json`
+
+‏פרסור: `python3 -c "import json"` ‏(stdlib, תמיד זמין). ‏אין yq, ‏אין PyYAML.
+
+### ‏שדות slice
+
+| ‏שדה | ‏סוג | ‏מי כותב | ‏משמעות |
+|------|------|---------|---------|
+| `id` | string | ‏מרדכי | ‏מזהה ייחודי |
+| `name` | string | ‏מרדכי | ‏שם קריא |
+| `status` | string | ‏ראה טבלה | ‏סטטוס נוכחי |
+| `brief` | string | ‏מרדכי | ‏נתיב ל-brief (‏יחסי ל-repo_root) |
+| `plan_verified` | boolean | ‏מרדכי | ‏אביגיל אישרה? |
+| `depends_on` | array | ‏מרדכי | ‏IDs שה-slice תלוי בהם (‏חובה) |
+| `dispatch_ready` | boolean | ‏מרדכי | ‏מוכן ליתרו? |
+| `base` | string | ‏יתרו/מרדכי | branch ‏שממנו נגזר |
+| `branch` | string\|null | ‏יתרו | branch ‏שנוצר |
+| `worktree` | string\|null | ‏יתרו | ‏נתיב ל-worktree |
+| `started` | string\|null | ‏יתרו | ‏timestamp ‏של dispatch |
+
+### ‏ערכי status
+
+| status | ‏מי מסמן | ‏משמעות |
+|--------|---------|---------|
+| `planned` | ‏מרדכי | ‏רעיון, ‏אין brief |
+| `brief-ready` | ‏מרדכי | brief ‏נכתב |
+| `plan-verified` | ‏מרדכי | ‏אביגיל אישרה |
+| `in-progress` | ‏יתרו | ‏אליעזר פעיל ב-tmux |
+| `verified` | ‏יתרו | ‏כלב אישר (GO) |
+| `merged` | ‏מרדכי | ‏מוזג ל-dev |
+| `needs-revision` | ‏יתרו | ‏כלב סירב |
+| `blocked` | ‏יתרו | ‏אליעזר כתב blocked.json |
+| `blocked-by:<id>` | ‏יתרו | ‏תלות שלו נכשלה |
+| `timed-out` | ‏יתרו | ‏אין heartbeat > 2h |
+| `crashed` | ‏יתרו | tmux ‏מת ללא sentinel |
+| `failed:infra` | ‏יתרו | exit ≠ 0 (‏קריסת opencode) |
+| `discarded` | ‏מרדכי | ‏נזרק ידנית |
+
+---
+
+## §4 — ‏שרשור Worktrees
+
+‏לב המערכת: ‏slices תלויים יכולים לרוץ על branch של תלות, ‏גם לפני שהיא נמרגה ל-dev.
+
+### ‏הכללים
+
+```
+‏כל depends_on ∈ {merged} → base = "dev"
+‏יש תלות ∈ {verified} (לא merged) → base = branch של אותה תלות
+```
+
+### ‏דוגמה: A→B→C
+
+```
+‏לילה ראשון:
+  dispatch A (base=dev, branch=slice-A)
+  → calev GO → status=verified (branch slice-A בחיים)
+  → base של B נקבע = slice-A
+  dispatch B (base=slice-A, branch=slice-B)
+  → B בנוי על קוד של A, גם אם A לא ב-dev עדיין
+
+‏בוקר:
+  ‏מרדכי ממזג: A → dev (git merge --no-ff slice-A)
+  ‏מרדכי ממזג: B → dev (git merge --no-ff slice-B)
+```
+
+‏הכלל: ‏חייב merge commits (לא squash) ‏בשרשרת, ‏אחרת git מכפיל commits של A ‏כשממזג B.
+
+---
+
+## §5 — ‏מנגנון BLOCKED
+
+‏אליעזר, ‏כשהוא מחליט BLOCKED ‏ב-Mode 2 (‏מזהה לפי `$BDS_SLICE` מוגדר):
+
+```bash
+cat > "$BDS_STATE_DIR/blocked/$BDS_SLICE.blocked.json" << 'EOF'
+{
+  "slice": "<id>",
+  "issue": "<one sentence>",
+  "source": "<file:line | brief section>",
+  "tried": "<what you tried>",
+  "need": "<decision? new spec? skip?>"
+}
+EOF
+```
+
+‏יתרו בודק קיום הקובץ ‏**‏לפני** ‏exit code. ‏אם קיים → status=blocked, ‏לא מריץ כלב.
+
+**‏למה לא exit code**: `opencode run` ‏תמיד מחזיר exit 0. ‏file-existence הוא ה-signal.
+
+---
+
+## §6 — ‏ארבעה מצבי כשל (‏לבוקר)
+
+| ‏מצב | ‏מתי | ‏פעולת מרדכי |
+|------|------|--------------|
+| **‏מזג-מה-שעבד** | A ‏עבר, B ‏ומעלה נכשלו | merge A, discard B+ |
+| **‏תקן-במקום** | 90% ‏טוב, ‏תיקון קטן | ‏כנס ל-worktree, ‏תקן, ‏הרץ כלב שוב |
+| **‏זרוק-הכל** | ‏כל השרשרת עקומה | `python3 scripts/discard_chain.py <project> A` |
+| **‏מזג-הכל** | ‏הכל עבר | merge A→B→C ‏ל-dev ‏בסדר |
+
+---
+
+## §7 — ‏State Directory (‏פר פרויקט)
+
+```
+~/.local/state/brief-driven-slices/<project>/
+├── state.json                    # ‏ה-state machine
+├── yetro.lock                    # flock ‏נגד שני יתרו
+├── dispatches/<slice>.prompt     # ‏ה-prompt שנשלח
+├── logs/<slice>.log              # ‏stdout/stderr
+├── sentinels/<slice>.done        # exit code
+├── blocked/<slice>.blocked.json  # ‏אם אליעזר BLOCKED
+├── heartbeats/<slice>.last       # ‏timestamp פר commit
+├── crashes/<slice>-<ts>.log      # crash logs
+└── archived/                     # ‏אחרי merge
+```
+
+---
+
+## §8 — ‏הסקריפטים
+
+| ‏סקריפט | ‏שפה | ‏מי קורא | ‏תפקיד |
+|---------|------|---------|--------|
+| `scripts/dispatch-executor.sh` | bash | ‏יתרו | tmux + env scrub + sentinel |
+| `scripts/wait-for-slice.sh` | bash | ‏יתרו | ‏poll + crash/timeout detection |
+| `scripts/install-agents.sh` | bash | ‏משתמשת | symlinks ל-~/.config/opencode/agents/ |
+| `scripts/cleanup_state.py` | python3 | ‏יתרו | ‏ניקוי תחילת סשן |
+| `scripts/discard_chain.py` | python3 | ‏מרדכי | ‏זריקת שרשרת בטוחה |
+
+---
+
+## §9 — ‏התקנה ראשונה
+
+```bash
+# ‏צור state dir לפרויקט
+mkdir -p ~/.local/state/brief-driven-slices/<project>
+cp ~/projects/brief-driven-slices/briefs/state.template.json \
+   ~/.local/state/brief-driven-slices/<project>/state.json
+# ‏ערוך state.json לפי הפרויקט
+
+# ‏צור פרויקט הבית של יתרו (מ-template)
+cp -r ~/projects/brief-driven-slices/orchestration-project/ \
+      ~/projects/orchestration/
+# ‏ערוך projects.json
+
+# ‏התקן symlinks לסוכנים (אחרי בדיקה!)
+bash ~/projects/brief-driven-slices/scripts/install-agents.sh
+```

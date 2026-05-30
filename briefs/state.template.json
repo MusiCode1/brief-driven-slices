@@ -1,0 +1,33 @@
+{
+  "project": "<project-name>",
+  "repo_root": "/home/user/projects/<project-name>",
+  "base_branch": "dev",
+  "dev_tip": "<git-hash>",
+  "updated": "<ISO-8601>",
+  "slices": [
+    {
+      "id": "1",
+      "name": "<Slice name>",
+      "status": "brief-ready",
+      "brief": "docs/plans/slice-1-<name>.md",
+      "plan_verified": false,
+      "depends_on": [],
+      "dispatch_ready": false,
+      "base": "dev",
+      "branch": null,
+      "worktree": null
+    },
+    {
+      "id": "2",
+      "name": "<Slice that depends on 1>",
+      "status": "brief-ready",
+      "brief": "docs/plans/slice-2-<name>.md",
+      "plan_verified": true,
+      "depends_on": ["1"],
+      "dispatch_ready": true,
+      "base": "dev",
+      "branch": null,
+      "worktree": null
+    }
+  ]
+}

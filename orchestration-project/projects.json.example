@@ -1,0 +1,16 @@
+[
+  {
+    "name": "voice-acp",
+    "repo_root": "/home/user/projects/voice-acp",
+    "active": true,
+    "state_dir": "~/.local/state/brief-driven-slices/voice-acp",
+    "notes": "‏פרויקט ראשי — BE + FE + ACP"
+  },
+  {
+    "name": "anat",
+    "repo_root": "/home/user/projects/anat",
+    "active": false,
+    "state_dir": "~/.local/state/brief-driven-slices/anat",
+    "notes": "‏לא פעיל כרגע"
+  }
+]
