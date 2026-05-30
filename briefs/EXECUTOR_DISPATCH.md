@@ -18,7 +18,7 @@
 |-----------|------|
 | `calev` + `mode: phase` | ‏אחרי commit שה-brief ‏סימן לphase verifier |
 | `calev` + `mode: light` | ‏בסוף, ‏אם ה-brief ‏מסמן light |
-| `calev` + `mode: heavy` | ‏בסוף, ‏אם ה-brief ‏מסמן heavy (complexity 8+) |
+| `calev-heavy` (Opus) | ‏בסוף, ‏אם ה-brief ‏מסמן heavy (complexity 8+) — ‏סוכן נפרד, ‏בלי `mode:` |
 | `general` | ‏מחקר רוחבי read-only — ‏לא ליישום |
 | `eliezer` | ❌ **‏אל תקרא לו. ‏אתה הוא.** |
 
@@ -118,7 +118,7 @@ ssh -i ~/.ssh/pico ... -R drive-coding-<slice>:80:localhost:<vite-port> tuns.sh 
 |------|------|
 | `calev` + `mode: phase` | ‏אחרי commit ‏מסוים שה-brief מציין |
 | `calev` + `mode: light` | ‏אחרי commit ‏אחרון, ‏לפני שמודיעים "‏גמרתי". Default. |
-| `caleb` + `mode: heavy` | ‏רק אם ה-brief ‏מציין (complexity 8+) |
+| `calev-heavy` (Opus, ‏בלי `mode:`) | ‏רק אם ה-brief ‏מציין (complexity 8+) |
 
 ‏הפעל ‏עם `Task(subagent_type="calev", prompt="... mode: light ...")` ‏ועוקב אחר ה-output.
 

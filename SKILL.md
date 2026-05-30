@@ -36,11 +36,16 @@ description: |
 
 | ‏שם | ‏תפקיד | ‏Mode | ‏מודל | merge? |
 |-----|-------|-------|------|--------|
-| **‏מרדכי** | planner | primary | Opus | ✅ ‏אחרי אישור |
-| **‏יתרו** | orchestrator | primary | Sonnet | ❌ ‏לעולם לא |
-| **‏אליעזר** | executor | all | Sonnet | ❌ ‏לעולם לא |
-| **‏אביגיל** | plan-verifier | subagent | Opus | ❌ |
-| **‏כלב** | runtime-verifier | subagent | Sonnet | ❌ |
+| **‏מרדכי** | planner | primary | Opus 4.8 | ✅ ‏אחרי אישור |
+| **‏יתרו** | orchestrator | primary | Sonnet 4.6 | ❌ ‏לעולם לא |
+| **‏אליעזר** | executor | all | Sonnet 4.6 | ❌ ‏לעולם לא |
+| **‏אביגיל** | plan-verifier | subagent | Opus 4.8 | ❌ |
+| **‏כלב** | runtime-verifier (phase/light) | subagent | Sonnet 4.6 | ❌ |
+| **‏כלב-heavy** | runtime-verifier (heavy, complexity 8+) | subagent | Opus 4.8 | ❌ |
+
+> **‏עיקרון המודלים**: ‏Opus למקום שהאמת מגיעה מ**‏הסקה** (מרדכי תכנון, ‏אביגיל
+> ‏על brief סטטי, ‏כלב-heavy על edge-cases/regressions/patterns). ‏Sonnet למקום
+> ‏שהאמת מגיעה מ**‏הרצה** (אליעזר ביצוע, ‏יתרו מכני, ‏כלב phase/light — runtime).
 
 ‏להתקנת symlinks: `bash ~/projects/brief-driven-slices/scripts/install-agents.sh`
 
@@ -86,7 +91,7 @@ description: |
   ↓ ‏heartbeat אחרי כל commit (ב-Mode 2)
   ↓ ‏(אופציונלי) כלב (mode: phase) ‏אחרי commit מסוכן
   ↓
-‏כלב (runtime-verifier, Sonnet, mode: light|heavy)
+‏כלב (runtime-verifier, Sonnet, mode: light) ‏או כלב-heavy (Opus, complexity 8+)
   ↓ ‏בודק DoD ‏מול הקוד בסביבה אמיתית. ‏כותב report.
   ↓
 ‏מרדכי ‏מוודא, ‏עושה merge ‏ל-dev, ‏מוחק worktree.
@@ -116,7 +121,8 @@ description: |
 | [`agents/yetro.md`](agents/yetro.md) | ‏session ‏לילי — ‏מריץ queue אוטומטית |
 | [`agents/eliezer.md`](agents/eliezer.md) | **‏מבצע** (all mode — Task ‏או primary) |
 | [`agents/avigail.md`](agents/avigail.md) | **‏חובה לפני handoff** — ‏בודקת brief + depends_on |
-| [`agents/calev.md`](agents/calev.md) | **‏חובה בסוף** — mode: phase/light/heavy |
+| [`agents/calev.md`](agents/calev.md) | **‏חובה בסוף** — mode: phase/light (Sonnet) |
+| [`agents/calev-heavy.md`](agents/calev-heavy.md) | heavy tier (complexity 8+, Opus) |
 
 ## ‏שלוש תובנות ‏ליבה
 

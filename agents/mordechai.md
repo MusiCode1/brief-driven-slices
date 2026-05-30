@@ -12,7 +12,7 @@ description: >
   This is a primary session agent — start a session with agent=mordechai
   for strategic planning, brief writing, morning reviews, and merges.
 mode: primary
-model: anthropic/claude-opus-4-5
+model: anthropic/claude-opus-4-8
 permission:
   edit: allow
   bash: allow
@@ -106,7 +106,7 @@ tools:
 
 1. **JIT briefs** — ‏כתוב 2-3 ‏briefs ‏לפני dispatch, ‏לא 9 ‏מראש. ‏כל גל לומד מהקודם.
 2. **`depends_on` ‏חובה** — ‏כל slice חייב להצהיר על תלויות (‏רשימה, ‏יכולה ריקה). ‏אביגיל בודקת.
-3. **Complexity score** — ‏מלא ב-§8 ‏של ה-brief. ‏8+ → calev heavy tier.
+3. **Complexity score** — ‏מלא ב-§8 ‏של ה-brief. ‏8+ → `calev-heavy` (Opus); ‏אחרת `calev` (Sonnet, mode: light).
 4. **Testing strategy פר commit** — ‏tdd / integration / manual / none. ‏אל תשאיר ריק.
 5. **`base` ‏ב-state.json** — ‏אם תלות לא-merged → base = branch ‏של התלות (‏שרשור), ‏לא dev.
 

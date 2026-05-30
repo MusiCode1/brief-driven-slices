@@ -1,0 +1,47 @@
+# Walkthrough — brief-driven-slices
+
+> ‏יומן-ביצוע כרונולוגי: ‏מה נבנה, ‏מתי, ‏ובאילו commits. ‏מתחזק ע"י אליעזר (executor).
+> ‏"משעמם בכוונה": brief בוצע + ‏חריגות. ‏הרציונל וההחלטות → `docs/decisions/bds.md`.
+
+---
+
+## 2026-05-29 — ‏בניית מערכת האורקסטרציה (commits 03b1a6d→1f9308c, ‏ב-my-skills)
+
+‏אליעזר בנה את התשתית הראשונית של מערכת ה-5 ‏סוכנים, ‏לפי `orchestration-design.md`
+‏(שעבר 4 ‏סבבי אביגיל). 6 ‏commits:
+
+| Commit | ‏מה | ‏קבצים |
+|--------|------|--------|
+| `03b1a6d` | Commit 0 — scripts | dispatch-executor.sh, wait-for-slice.sh, install-agents.sh, cleanup_state.py, discard_chain.py |
+| `265f429` | Commit 1 — 5 ‏סוכנים | agents/{mordechai,yetro,eliezer,avigail,calev}.md |
+| `2f38d53` | Commit 2 — state + orchestration | state.template.json, orchestration.md |
+| `755bdc2` | Commit 3 — בית יתרו | orchestration-project/ template |
+| `f6bf30f` | Commit 4 — SKILL + briefs | SKILL.md, BRIEF_TEMPLATE, EXECUTOR_DISPATCH, ‏מחיקת סוכנים ישנים |
+| `1f9308c` | Commit 5 — README + walkthrough | README, docs/walkthrough |
+
+‏אימות: GO, 16/16 DoD (דוח ב-`/tmp/orchestration-verification-report.md`).
+
+**‏מאפיינים מרכזיים שנבנו**: env scrub מלא (prefix OPENCODE_*), ‏prompt דרך stdin,
+‏BLOCKED דרך קיום-קובץ (לא exit code), ‏JSON state + python3 stdlib, ‏שרשור worktrees,
+‏flock נגד שני יתרו, ‏discard_chain (dependents בלבד), ‏4 ‏מצבי טיפול-כשל.
+
+---
+
+## 2026-05-30 — slice bds-extraction: ‏הוצאה לפרויקט נפרד + ‏שכבת דיווח
+
+‏העברת brief-driven-slices מ-`~/projects/my-skills/` ‏לפרויקט עצמאי
+‏`~/projects/brief-driven-slices/` ‏עם git משלו, + ‏שכבת דיווח-בקבצים + ‏2 ‏יומנים.
+‏Mode 3 ‏(ידני, ‏לא דרך יתרו). brief עבר 2 ‏סבבי אביגיל (5+1 ‏ממצאים, ‏כולם תוקנו).
+
+| Commit | ‏מה |
+|--------|------|
+| `32ea702` | Commit A — ‏העברה: ‏git init חדש, ‏עדכון 12 ‏נתיבי my-skills, symlinks (skill + 5 agents) למיקום חדש |
+| `50fbce4` | Commit B — outcomes: ‏אליעזר כותב `outcomes/<slice>.json` ‏תמיד (אופציה A); ‏יתרו בודק אותו ראשון; discard_chain.py blocked→outcomes |
+| `07f43dd` | Commit C — דוחות מתויגים: avigail write:true + JSON ל-`reports/<project>/`; calev JSON בנוסף ל-MD; ‏טקסונומיה severity/category |
+| `ea7aa38` | Commit D — ‏הפרדת יומנים: walkthrough=ביצוע (אליעזר), decisions/<project>.md=רציונל (מרדכי) |
+| `c6513b8` | Commit E — ‏תיעוד 2 ‏סטיות (SOUL.md, ‏סוכנים ישנים) ב-decisions/bds.md |
+
+**‏חריגות/הערות**:
+- ‏מחיקת התיקייה הישנה ב-my-skills (`git rm`) — ‏הצעד האחרון, ‏commit נפרד ב-my-skills, ‏רק אחרי grep נקי.
+- ‏calev tier: heavy (complexity 8) — ‏smoke של opencode run + ‏בדיקת symlinks + grep נקי.
+- ‏מה שלא נכנס (brief שני, ‏עתידי): ‏קטלוגים תמציתיים, ‏זיקוק תקופתי, ‏טקסונומיה מתפתחת, ‏יומן גלובלי.

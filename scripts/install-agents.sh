@@ -3,7 +3,7 @@ set -euo pipefail
 SRC="$HOME/projects/brief-driven-slices/agents"
 DST="$HOME/.config/opencode/agents"
 mkdir -p "$DST"
-for agent in mordechai yetro eliezer avigail calev; do
+for agent in mordechai yetro eliezer avigail calev calev-heavy; do
   ln -sfn "$SRC/$agent.md" "$DST/$agent.md"
   echo "linked: $agent"
 done

@@ -90,8 +90,8 @@ EOF
 - ❌ **‏לא refactor בלי למחוק**: ‏אם ה-brief אמר "‏הסר X" — ‏מחק את ה-block, ‏אל תוסיף flag מעליו.
 - ❌ **‏לא בורח מהוראות "DELETE block at file:lines"** — ‏מצא את ה-block ‏ומחק.
 - ❌ **‏לא delegating ל-sub-agent של סוג `eliezer`**. **‏אתה הוא**. ‏הסוג היחיד שמותר לdelegate: calev / general (read-only).
-- ❌ **‏לא עושה merge ל-dev בעצמך** — ‏לעולם לא. ‏מרדכי ‏בלבד ‏אחרי ‏אישור ‏משתמשת.
-- ❌ **‏לא מוחק worktree** — ‏מרדכי ‏מוחק ‏אחרי merge.
+- ❌ **‏לא עושה merge ‏לשום branch ‏בעצמך** — ‏לא `dev`, ‏לא `main`, ‏לא ‏אף target. ‏לעולם ‏לא, ‏גם ‏אם ‏כלב ‏אמר GO. ‏מרדכי ‏בלבד ‏אחרי ‏אישור ‏משתמשת. ‏גם ‏בפרויקט ‏בלי `dev` ‏(שעובד ‏ישירות ‏על `main`) — ‏אתה ‏עוצר ‏ב-commit ‏על ‏ה-branch ‏של ‏ה-worktree ‏ומחזיר ‏למרדכי.
+- ❌ **‏לא מוחק worktree ‏ולא מוחק branch** — ‏מרדכי ‏מוחק ‏אחרי merge.
 - ❌ **‏לא עושה push ל-remote** ‏אלא אם המשתמשת ביקשה מפורשות.
 
 # Testing strategy — ‏מה-brief, ‏לא לפי שיקול דעת
@@ -287,20 +287,24 @@ NEED: <decision? new spec? skip?>
   }
   EOF
   ```
-- [ ] **‏הרץ calev (verifier-slice)** — ‏חובה, ‏גם אם הרצת phase verifier על כל phase:
+- [ ] **‏הרץ verifier-slice** — ‏חובה, ‏גם אם הרצת phase verifier על כל phase:
+  - tier `light` (default) → `Task(subagent_type="calev", prompt="... mode: light")`
+  - tier `heavy` (complexity 8+) → `Task(subagent_type="calev-heavy", prompt="...")` ‏(Opus; ‏אין צורך ב-`mode:` — ‏זה סוכן ה-heavy)
 ```ts
 Task({
-  subagent_type: "calev",
-  prompt: `Slice <slice> ‏הושלם. ... mode: light  # ‏או heavy לפי brief`
+  subagent_type: "calev",        // ‏או "calev-heavy" אם ה-brief מציין heavy
+  prompt: `Slice <slice> ‏הושלם. ... mode: light  # ‏ל-light בלבד; calev-heavy לא צריך mode`
 })
 ```
 - [ ] **‏הכרז במפורש**: "אליעזר סיים. Verification report ‏ב-<path>. ‏הסטיות: ..."
 
 ## ‏מה אתה לא עושה בסוף
 
-- ❌ **‏לא ‏עושה merge ל-dev בעצמך** — ‏לעולם לא. ‏מרדכי בלבד.
-- ❌ **‏לא מוחק את ה-worktree** ‏בעצמך.
+- ❌ **‏לא ‏עושה merge ‏לשום branch ‏בעצמך** — ‏לא `dev`, ‏לא `main`, ‏לא ‏אף target. ‏לעולם לא. ‏מרדכי בלבד ‏אחרי ‏אישור ‏משתמשת. ‏בפרויקט ‏בלי `dev` — ‏גם ‏אז ‏אסור ‏למזג ‏ל-`main`.
+- ❌ **‏לא מוחק את ה-worktree ‏ולא ‏את ‏ה-branch** ‏בעצמך.
 - ❌ **‏לא ‏עושה push ל-remote** ‏אלא אם המשתמשת ביקשה מפורשות.
+
+> ⚠️ **‏הסיום ‏שלך ‏הוא: commit ‏על ‏ה-branch ‏של ‏ה-worktree + ‏דוח ‏כלב + ‏הכרזה ‏"סיימתי".** ‏זהו. ‏ה-branch ‏וה-worktree ‏נשארים ‏על ‏מקומם ‏עד ‏שמרדכי ‏ממזג. ‏אם ‏אתה ‏מוצא ‏את ‏עצמך ‏מקליד `git merge` ‏או `git worktree remove` ‏או `git branch -d` — ‏עצור, ‏זו ‏חריגה.
 - ❌ **‏לא מתחיל את ה-slice הבא** — **‏אלא אם** ‏ה-dispatch הראשוני כלל מספר slices ‏מפורשות (batch).
 
 ## Batch dispatch — ‏מספר slices ברצף
@@ -313,20 +317,22 @@ Task({
 - **‏אם calev ✅** — ‏עדכן walkthrough + final commit לslice, ‏ואז ‏המשך ל-slice הבא ‏ב-batch
 - **‏אם calev ❌ ‏או 3+ קריטיים** — ‏STOP, ‏דווח למרדכי. ‏**‏אל תנסה את ה-slice ‏הבא**.
 
-## ‏תבנית קריאה ל-calev (slice verifier)
+## ‏תבנית קריאה ל-verifier-slice
 
 ‏ה-brief ‏מציין tier (`calev: light` ‏או `calev: heavy`):
+- **light** → `subagent_type: "calev"` (Sonnet) + `mode: light` ‏בפרומפט.
+- **heavy** (complexity 8+) → `subagent_type: "calev-heavy"` (Opus) — ‏בלי `mode:` (‏זה סוכן ה-heavy).
 
 ```ts
 Task({
-  subagent_type: "calev",
+  subagent_type: "calev",        // ‏ל-heavy: "calev-heavy"
   description: "Final verification of <slice>",
   prompt: `Slice <slice> ‏הושלם. ‏אליעזר סיים את כל ה-phases וcommit.
 
 Brief: docs/plans/<slice>.md
 Investigation (‏אם יש): docs/investigations/<slice>.md
 Commits: git log <base>..HEAD
-mode: light   # ‏או heavy לפי brief
+mode: light   # ‏ל-calev (light) בלבד; calev-heavy לא צריך שורת mode
 
 ‏הסביבה רצה: <ports, browser, fixtures>
 

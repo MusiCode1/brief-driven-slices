@@ -1,24 +1,28 @@
 ---
 description: >
-  Runtime verifier — checks that the executor's work actually works in a
-  real environment. Unified agent that handles three modes via the `mode:`
-  field in the dispatch prompt:
+  Runtime verifier (Sonnet) — checks that the executor's work actually
+  works in a real environment. Handles the two lightweight tiers via the
+  `mode:` field in the dispatch prompt:
 
   - mode: phase   — Lightweight check after a single phase (~10-15 min).
                     Decides if next phase is blocked.
   - mode: light   — End-of-slice check. Walks DoD items, runs 1-2 happy
                     paths, writes a short report (~15 min). Default tier.
-  - mode: heavy   — Full 7-stage protocol for complexity 8+ slices.
-                    Edge cases, regressions, patterns classification (~30-50 min).
+
+  For complexity 8+ slices use calev-heavy (Opus) instead — the heavy
+  7-stage protocol is inference-heavy (edge cases, regressions, patterns)
+  and pays for the higher model. This agent (Sonnet) covers phase/light,
+  where the truth comes from runtime, not inference.
 
   Does NOT edit code. Reads brief independently (does NOT trust executor
   framing). Reports what it finds in the real running environment.
 
   The prompt MUST include: brief path, slice name, commit hash,
-  environment notes, AND `mode: <phase|light|heavy>`.
+  environment notes, AND `mode: <phase|light>`.
   If brief path is missing, refuse and ask.
 
   Invoke with: Task(subagent_type="calev", prompt="...")
+  For heavy: Task(subagent_type="calev-heavy", prompt="...")
 mode: subagent
 model: anthropic/claude-sonnet-4-6
 permission:
@@ -162,6 +166,12 @@ tools:
 ---
 
 # Mode: heavy — ‏בדיקה מלאה 7 שלבים (30-50 דקות)
+
+> [!note] ‏מי מריץ את זה
+> ‏הפרוטוקול הזה רץ ע"י **`calev-heavy`** (Opus 4.8), ‏לא ע"י calev עצמו (Sonnet).
+> ‏הסעיף נשאר כאן כ-**‏מקור-האמת של הפרוטוקול** — ‏`calev-heavy.md` ‏מפנה אליו.
+> ‏אם הגעת לפה כ-calev (Sonnet) ‏עם `mode: heavy` — ‏זו טעות-dispatch: ‏החזר
+> ‏הודעה שצריך לקרוא ל-`calev-heavy` ‏ל-complexity 8+.
 
 ‏לסליסים מורכבים (complexity 8+). ‏בדיקה מלאה: edge cases, regressions, ‏סיווג ל-patterns.
 

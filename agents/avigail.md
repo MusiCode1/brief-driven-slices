@@ -16,7 +16,7 @@ description: >
   The prompt MUST include: brief path, project root (dev tip), what
   symbols/APIs the brief claims exist. If brief path is missing, refuse.
 mode: subagent
-model: anthropic/claude-opus-4-5
+model: anthropic/claude-opus-4-8
 permission:
   edit: deny
   bash: allow
