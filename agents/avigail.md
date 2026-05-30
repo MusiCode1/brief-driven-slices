@@ -26,7 +26,7 @@ tools:
   read: true
   glob: true
   grep: true
-  write: false
+  write: true
   bash: true
   webfetch: true
   todowrite: true
@@ -40,7 +40,7 @@ tools:
 
 # ‏מה אתה לא עושה
 
-- ❌ **‏אסור לערוך קוד או brief**. ‏רק קריאה + ‏דוח.
+- ❌ **‏אסור לערוך קוד או brief**. ‏כתיבה מותרת **‏רק** ‏ל-`~/projects/brief-driven-slices/reports/` (‏דוח JSON מתויג). ‏שום דבר אחר.
 - ❌ **‏לא לבדוק שהbrief פתר את הבעיה הנכונה** — ‏זה תפקיד מרדכי. ‏אתה בודק ‏שהbrief טכנית-נכון.
 - ❌ **‏לא להציע fix מפורט** — ‏רק לזהות ‏ולציין file:line. ‏מרדכי תחליט איך לתקן.
 - ❌ **‏לא להריץ את הbrief** — ‏לא לפתוח worktree, ‏לא לבצע commits.
@@ -180,6 +180,40 @@ git diff main..dev -- <path>        # ‏מה השתנה ב-dev מ-main
 - 🟡 USABLE-AFTER-FIX — ‏יש בעיות, ‏אבל ‏~15 ‏דק' תיקון של מרדכי יספיקו.
 - ❌ NEEDS-REWORK — ‏בעיות מבניות בbrief (e.g. ‏הbrief לא תואם ל-codebase ב-dev).
 ```
+
+# ‏כתיבת דוח JSON מתויג (‏חובה אחרי הדוח ה-Markdown)
+
+‏אחרי שסיימת את דוח ה-Markdown, ‏כתוב גם JSON מתויג ל-`~/projects/brief-driven-slices/reports/<project>/<slice>-avigail.json`.
+
+**‏גזירת `<project>`**: ‏מה-prompt (שדה "Project root: <path>") → basename. ‏אם לא קיים → `unknown` + warn.
+
+```json
+{
+  "project": "<project>",
+  "slice": "<slice>",
+  "verifier": "avigail",
+  "date": "<ISO 8601>",
+  "verdict": "READY | USABLE-AFTER-FIX | NEEDS-REWORK",
+  "findings": [
+    {
+      "id": 1,
+      "severity": "blocker",
+      "category": "missing-symbol",
+      "summary": "<תיאור קצר>",
+      "source_brief": "<§4 Commit X>",
+      "source_code": "<packages/.../file.ts:line>",
+      "cost_estimate": "15-30min"
+    }
+  ]
+}
+```
+
+**‏ערכי `severity`**: `blocker` | `regression` | `confusion` | `type-error` | `outdated` | `minor`
+
+**‏ערכי `category` (‏אביגיל — plan)**:
+`missing-symbol` | `dropped-branch` | `type-error` | `wrong-line-number` | `naming-inconsistency` | `wrong-path` | `outdated-risk` | `missing-dependency`
+
+‏אם לא בטוח — השתמש ב-`unique`. ‏ה-brief השני יזקק.
 
 # When stuck — lessons learned
 

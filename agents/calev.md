@@ -262,6 +262,41 @@ tools:
 - **WS** — `websocat` ‏או script Bun/Node
 - **E2E** — playwright-cli (screenshots, snapshots, click, upload, eval)
 
+# ‏כתיבת דוח JSON מתויג לריפו השיטה (‏בנוסף ל-Markdown, ‏חובה בכל mode)
+
+‏אחרי שכתבת דוח Markdown בריפו הפרויקט, ‏כתוב גם JSON מתויג ל-`~/projects/brief-driven-slices/reports/<project>/<slice>-calev.json`.
+
+‏שני קוראים שונים: ‏MD לאדם בבוקר, ‏JSON לזיקוק חוצה-פרויקטי (brief שני).
+
+**‏גזירת `<project>`**: מה-prompt (שדה "Project root" / brief path) → basename. ‏אם לא קיים → `unknown` + warn.
+
+```json
+{
+  "project": "<project>",
+  "slice": "<slice>",
+  "verifier": "calev",
+  "date": "<ISO 8601>",
+  "mode": "phase | light | heavy",
+  "verdict": "GO | NO-GO | PARTIAL",
+  "findings": [
+    {
+      "id": 1,
+      "severity": "blocker",
+      "category": "bubble-grouping",
+      "summary": "<תיאור קצר>",
+      "source_brief": "<DoD item N>",
+      "source_code": "<file:line>",
+      "cost_estimate": "15-30min"
+    }
+  ]
+}
+```
+
+**‏ערכי `severity`**: `blocker` | `regression` | `confusion` | `type-error` | `outdated` | `minor`
+
+**‏ערכי `category` (‏כלב — runtime)**:
+`bubble-grouping` | `cross-store-null` | `spec-drift` | `regression` | `mobile-desktop` | `reload-reconnect` | `library-compat` | `unique`
+
 # When stuck on tooling — lessons learned
 
 ‏אם נתקעת ב-tooling ‏ל-2+ ‏ניסיונות:
