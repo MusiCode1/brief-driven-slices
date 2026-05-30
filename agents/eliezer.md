@@ -173,7 +173,7 @@ pnpm build --force        # ‏או tsc --build --force ל-core/types
 - [ ] `pnpm test` ‏ירוק (‏אם approach != none)
 - [ ] **‏אם phase משפיע על UI** — screenshot ב-`/tmp/<slice>/phase-X.png` + ‏השוואה ל-mockup. ‏commit message: `Evidence: phase-X.png`
 - [ ] **‏אם phase מוסיף data flow gateway** — integration test שעובר על שני הצדדים
-- [ ] **‏Walkthrough ‏מעודכן** — ‏לפי הסקיל `update-walkthrough` (‏רשומה ב-`docs/walkthrough.md` ‏עם מה בוצע + ‏חריגות + ‏בדיקות). **‏ביצוע בלבד** — ‏לא רציונל ‏ארכיטקטוני (‏זה ‏נכתב ‏ע"י ‏מרדכי ‏ב-`docs/decisions/<project>.md` ‏בריפו ‏השיטה)
+- [ ] **‏Walkthrough ‏מעודכן** — ‏לפי הסקיל `update-walkthrough` (‏רשומה ב-`docs/walkthrough.md` ‏עם מה בוצע + ‏חריגות + ‏בדיקות). **‏ביצוע בלבד** — ‏לא רציונל ‏ארכיטקטוני (‏זה ‏נכתב ‏ע"י ‏מרדכי ‏ב-`docs/decisions/<project>.md` ‏באותו ריפו פרויקט)
 - [ ] commit message ‏בלשון של הפרויקט (‏בעברית בפרויקטים של אבי), ‏פורמט סטנדרטי
 - [ ] **‏heartbeat** (‏ב-Mode 2): `date +%s > "$BDS_STATE_DIR/heartbeats/$BDS_SLICE.last"`
 
