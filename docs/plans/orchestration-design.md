@@ -341,24 +341,29 @@ brief-driven-slices/
    ▼ ‏[‏המתנה]
    ‏הרץ: wait-for-slice.sh <project> <slice> 120
    │
-   ▼ ‏[‏טיפול ‏בתוצאה — ‏סדר ‏בדיקה ‏חשוב]
-   ‏(1) ‏קיים blocked/<slice>.blocked.json?  ← ‏הבדיקה ‏הראשונה, ‏לא ‏exit code
-   │       ‏כן → ‏קרא ‏אותו → status=blocked → ‏עצור ‏ענף (‏לא ‏מריץ ‏כלב!)
-   ‏(2) ‏exit 124 (timeout) → status=timed-out → ‏עצור ‏ענף
-   ‏(3) ‏exit 125 (crash)   → status=crashed → ‏שמור crash log → ‏עצור ‏ענף
-   ‏(4) ‏exit ≠0 ‏אחר        → ‏קריסת-תשתית ‏של opencode → status=failed:infra → ‏עצור ‏ענף
-   ‏(5) ‏exit 0 ‏ואין blocked.json → ‏הרץ ‏כלב:
-   │       ‏כלב GO → status=verified → ‏ארכב brief (‏ב-branch) → ‏slice ‏הבא
-   │       ‏כלב NO → status=needs-revision → ‏עצור ‏ענף (worktree ‏נשאר ‏לתיקון)
-   │     ‏("עצור ‏ענף" = ‏סמן ‏כל ‏מה ‏שתלוי ‏ב-slice ‏הזה ‏כ-blocked-by, ‏אבל ‏המשך
-   │      ‏לשרשראות/slices ‏אחרים ‏שלא ‏תלויים. dev ‏לא ‏נגעו ‏בו → ‏הכל ‏ניתן ‏לזריקה ‏בבוקר)
-   │
-   │  ‏הערה ‏(תיקון #9/#10): `opencode run` ‏כמעט ‏תמיד ‏מחזיר exit 0 — ‏גם ‏אם ‏אליעזר
-   │  ‏נכשל ‏לוגית (typecheck ‏נשבר). ‏לכן ‏סיווג ‏כשל ‏לוגי ‏קורה ‏דרך **‏כלב** (NO-GO),
-   │  ‏לא ‏דרך exit code. exit≠0 ‏שמור ‏רק ‏לקריסות-תשתית ‏של opencode ‏עצמו.
-   │
-   ▼ ‏[‏סוף]
-   ‏כתוב runs/<date>.summary.md: ‏מה ‏עבר, ‏מה ‏blocked (+ ‏סיבה ‏מ-blocked.json), ‏מה ‏נכשל, ‏מה ‏ממתין ‏ל-merge
+    ▼ ‏[‏טיפול ‏בתוצאה — ‏סדר ‏בדיקה ‏חשוב]
+    ‏(1) ‏קיים outcomes/<slice>.json?  ← ‏הבדיקה ‏הראשונה, ‏לא ‏exit code
+    │       ‏לא ‏קיים → status=crashed (‏קריסה ‏שקטה — ‏אליעזר ‏לא ‏הגיע ‏לסיים) → ‏עצור ‏ענף
+    │       ‏קיים → ‏קרא status:
+    │          status=="blocked"   → status=blocked → ‏עצור ‏ענף (‏לא ‏מריץ ‏כלב!)
+    │          status=="completed" → ‏המשך ‏ל-(2)
+    ‏(2) ‏exit 124 (timeout) → status=timed-out → ‏עצור ‏ענף
+    ‏(3) ‏exit 125 (crash)   → status=crashed → ‏שמור crash log → ‏עצור ‏ענף
+    ‏(4) ‏exit ≠0 ‏אחר        → ‏קריסת-תשתית ‏של opencode → status=failed:infra → ‏עצור ‏ענף
+    ‏(5) ‏exit 0 + status==completed → ‏הרץ ‏כלב:
+    │       ‏כלב GO → status=verified → ‏ארכב brief (‏ב-branch) → ‏slice ‏הבא
+    │       ‏כלב NO → status=needs-revision → ‏עצור ‏ענף (worktree ‏נשאר ‏לתיקון)
+    │     ‏("עצור ‏ענף" = ‏סמן ‏כל ‏מה ‏שתלוי ‏ב-slice ‏הזה ‏כ-blocked-by, ‏אבל ‏המשך
+    │      ‏לשרשראות/slices ‏אחרים ‏שלא ‏תלויים. dev ‏לא ‏נגעו ‏בו → ‏הכל ‏ניתן ‏לזריקה ‏בבוקר)
+    │
+    │  ‏הערה: `opencode run` ‏כמעט ‏תמיד ‏מחזיר exit 0 — ‏גם ‏אם ‏אליעזר
+    │  ‏נכשל ‏לוגית. ‏לכן ‏סיווג ‏כשל ‏לוגי ‏קורה ‏דרך **‏כלב** (NO-GO),
+    │  ‏לא ‏דרך exit code. exit≠0 ‏שמור ‏רק ‏לקריסות-תשתית ‏של opencode ‏עצמו.
+    │  ‏שלבים (2)-(4) ‏עדיין ‏רלוונטיים ‏גם ‏אחרי ‏completed — ‏guard ‏לקריסה ‏אחרי
+    │  ‏כתיבת outcomes ‏ולפני ‏סיום ‏נקי.
+    │
+    ▼ ‏[‏סוף]
+    ‏כתוב runs/<date>.summary.md: ‏מה ‏עבר, ‏מה ‏blocked (+ ‏סיבה ‏מ-outcomes/<slice>.json), ‏מה ‏נכשל, ‏מה ‏ממתין ‏ל-merge
    ‏שחרר flock
 ```
 
@@ -609,11 +614,11 @@ date +%s > "$BDS_STATE_DIR/heartbeats/$BDS_SLICE.last"
 
 | ‏מצב | ‏זיהוי | ‏פעולת ‏יתרו |
 |------|--------|-------------|
-| **blocked** | ‏קיים `blocked/<slice>.blocked.json` | ‏קרא ‏סיבה, status=blocked, ‏לא ‏מריץ ‏כלב, ‏עצור ‏ענף |
+| **blocked** | ‏קיים `outcomes/<slice>.json` + `status=="blocked"` | ‏קרא ‏סיבה, status=blocked, ‏לא ‏מריץ ‏כלב, ‏עצור ‏ענף |
 | **stuck** | heartbeat > 30min (warn), > 2h (act) | kill tmux, status=timed-out, ‏עצור ‏ענף |
-| **crashed** | `tmux has-session` fail + ‏אין sentinel | ‏שמור crash log, status=crashed, ‏עצור ‏ענף |
+| **crashed** | `tmux has-session` fail + ‏אין sentinel, ‏**‏או** ‏אין outcomes/<slice>.json | ‏שמור crash log, status=crashed, ‏עצור ‏ענף |
 | **failed:infra** | sentinel ‏עם exit ≠ 0 (‏רק ‏קריסת-תשתית ‏של opencode) | status=failed:infra, ‏עצור ‏ענף |
-| **rejected** | sentinel exit 0, ‏אין blocked.json, + ‏כלב NO-GO | status=needs-revision, ‏עצור ‏ענף (worktree ‏נשאר) |
+| **rejected** | `outcomes/<slice>.json` status==completed + ‏כלב NO-GO | status=needs-revision, ‏עצור ‏ענף (worktree ‏נשאר) |
 
 ‏**הערה (‏תיקון #C)**: ‏כשל ‏לוגי (typecheck/lint ‏נשבר) ‏**‏לא ‏מסווג ‏דרך exit code** — `opencode run` ‏מחזיר 0 ‏גם ‏אז. ‏הוא ‏נתפס ‏ע"י ‏כלב ‏(NO-GO → needs-revision). exit≠0 ‏שמור ‏אך ‏ורק ‏לקריסות-תשתית ‏של opencode ‏עצמו (`failed:infra`).
 
@@ -643,12 +648,13 @@ date +%s > "$BDS_STATE_DIR/heartbeats/$BDS_SLICE.last"
 > [!warning] ‏למה ‏**‏לא** exit code (‏תיקון #9 ‏מאביגיל)
 > ‏בתכנון ‏מוקדם ‏חשבנו ‏שאליעזר ‏"יוצא ‏עם exit 3". ‏זה ‏**‏בלתי-אפשרי**: `opencode run` ‏תמיד ‏מחזיר exit 0 ‏(אומת ‏בקוד `run.ts` — ‏אין `process.exit` ‏עם ‏קוד ‏מהסוכן ‏פרט ‏לקריסות-תשתית). ‏אליעזר ‏הוא ‏LLM ‏בתוך ‏session — ‏אין ‏לו ‏שליטה ‏על ‏exit code ‏של ‏ה-CLI. ‏גם `exit 3` ‏ב-bash tool ‏רץ ‏ב-subshell, ‏לא ‏בתהליך ‏opencode.
 
-**‏הפתרון — ‏file-existence, ‏לא exit code**: ‏אליעזר, ‏כשהוא ‏מחליט ‏BLOCKED ‏ב-Mode 2 (‏מזהה ‏לפי `$BDS_SLICE` ‏מוגדר), ‏פשוט ‏**‏כותב ‏קובץ**:
+**‏הפתרון — ‏outcomes file, ‏לא exit code**: ‏אליעזר **‏כותב תמיד** ‏ב-Mode 2 (‏מזהה ‏לפי `$BDS_SLICE` ‏מוגדר):
 
-`$STATE/blocked/$BDS_SLICE.blocked.json`:
+`$STATE/outcomes/$BDS_SLICE.json` (‏דוגמה לחסימה):
 ```json
 {
   "slice": "17",
+  "status": "blocked",
   "issue": "‏ספריית ‏ה-wake-word ‏לא ‏תומכת ‏בעברית",
   "source": "docs/plans/slice-17-wake-word.md §4 Commit 2",
   "tried": "‏ניסיתי locale=he → unsupported error",
@@ -656,12 +662,15 @@ date +%s > "$BDS_STATE_DIR/heartbeats/$BDS_SLICE.last"
 }
 ```
 
-‏וזהו — ‏הוא ‏מסיים ‏את ‏הסשן ‏רגיל. ‏**‏יתרו ‏בודק ‏קיום ‏הקובץ ‏הזה ‏כ-signal ‏הראשון** (‏לפני ‏שמריץ ‏כלב). ‏אם ‏קיים → status=blocked, ‏לא ‏מריץ ‏כלב, ‏קורא ‏את ‏ה-json ‏ל-summary. ‏בבוקר ‏מרדכי ‏רואה ‏בדיוק ‏למה ‏אליעזר ‏נתקע.
+‏וזהו — ‏הוא ‏מסיים ‏את ‏הסשן ‏רגיל. ‏**‏יתרו ‏בודק `outcomes/<slice>.json` ‏כ-signal ‏הראשון**:
+- ‏לא קיים → status=crashed (‏קריסה ‏שקטה)
+- status==blocked → ‏לא ‏מריץ ‏כלב, ‏קורא ‏ל-summary
+- status==completed → ‏המשך ‏לבדיקת ‏exit code, ‏אז ‏כלב
 
-‏זה ‏אותו ‏פורמט ‏ISSUE/SOURCE/TRIED/NEED ‏שכבר ‏מוגדר ‏ב-eliezer.md — ‏רק ‏שבמקום ‏להחזיר ‏ל-Task, ‏הוא ‏נכתב ‏לקובץ. ‏קיום-הקובץ ‏הוא ‏הסימן, ‏לא ‏קוד-יציאה.
+‏בבוקר ‏מרדכי ‏רואה ‏בדיוק ‏למה ‏אליעזר ‏נתקע.
 
 **‏שתי ‏רשתות ‏ביטחון** ‏לאליעזר ‏שלא ‏מתקדם:
-- ‏**BLOCKED ‏מכוון** (‏הוא ‏יודע ‏שהוא ‏תקוע) → ‏כתיבת `blocked.json` (‏יתרו ‏בודק ‏קיום)
+- ‏**BLOCKED ‏מכוון** (‏הוא ‏יודע ‏שהוא ‏תקוע) → ‏כתיבת `outcomes/<slice>.json` עם `status=blocked` (‏יתרו ‏בודק)
 - ‏**stuck ‏לא-מכוון** (‏לולאה ‏בלי ‏לעצור) → heartbeat ‏מתיישן → ‏אחרי 2h ‏יתרו ‏הורג (timed-out)
 
 ---
@@ -708,7 +717,7 @@ git commit -m "(docs): archive brief <slice> — verified"
 |---|--------|
 | 1 | 5 ‏קבצי ‏agents ‏קיימים ‏עם frontmatter ‏תקין. ‏אליעזר = `mode: all` (‏לא subagent — ‏תיקון N4) |
 | 2 | `install-agents.sh` ‏יוצר ‏symlinks ‏נכונים ‏ומסיר ‏ישנים |
-| 3 | `wait-for-slice.sh` ‏מחזיר exit code ‏נכון ‏ב-תרחישים (success=0/timeout=124/crash=125). ‏BLOCKED ‏מזוהה ‏ע"י ‏יתרו ‏דרך ‏קיום blocked.json, ‏לא ‏ע"י ‏הסקריפט |
+| 3 | `wait-for-slice.sh` ‏מחזיר exit code ‏נכון ‏ב-תרחישים (success=0/timeout=124/crash=125). ‏BLOCKED/COMPLETED ‏מזוהה ‏ע"י ‏יתרו ‏דרך `outcomes/<slice>.json`, ‏לא ‏ע"י ‏הסקריפט |
 | 4 | `dispatch-executor.sh` ‏פותח tmux ‏עם **env scrub ‏מלא (prefix)** + sentinel + ‏prompt ‏דרך stdin |
 | 5 | `cleanup_state.py` (python3) ‏מנקה ‏ללא ‏מחיקת state ‏פעיל (‏עיגון id ‏מדויק) |
 | 6 | `discard_chain.py` (python3) ‏זורק dependents, ‏מסרב merged, ‏הגנת ‏מעגל |
@@ -719,9 +728,9 @@ git commit -m "(docs): archive brief <slice> — verified"
 | 11 | ‏הסקילים ‏הישנים (executor/plan-verifier/verifier-*) ‏מטופלים |
 | 12 | **‏בדיקה ‏אמפירית**: `opencode run --agent eliezer` ‏ב-tmux ‏עם env scrub ‏רץ ‏(לא "Session not found", ‏לא ‏נופל ‏ל-build) |
 | 13 | ‏שרשור: slice ‏עם ‏תלות `verified` ‏נגזר ‏מ-branch ‏של ‏התלות, ‏לא ‏מ-dev |
-| 14 | ‏BLOCKED ‏ב-Mode 2: ‏אליעזר ‏כותב `blocked.json`; ‏יתרו ‏בודק ‏**‏קיום ‏הקובץ** (‏לא exit 3) ‏ולא ‏מריץ ‏כלב |
+| 14 | ‏Mode 2: ‏אליעזר כותב **תמיד** `outcomes/<slice>.json` (completed/blocked); ‏יתרו ‏בודק ‏ **‏קיום ‏ותוכן** (‏לא exit code) — ‏היעדר = קריסה שקטה |
 | 15 | `python3 -c "import json"` ‏עובד (‏stdlib), ‏אין ‏תלות ‏ב-yq/PyYAML |
-| 16 | ‏יתרו ‏בודק blocked.json **‏לפני** ‏exit code ‏בטיפול-תוצאה (‏סדר ‏נכון) |
+| 16 | ‏יתרו ‏בודק `outcomes/<slice>.json` **‏לפני** ‏exit code ‏בטיפול-תוצאה (‏סדר ‏נכון) |
 
 ---
 
@@ -737,7 +746,7 @@ git commit -m "(docs): archive brief <slice> — verified"
 | 6 | env scrub ‏prefix ‏מלא ‏עובד ‏ב-tmux? | ⚠️ ‏לאמת ‏אמפירית ‏ב-Commit 0 |
 | 7 | ‏הנתיב `$HOME/.opencode/bin/opencode` ‏נכון? | ✅ ‏אומת |
 | 8 | yq/PyYAML ‏זמינים? | ✅ ‏לא — ‏לכן JSON+json stdlib (‏אומת `import yaml` ‏נכשל) |
-| 9 | `opencode run` ‏מעביר exit code ‏של ‏הסוכן? | ✅ **‏לא** (‏אומת `run.ts`) — ‏לכן BLOCKED ‏דרך ‏קיום `blocked.json`, ‏לא exit 3. ‏סיווג ‏כשל ‏לוגי ‏דרך ‏כלב. |
+| 9 | `opencode run` ‏מעביר exit code ‏של ‏הסוכן? | ✅ **‏לא** (‏אומת `run.ts`) — ‏לכן BLOCKED/COMPLETED ‏דרך `outcomes/<slice>.json`, ‏לא exit 3. ‏סיווג ‏כשל ‏לוגי ‏דרך ‏כלב. |
 
 ---
 
