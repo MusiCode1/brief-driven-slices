@@ -5,6 +5,25 @@
 
 ---
 
+## 2026-06-01 — slice-2-distillation: Commit 3 — systemd timer + distill-run.sh + distill-prompt.txt
+
+נוספו קבצי ה-wrapper + systemd לטיימר הזיקוק היומי:
+
+| קובץ | מה |
+|------|------|
+| `scripts/distill-run.sh` | wrapper: טריגר כמותי → distill.py → worktree branch → מרדכי-אוטומטי |
+| `scripts/distill-prompt.txt` | פרומפט למרדכי-אוטומטי (כולל "אסור לעשות merge") |
+| `systemd/bds-distill.service` | Type=oneshot, ExecStart=$HOME/scripts/distill-run.sh |
+| `systemd/bds-distill.timer` | OnCalendar=daily, Persistent=true |
+| `systemd/README.md` | הוראות התקנה, שינוי סף, בדיקה ידנית, לוגים |
+
+**אימות manual**: `bash -n scripts/distill-run.sh` ✅.
+grep "אסור לעשות merge" scripts/distill-prompt.txt ✅. grep OnCalendar systemd/bds-distill.timer ✅.
+systemd-analyze verify — לא זמין בסביבה (קובץ נקרא ידנית, syntax תקין).
+**חריגות**: systemd-analyze לא זמין בcontainer — קריאה ידנית של ה-unit (תקין).
+
+---
+
 ## 2026-06-01 — slice-2-distillation: Commit 2 — יומן גלובלי אבולוציית השיטה
 
 נוסף `docs/methodology-evolution.md` — יומן גלובלי נדיר של התפתחות השיטה.
