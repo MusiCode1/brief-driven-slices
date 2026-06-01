@@ -5,6 +5,18 @@
 
 ---
 
+## 2026-06-01 — slice-3-report-discipline: Commit 0 — חוזה result + חובת-דוח אצל avigail
+
+הוספת חוזה ה-Task-result ל-`agents/avigail.md`:
+- משפט חובה בראש §"פורמט הדוח": "הדוח חייב להיות מפורט ומלא — הערוץ היחיד לניתוח."
+- §חדש "מה אתה מחזיר ב-Task-result": אינדקס קבוע (verdict+report+findings+כותרות בלבד).
+- Anti-pattern חדש: "result-שמן = תקלה".
+
+**אימות manual**: grep ✅ × 4 (חייב-מפורט, אינדקס-קבוע, כותרות-בלבד, תקלה).
+**חריגות**: אין.
+
+---
+
 ## 2026-06-01 — slice-2-distillation: תיקון post-calev — date.date normalization
 
 כלב מצא bug minor: `parse_report_file` ניר datetime.datetime אבל לא datetime.date.
