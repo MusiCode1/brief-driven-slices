@@ -2,9 +2,10 @@
 
 > **תאריך**: 2026-05-30
 > **סטטוס**: טיוטה (טרם אומת ע"י אביגיל)
-> **Complexity**: 7/10 (verifier: light + verifier-phase על Commit 0 ו-Commit 4)
-> **תלויות (`depends_on`)**: [] — additive על main. בנוי מעל התשתית של slice-bds-extraction-and-reporting (שכבר merged): הדוחות המתויגים ב-`reports/<project>/<slice>-<verifier>.json`.
-> **Base**: main tip `df93edb`
+> **Complexity**: 7/10 (verifier: light + verifier-phase על Commit 0, 3, 6)
+> **Commits**: 7 (0: distill.py | 1: פורמט-זיקוק+קטלוגים | 2: methodology-evolution | 3: timer+wrapper | 4: פורמט דוח MD-front-matter | 5: שני gates | 6: e2e+תיעוד-סגירה)
+> **תלויות (`depends_on`)**: [] — additive על main. בנוי מעל התשתית של slice-bds-extraction-and-reporting (שכבר merged): הדוחות המתויגים ב-`reports/<project>/<slice>-<verifier>.{json,md}`.
+> **Base**: main tip `8d908b0` (או חדש יותר — ראה §0 תלויות; ה-worktree נפתח מ-`main` ה-tip שיהיה בזמן dispatch, אחרי commit של עדכוני-הסוכנים הנוכחיים)
 
 ---
 
@@ -15,7 +16,7 @@
 ### תלויות (חובה!)
 
 slice זה **מבוסס על**:
-- slice-bds-extraction-and-reporting (status: **merged**, tip `df93edb`) — הוא זה שהקים את `reports/<project>/<slice>-<verifier>.json` (דוחות מתויגים severity+category) ואת ה-README של reports עם הטקסונומיה. **כל הזיקוק קורא מהמבנה הזה.**
+- slice-bds-extraction-and-reporting (status: **merged**) — הוא זה שהקים את `reports/<project>/<slice>-<verifier>.json` (דוחות מתויגים severity+category) ואת ה-README של reports עם הטקסונומיה. **כל הזיקוק קורא מהמבנה הזה.**
 - _אין תלות ב-branch לא-merged. additive בלבד._
 
 > אביגיל: בדקי ש-`reports/README.md` קיים ושמבנה ה-JSON (severity/category/findings) תואם את מה שה-distill.py מצפה לקרוא. depends_on ריק כי הכל merged.
@@ -46,8 +47,9 @@ cd .worktrees/slice-2-distillation
 
 **must-read** (לפני שמתחילים):
 - `reports/README.md` — מבנה הדוחות והטקסונומיה (2 זרמים: avigail plan / calev runtime). **זה הקלט של distill.py.**
-- `reports/bds/bds-extraction-calev.json` — דוגמת דוח אמיתי יחיד (השדות בפועל: project, slice, verifier, date, verdict, findings[], לפעמים mode/summary/dod_items). **שים לב: השדות לא אחידים לגמרי בין avigail ל-calev — distill.py חייב להיות סלחני.**
-- `agents/avigail.md` (שורות 184-216) + `agents/calev.md` (שורות 275-308) — פורמט ה-JSON שכל מאמת כותב, וערכי severity/category הקנוניים.
+- `docs/reports-format.md` — **הפורמט החדש** (Commit 4): דוח אימות = קובץ `.md` עם YAML front-matter מובנה (project/slice/verifier/date/verdict/findings) + גוף MD מלא. **distill.py קורא את ה-front-matter.**
+- `reports/bds/bds-extraction-calev.json` — דוגמת דוח **בפורמט הישן** (`.json`). 9 דוחות כאלה קיימים ולא מומרים — `load_reports` חייב לתמוך **בשני הפורמטים** (`.json` ישן + `.md` חדש). השדות לא אחידים לגמרי בין avigail ל-calev — distill.py סלחני.
+- `agents/avigail.md` + `agents/calev.md` — פורמט הדוח שכל מאמת כותב (יעודכן ל-MD-front-matter ב-Commit 4), וערכי severity/category הקנוניים.
 - `patterns.md` — קטלוג טעויות-הביצוע הקיים (5 קטגוריות). זה הקטלוג שכלב מזין; הזיקוק מעדכן אותו.
 - `worktrees.md` — מבנה bare+worktrees (רלוונטי לנספח A — init-project).
 
@@ -74,7 +76,10 @@ cd .worktrees/slice-2-distillation
 | מנגנון טקסונומיה-מתפתחת (זיהוי קטגוריות חדשות/`unique`, תיעוד שינוי כאירוע) | ✅ | ה-slice הזה |
 | יומן-גלובלי נדיר של השיטה (`docs/methodology-evolution.md`) | ✅ | ה-slice הזה |
 | מנגנון הרצה תקופתית: systemd user timer + הפעלת מרדכי-אוטומטי ל-branch ייעודי | ✅ | ה-slice הזה |
-| **הרצת הזיקוק האמיתי הראשון** על חומר-גלם מצטבר | ❌ | אחרי שיצטברו ≥N דוחות אמיתיים (לא עכשיו — יש report אחד) |
+| **פורמט דוח-אימות חדש**: MD עם YAML front-matter מובנה (מחליף JSON טהור), המאמתים שומרים את הדוח המלא | ✅ | ה-slice הזה (Commit 4) |
+| **שני gates מנוסחים**: plan-gate (READY-only לפני dispatch) + runtime-gate (GO-only לפני merge, או דחייה מתועדת) | ✅ | ה-slice הזה (Commit 5) |
+| **הרצת הזיקוק האמיתי הראשון** על חומר-גלם מצטבר | ❌ | כשהטריגר הכמותי ייפתח (≥N דוחות חדשים מאז snapshot). כרגע יש ~12 דוחות ב-7 projects — לבנות+לבדוק את הכלי, לא להפיק זיקוק-אמת מאולץ |
+| המרת 9 דוחות ה-`.json` הקיימים ל-`.md` | ❌ | לא ממירים — מידע דל. `load_reports` תומך בשני הפורמטים (backward-compat) |
 | מיזוג branch הזיקוק ל-main | ❌ | תמיד אנושי (מרדכי, אחרי סקירה) — לא בקוד |
 | `init-project.sh` (bootstrap פרויקט חדש) | ❌ | **slice נפרד — ראה נספח A** |
 
@@ -85,8 +90,9 @@ cd .worktrees/slice-2-distillation
 ## §3 — Architecture diagram
 
 ```
-                  reports/<project>/<slice>-<verifier>.json   ← קיים (slice-1)
-                  (severity + category, 2 זרמים: avigail/calev)
+                  reports/<project>/<slice>-<verifier>.md   ← פורמט חדש (Commit 4)
+                  (.json ישן עדיין נתמך — backward-compat)
+                  (YAML front-matter: severity+category, 2 זרמים: avigail/calev)
                           │
                           ▼ קורא הכל
         ┌─────────────────────────────────────────────┐
@@ -130,14 +136,19 @@ cd .worktrees/slice-2-distillation
 
 > זה הליבה הניתנת-לבדיקה. כל הספירה/מדידה/דלתא/traceability — pure על קלט קבצים, פלט JSON. **כל הלוגיקה הבדיקה של ה-slice כאן.** שאר ה-commits הם IO-wiring (פורמטים, systemd) שנבדקים manual/none.
 
+> **הערה על `reports/`**: `reports/` הוא **sub-repo נפרד gitignored** ב-main (`.gitignore:4`). זה מכוון (decisions/bds.md — reports לשיטה, repo פרטי). distill.py קורא ממנו ברמת-filesystem (`Path.glob`) — gitignore לא משפיע על קריאה. ה-fixtures ב-`tests/fixtures/reports/` **אינם** מוחרגים (אומת) — הם tracked, חלק מה-slice.
+
 **קבצים חדשים**:
 - `scripts/distill.py`
 - `tests/test_distill.py` — unittest (stdlib). **אין pytest בסביבה** (§6) — חובה `import unittest`, לא pytest.
-- `tests/fixtures/reports/<project>/*.json` — קבצי דוח סינתטיים (≥2 projects, ≥2 verifiers, severity/category מגוונים) — חומר-גלם לבדיקה. **fixtures, לא הדוחות האמיתיים.**
+- `tests/fixtures/reports/<project>/*.md` — קבצי דוח סינתטיים **בפורמט החדש** (YAML front-matter + גוף MD): ≥2 projects, ≥2 verifiers, severity/category מגוונים, ולפחות אחד עם `date` ISO 8601 ו-`summary` שמכיל נקודתיים (לוודא ציטוט נכון). **fixtures, לא הדוחות האמיתיים.**
+- `tests/fixtures/reports/<project>/*.json` — לפחות **דוח אחד בפורמט הישן** (`.json`) — לבדוק backward-compat ש-`load_reports` עדיין טוען אותו.
 
 **API skeleton** (החתימה המדויקת — executor אסור לשנות):
 
 ```python
+import json
+import yaml          # PyYAML 6.0.2 — זמין ב-system python3 (אומת ב-env -i, ראה §6)
 from pathlib import Path
 from typing import TypedDict
 
@@ -157,12 +168,29 @@ class Report(TypedDict, total=False):
     date: str
     verdict: str
     findings: list[Finding]
+    # total=False → שדות נוספים שמופיעים בדוחות אמיתיים מותרים ולא "מנוקים":
+    # summary (גם ברמת-report, לא רק finding), mode, dod_items, spot_check, evidence.
+    # אל תסיר/תוסיף שדות-חובה — distill.py ניגש בכל מקום עם .get() סלחני.
 
 # ─── ספרה דטרמיניסטית: כל הפונקציות pure (קלט→פלט, אין side-effect) ───
 
+def parse_report_file(path: Path) -> Report | None:
+    """פרסר קובץ-דוח יחיד. תומך בשני פורמטים (executor אסור לשנות התנהגות):
+      - `.json` (פורמט ישן): json.loads ישיר.
+      - `.md`  (פורמט חדש):  חילוץ YAML front-matter בין שני '---', yaml.safe_load.
+    נרמול: אם front-matter['date'] נטען כ-datetime (YAML ISO 8601) → המר ל-.isoformat()
+    (string) לעקביות עם הפורמט הישן.
+    סלחני: כל כשל (JSON פגום / אין front-matter / YAML שבור) → return None (לא קריסה).
+    קובץ בלי סיומת .json/.md → None."""
+    # .json: json.loads; .md: split('---', 2) → parts[1] → yaml.safe_load
+    # אם isinstance(date, datetime): date = date.isoformat()
+    # except (json.JSONDecodeError, yaml.YAMLError, OSError): warn + return None
+
 def load_reports(reports_dir: Path) -> list[Report]:
-    """קורא את כל reports/<project>/*.json. סלחני: קובץ לא-תקין → דלג + warn ל-stderr,
-    לא קריסה. מתעלם מ-README.md/.gitkeep. מחזיר רשימה שטוחה."""
+    """קורא את כל reports/<project>/*.{json,md} דרך parse_report_file.
+    סלחני: parse_report_file שמחזיר None → דלג + warn ל-stderr, לא קריסה.
+    מתעלם מ-README.md/.gitkeep (אין להם front-matter → None ממילא, אבל סנן מפורשות
+    כדי לא להציף warnings). מחזיר רשימה שטוחה של Report תקינים."""
 
 def count_by_severity_category(reports: list[Report], verifier: str) -> dict:
     """מסנן ל-verifier נתון, סופר findings.
@@ -242,20 +270,27 @@ def main() -> int:
 - last_data=None → מחזיר את כל מספר הדוחות.
 - last_data עם 3 report_ids, יש 5 דוחות (2 חדשים) → מחזיר 2.
 
-*load_reports (סלחנות — קריטי):*
-- קובץ JSON לא-תקין → מדולג (לא קריסה), warn ל-stderr.
-- README.md / .gitkeep בתיקייה → מדולגים (רק *.json שהם דוחות).
+*parse_report_file + load_reports (סלחנות + dual-format — קריטי):*
+- **`.md` תקין עם front-matter** → נטען; findings מקונן (YAML list) נטען כ-list-of-dicts.
+- **`.json` תקין (פורמט ישן)** → עדיין נטען (backward-compat). שני הפורמטים באותה תיקייה → שניהם ב-load_reports.
+- **`date` כ-ISO 8601 ב-front-matter** → YAML מפרסר ל-datetime → מנורמל ל-string (`.isoformat()`).
+- **`summary` עם נקודתיים** (`"passes string|boolean: fails"`) → צוטט נכון → נטען ללא שבירת YAML.
+- `.md` בלי front-matter (לא מתחיל ב-`---`) → None (מדולג), warn ל-stderr.
+- `.md` עם front-matter ריק / YAML שבור → None (לא קריסה), warn.
+- JSON לא-תקין → None (לא קריסה), warn ל-stderr.
+- README.md / .gitkeep → מדולגים מפורשות (לא warn).
 - דוח בלי שדה findings → נטען עם findings=[] (לא KeyError).
-- **שונות שדות avigail/calev**: דוח calev עם mode/summary/dod_items (שדות נוספים) → נטען בלי בעיה (TypedDict total=False).
+- **שונות שדות avigail/calev**: דוח calev עם mode/dod_items/spot_check (שדות נוספים ב-front-matter) → נטען בלי בעיה (TypedDict total=False).
 
 **Verification**:
 ```bash
+python3 -c "import yaml; print(yaml.__version__)"   # 6.0.2 — וודא PyYAML זמין לפני הכל
 python3 tests/test_distill.py          # כל ה-unittest ירוקים
 python3 scripts/distill.py --reports-dir tests/fixtures/reports --out /tmp/d.json
 python3 -c "import ast; ast.parse(open('scripts/distill.py').read())"  # syntax
 ```
 
-**verifier-phase אחרי commit זה**: כן — זו הליבה. ה-verifier יריץ את ה-tests + יריץ את הסקריפט על ה-fixtures ויאמת שה-data.json נכון מספרית.
+**verifier-phase אחרי commit זה**: כן — זו הליבה. ה-verifier יריץ את ה-tests + יריץ את הסקריפט על ה-fixtures (גם `.md` וגם `.json`) ויאמת שה-data.json נכון מספרית וששני הפורמטים נטענים.
 
 ---
 
@@ -366,19 +401,85 @@ grep -q "OnCalendar" systemd/bds-distill.timer
 
 ---
 
-### Commit 4 — manual e2e + תיעוד (approach: manual)  ⚠️ verifier-phase
+> **סדר ביצוע**: Commit 4 ו-5 (פורמט-דוח + gates) באים **לפני** commit הסגירה (e2e+תיעוד), כי commit הסגירה מתעד אותם ב-decisions. הסדר: 0→1→2→3→**4 (פורמט)**→**5 (gates)**→**6 (סגירה)**.
+
+### Commit 4 — פורמט דוח-אימות חדש: MD עם YAML front-matter (approach: manual)
+
+> **המוטיבציה**: ה-MD המפורט שאביגיל/כלב מחזירים ב-Task result **נעלם** כשהסשן נסגר — רק ה-JSON הדל נשמר (`findings:[]` לא מבדיל בין "נבדק ביסודיות ועבר" ל"כמעט לא נבדק"). הפורמט החדש שומר את הדוח המלא **וגם** את ה-data המובנה, במקור-אמת יחיד.
+>
+> **למה manual**: זו עריכת agent.md + 2 docs. אין קוד חדש לבדוק (distill.py כבר תומך ב-`.md` מ-Commit 0). האימות: קריאה + grep + הרצת distill.py על fixture `.md`.
+
+**ההכרעה (סגורה)**: דוח אימות = קובץ `reports/<project>/<slice>-<verifier>.md`:
+- **YAML front-matter** (בין שני `---`) = ה-data המובנה, **מקור-אמת יחיד** (אין JSON-block כפול): `project`, `slice`, `verifier`, `date` (ISO 8601), `verdict`, `findings:` (YAML list). כלב מוסיף `mode`/`dod_items`/`spot_check` כרצונו (total=false).
+- **גוף MD** אחרי ה-front-matter = הדוח המלא המפורט (טבלאות 🔴🟡🟢, spot-check, evidence) — בדיוק מה שהמאמת מחזיר היום ב-Task result.
 
 **קבצים שמשתנים**:
-- `SKILL.md` / `workflow.md` — הוסף את שכבת הזיקוק לתיאור השיטה (3 שכבות זיכרון, מי מריץ, הטריגר).
-- `docs/walkthrough.md` — ערך חדש (skill `update-walkthrough`): מה נבנה ב-slice הזה.
-- `docs/decisions/bds.md` — ערך חדש (מרדכי): הרציונל של המנגנון המשולב (טיימר→כמותי→מרדכי-אוטומטי→branch→מרג'-אנושי), והחלוקה כמותי/איכותני.
+- `agents/avigail.md` (§"כתיבת דוח JSON מתויג", שורות ~185-217) → "כתיבת דוח MD עם front-matter". **פעולה אחת**: שמור את דוח ה-MD שכתבת ל-`reports/<project>/<slice>-avigail.md` עם front-matter בראש (במקום MD-ב-Task-result + JSON-נפרד). **הוראת ציטוט מפורשת**: כל `summary` ושדה-string עם `:`/`'`/`|` → עטוף ב-double-quote (אחרת yaml.safe_load נשבר). דוגמת front-matter מלאה בגוף ה-agent.
+- `agents/calev.md` (§"כתיבת דוח JSON מתויג", שורות ~276-309) → אותו דבר ל-`<slice>-calev.md`. ה-MD שכלב כותב כבר היום בריפו הפרויקט (`docs/<slice>-verification-report.md`) — **מתאחד**: עכשיו הדוח נשמר ב-`reports/` עם front-matter, מקור-אמת יחיד (לא שני עותקים).
+- `agents/calev-heavy.md` — מצביע ל-calev.md לפורמט; וודא שההפניה לפורמט-MD-front-matter עקבית.
+- `reports/README.md` — עדכן מ-`<slice>-<verifier>.json` ל-`.md`. ציין: `.json` ישן עדיין נתמך (לא מומר).
+- `docs/reports-format.md` — שכתוב: מבנה הקובץ החדש (front-matter schema + גוף MD), דוגמה מלאה, הערת backward-compat ל-`.json`, והערת-הציטוט.
+
+**Verification** (manual):
+```bash
+# 1. הפורמט מתועד
+grep -q "front-matter" docs/reports-format.md
+grep -q "double-quote\|לצטט\|ציטוט" agents/avigail.md      # הוראת הציטוט קיימת
+grep -q "reports/.*\.md" agents/avigail.md agents/calev.md  # הנתיב החדש
+# 2. round-trip: כתוב fixture .md בפורמט החדש, ודא distill.py טוען אותו
+python3 scripts/distill.py --reports-dir tests/fixtures/reports --out /tmp/d.json
+python3 -c "import json; d=json.load(open('/tmp/d.json')); assert d['avigail']['hitrate']['reports']>0"
+```
+
+> **חגורה-וכתפיים על YAML**: הסיכון היחיד בפורמט הוא front-matter שבור (summary לא-מצוטט). שתי הגנות: (1) הוראת-ציטוט מפורשת ב-agent.md; (2) parse_report_file סלחני (Commit 0) — קובץ שבור → דלג+warn, לא קריסה של כל הזיקוק.
+
+---
+
+### Commit 5 — ניסוח שני gates: plan-gate + runtime-gate (approach: manual)
+
+> **המוטיבציה**: היום "אימות שחזר נקי" **אינו תנאי מנוסח**. ה-state machine של יתרו דורש `status=plan-verified` לפני dispatch — אבל שום מקום לא אומר ש-`plan-verified` מחייב verdict=READY (לא USABLE-AFTER-FIX). וב-Mode 1 (Task ממרדכי) אין כלל מפורש ש-merge דורש כלב GO נקי. שני gates צריכים ניסוח מפורש.
+>
+> **למה manual**: עריכת agent.md + workflow.md. אין קוד. אימות: grep שהכללים קיימים.
+
+**הכללים (סגורים)**:
+
+| Gate | מתי | הכלל |
+|------|-----|------|
+| **plan-gate** | לפני dispatch (status→plan-verified) | `plan-verified` רק כש-אביגיל verdict=**READY**. `USABLE-AFTER-FIX` → מרדכי **חייב לתקן** ולהריץ אביגיל **שוב** עד READY. `NEEDS-REWORK` → rewrite. אין dispatch על verdict שאינו READY. |
+| **runtime-gate** | לפני merge | merge דורש כלב verdict=**GO**. אם PARTIAL/NO-GO → מרדכי **חייב** או (א) סבב fix עד GO, או (ב) החלטה **מפורשת ומתועדת ב-decisions/<project>.md** + אישור משתמשת שה-bug נדחה ל-slice עתידי. **לא ברירת-מחדל שקטה.** |
+
+**קבצים שמשתנים**:
+- `agents/mordechai.md` — סעיף חדש **"שני gates — אימות-נקי כתנאי"**: plan-gate (אל תסמן plan-verified בלי READY; USABLE-AFTER-FIX → תקן+הרץ אביגיל שוב) + runtime-gate (אל תמזג בלי GO; דחיית-bug רק מתועדת+מאושרת). הוסף ל-Anti-patterns: "❌ לסמן plan-verified על USABLE-AFTER-FIX בלי תיקון", "❌ למזג על PARTIAL/NO-GO בלי דחייה מתועדת".
+  > **הערה ל-executor**: עדכון §ערב צעד 2 (הרצת-אביגיל-אוטומטית) + Anti-pattern "❌ לשאול 'להריץ אביגיל?'" — **כבר בוצע ע"י מרדכי ו-committed ל-main** לפני פתיחת ה-worktree (זה היה חלק מהתכנון, ראה decisions). ה-worktree שנפתח מ-main **יכלול** את השינוי. אם משום מה אינו שם (base ישן) — Escalate, אל תשכתב. החלק שנשאר ל-Commit 5 הוא ה-gates עצמם.
+- `agents/eliezer.md` (§"Feedback loop" / "בסוף הסליס") — חידוד: אליעזר מדווח את verdict כלב **מפורשות** בהכרזת-הסיום ("כלב verdict: GO/PARTIAL/NO-GO"), כדי שמרדכי יוכל לאכוף את runtime-gate. (אליעזר עדיין לא ממזג — זה לא משתנה.)
+- `agents/yetro.md` (§"מצא slice הבא", שורה ~62) — חידוד שה-`status==plan-verified` שיתרו בודק **מניח** READY (מרדכי לא מסמן plan-verified אחרת). זה תיעוד של חוזה קיים, לא לוגיקה חדשה ביתרו.
+- `workflow.md` — תיעוד שני ה-gates כחלק מתיאור השיטה.
+
+**Verification** (manual):
+```bash
+grep -q "plan-gate\|READY" agents/mordechai.md
+grep -q "runtime-gate\|GO" agents/mordechai.md
+grep -q "USABLE-AFTER-FIX" agents/mordechai.md          # הטיפול במצב הביניים מנוסח
+grep -q "gate\|אימות-נקי\|אימות נקי" workflow.md
+```
+
+> **גבול scope**: ה-gates הם **ניסוח כללי-שיטה קיימים**, לא לוגיקה חדשה. אנחנו לא משנים את ה-state machine של יתרו (הוא כבר דורש plan-verified) — רק מנסחים מה plan-verified/merge **מחייבים**. אם תוך כדי מתגלה שצריך *שדה* חדש ב-state.json (למשל `plan_verdict`) — Escalate, זה הרחבת-scope.
+
+---
+
+### Commit 6 — manual e2e + תיעוד (approach: manual)  ⚠️ verifier-phase  [commit הסגירה — אחרון]
+
+**קבצים שמשתנים**:
+- `SKILL.md` / `workflow.md` — הוסף את שכבת הזיקוק לתיאור השיטה (3 שכבות זיכרון, מי מריץ, הטריגר). (workflow.md כבר נגעו ב-Commit 5 ל-gates — כאן מוסיפים את שכבת הזיקוק.)
+- `docs/walkthrough.md` — ערך חדש (skill `update-walkthrough`): מה נבנה ב-slice הזה (כולל הפורמט החדש וה-gates).
+- `docs/decisions/bds.md` — ערך חדש (מרדכי): הרציונל של (א) המנגנון המשולב (טיימר→כמותי→מרדכי-אוטומטי→branch→מרג'-אנושי) והחלוקה כמותי/איכותני; (ב) **פורמט דוח MD-front-matter** (למה במקום JSON: מקור-אמת יחיד, ה-MD המלא לא נעלם); (ג) **שני ה-gates** (plan-gate/runtime-gate — אימות-נקי כתנאי, ולמה runtime-gate לא חוסם מוחלט). **הערה**: תיקון ההנחה "אין PyYAML" כבר בוצע ב-`docs/decisions/bds.md` §"state מחוץ לריפו" (סביב שו' 60-65, הערת תיקון 2026-06-01) — אין צורך לתקן שוב, רק להפנות אליו מהערך החדש.
 - ה-brief הזה (סטטוס → הושלם).
 
 **Manual e2e** (תעד ב-commit msg):
-1. הרץ `distill.py` על ה-fixtures → ודא data.json נכון.
-2. הרץ `distill.py` על ה-reports האמיתי (`reports/`, report אחד) → ודא שלא קורס על דגימה דלה, שמסומן noncanonical/new נכון.
+1. הרץ `distill.py` על ה-fixtures (`.md` + `.json`) → ודא data.json נכון, שני הפורמטים נטענים.
+2. הרץ `distill.py` על ה-reports האמיתי (`reports/`, ~12 דוחות `.json` ב-7 projects נכון ל-2026-06-01) → ודא שלא קורס, שמסומן noncanonical/new נכון, ושהספירה הגיונית.
 3. הרץ `distill-run.sh` עם threshold=0 → ודא branch נוצר, main לא נגע (דמה את opencode — אל תפעיל מודל אמיתי).
-4. ודא ש-3 הקטלוגים/יומן קיימים ובמבנה תקין.
+4. ודא ש-3 הקטלוגים/יומן קיימים ובמבנה תקין, ושהפורמט החדש מתועד ב-reports-format.md.
 
 **verifier-phase אחרי commit זה**: כן — verifier-slice-light הסופי (§5).
 
@@ -397,8 +498,12 @@ grep -q "OnCalendar" systemd/bds-distill.timer
 | 7 | **לא-ממזג** | `distill-run.sh` (threshold=0, opencode מדומה) → branch `bds-distill-*` נוצר, `git log main` לא השתנה |
 | 8 | סלחנות | JSON פגום ב-reports/ → distill.py לא קורס, warn ל-stderr, ממשיך |
 | 9 | קטלוגים + יומן קיימים | `test -f plan-pitfalls.md && test -f docs/methodology-evolution.md && test -f distillations/TEMPLATE-report.md` |
-| 10 | על reports אמיתי | `distill.py --reports-dir reports` (report אחד) → לא קורס, מסמן noncanonical |
+| 10 | על reports אמיתי | `distill.py --reports-dir reports` (~12 דוחות `.json` ישנים ב-7 projects) → לא קורס, מסמן noncanonical, ספירה הגיונית |
 | 11 | systemd syntax | `grep OnCalendar systemd/bds-distill.timer` + prompt אוסר merge |
+| 12 | **dual-format** | fixtures מכילים גם `.md`-front-matter וגם `.json` → `load_reports` טוען את שניהם; דוח `.md` עם `date` ISO 8601 ו-`summary` עם נקודתיים נטען נכון |
+| 13 | **פורמט חדש מתועד** | `grep front-matter docs/reports-format.md` + הוראת-ציטוט ב-agents/avigail+calev + הנתיב `reports/*.md` |
+| 14 | **plan-gate** | `agents/mordechai.md` מנסח: plan-verified רק על READY; USABLE-AFTER-FIX→תקן+אביגיל-שוב |
+| 15 | **runtime-gate** | `agents/mordechai.md` מנסח: merge רק על GO; PARTIAL/NO-GO→fix או דחייה מתועדת+מאושרת |
 
 ---
 
@@ -407,9 +512,10 @@ grep -q "OnCalendar" systemd/bds-distill.timer
 | סיכון | מקור | מיטיגציה |
 |------|------|----------|
 | **אין pytest בסביבה** | AGENTS.md global ("NOT available: ... pytest" — אומת) | unittest (stdlib) בלבד. `python3 tests/test_distill.py`, לא `pytest`. ⚠️ אם אליעזר יכתוב pytest — יתקע. |
-| **אין PyYAML/yq** | decisions/bds.md (אומת אמפירית) | json stdlib בלבד. הדוחות JSON ממילא. |
-| שדות לא-אחידים avigail/calev בדוחות | calev מוסיף mode/summary/dod_items; avigail לא | TypedDict `total=False` + `.get()` בכל גישה. load_reports סלחני. Test מכסה. |
-| **דגימה דלה** (report אחד) שוברת חישוב | reports/ מכיל רק bds-extraction-calev | distill.py חייב לעבוד על n=1 (avg, delta מול None). Test + DoD 10. **זו הסיבה שההרצה-האמיתית מחוץ ל-scope.** |
+| **PyYAML — כן זמין** (תיקון הנחה קודמת) | decisions/bds.md אמר "אין PyYAML" — **שגוי**. אומת 2026-06-01: `env -i /usr/bin/python3 -c "import yaml"` → 6.0.2 ב-`/usr/lib/python3/dist-packages/`. עובד גם ב-env נקי → זמין מטיימר. (yq הוא binary נפרד וכן חסר — לא PyYAML.) | `import yaml` מותר ונדרש (קריאת front-matter). אם אליעזר נתקע על "אין PyYAML" — ההנחה הישנה, התעלם. |
+| שדות לא-אחידים avigail/calev בדוחות | calev מוסיף mode/dod_items/spot_check; avigail לא | TypedDict `total=False` + `.get()` בכל גישה. load_reports סלחני. Test מכסה. |
+| **YAML front-matter שבור** (summary עם `:` לא-מצוטט) | המאמת לא ציטט string עם נקודתיים → yaml.safe_load זורק YAMLError | parse_report_file סלחני (except YAMLError → None+warn). **הגנת-מקור**: agents/avigail+calev (Commit 4) מורים לצטט summary ב-double-quote. |
+| **דגימה דלה (n=1)** שוברת חישוב | בתחילת חיי כל פרויקט יש דוח אחד (גם אם ב-bds יש כבר ~12 ב-7 projects) | distill.py חייב לעבוד על n=1 (avg, delta מול None). Test מכסה n=1 על fixtures + DoD 10 בודק על ה-reports האמיתי. **הסיבה שההרצה-האמיתית מחוץ ל-scope: בונים+בודקים כלי, לא מפיקים זיקוק-אמת מאולץ לפני שהטריגר הכמותי נפתח.** |
 | `opencode run` exit 0 גם בכשל | memory 2026-05-28, decisions/bds.md | ה-wrapper לא סומך על exit code של opencode. הסיגנל הוא קיום ה-branch + ה-report. |
 | OPENCODE_BIN לא ב-PATH בטיימר | memory + decisions/bds.md | נתיב מלא `$HOME/.opencode/bin/opencode` ב-wrapper. |
 | **מרדכי-אוטומטי ממזג בטעות** | merge הוא בלעדי-אנושי (SOUL.md) | 3 הגנות (Commit 3): פרומפט אוסר + worktree-branch-נפרד + SOUL.md. DoD 7 מאמת ש-main לא נגע. |
@@ -450,12 +556,15 @@ grep -q "OnCalendar" systemd/bds-distill.timer
 | Refactor של קוד קיים? מעט (patterns.md additive בלבד) | +1 |
 | Greenfield (distill.py, אין call sites) | -1 |
 | רגישות: מרדכי-אוטומטי + merge guard | +2 |
+| פורמט דוח חדש (Commit 4) + gates (Commit 5) — manual/docs, נוגעים בחוזה-השיטה (state machine, מאמתים) | +1 |
 
-**Score**: 6 / 10
+**Score**: 7 / 10
 
-**Tier**: light + verifier-phase על Commit 0 (הליבה הכמותית) ו-Commit 3 (ה-wrapper + merge-guard) ו-Commit 4 (e2e סופי).
+> Commit 4+5 הם manual (עריכת agent.md/docs), לא קוד. הם מעלים complexity ב-1 כי הם נוגעים בחוזה-השיטה (פורמט שכל המאמתים כותבים, gates שמרדכי אוכף) — אבל אין בהם runtime חדש מעבר ל-round-trip של distill.py על fixture `.md`. הליבה הבדיקה נשארת Commit 0.
 
-**Verifier-phase אחרי commit/phase**: 0, 3, 4.
+**Tier**: light + verifier-phase על Commit 0 (הליבה הכמותית), Commit 3 (ה-wrapper + merge-guard), Commit 6 (e2e סופי). Commit 4 (פורמט) נכלל ב-verifier-phase של Commit 0/6 דרך round-trip על fixture `.md` (DoD 12-13). Commit 5 (gates) — manual grep בלבד (DoD 14-15), אין runtime.
+
+**Verifier-phase אחרי commit/phase**: 0, 3, 6.
 
 ---
 
@@ -469,6 +578,10 @@ grep -q "OnCalendar" systemd/bds-distill.timer
 | 4 | distill.py — כמותי בלבד, מרדכי מפרש? | **סגור: כן.** סקריפט סופר, מודל מפרש | ❌ |
 | 5 | ההרצה האמיתית הראשונה — ב-slice הזה? | **לא** — כשיצטברו ≥N דוחות אמיתיים. כאן בונים את הכלי ובודקים על fixtures | ❌ |
 | 6 | יומן-גלובלי — קובץ אחד או פר-נושא? | קובץ אחד (`methodology-evolution.md`), נדיר ממילא | ❌ |
+| 7 | פורמט דוח — MD-front-matter במקום JSON, או בנוסף? | **סגור: במקום.** front-matter הוא מקור-אמת יחיד (אין JSON-block כפול). PyYAML זמין (אומת) | ❌ |
+| 8 | להמיר את 9 ה-`.json` הקיימים? | **סגור: לא.** מידע דל; `load_reports` תומך בשני הפורמטים | ❌ |
+| 9 | gates — slice נפרד או כאן? | **סגור: כאן (Commit 5).** קוהרנטי תחת "חיזוק מנגנון האימות". manual, אין runtime חדש | ❌ |
+| 10 | runtime-gate — לחסום merge על PARTIAL לגמרי? | **סגור: לא חוסם מוחלט.** דחיית-bug מותרת אם מתועדת ב-decisions + מאושרת. לא ברירת-מחדל שקטה | ❌ |
 
 ---
 
