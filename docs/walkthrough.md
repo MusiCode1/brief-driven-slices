@@ -5,6 +5,147 @@
 
 ---
 
+## 2026-06-01 — slice-2-distillation: תיקון post-calev — date.date normalization
+
+כלב מצא bug minor: `parse_report_file` ניר datetime.datetime אבל לא datetime.date.
+YAML מפרסר "2026-05-01" (date-only) כ-date object — לא datetime.
+
+תיקון: `from datetime import date as date_type, datetime` + elif לnormalization.
+טסט חדש (38 ✅): `test_md_date_as_date_object_normalized`.
+
+**חריגות**: אין.
+
+---
+
+## 2026-06-01 — slice-2-distillation: Commit 6 — e2e + תיעוד סגירה
+
+commit סגירה — manual e2e + תיעוד 4+5 ב-decisions + עדכון SKILL.md/workflow.md + סטטוס brief.
+
+| בדיקה | תוצאה |
+|-------|-------|
+| distill.py על fixtures (.md + .json) | ✅ 3 avigail + 2 calev, שני פורמטים נטענו |
+| distill.py על reports אמיתי (18 דוחות) | ✅ לא קרס, noncanonical מסומן, ספירה הגיונית |
+| distill-run.sh threshold=0 כמותי (ללא opencode) | ✅ data.json נוצר, main לא נגע |
+| 3 קטלוגים/יומן קיימים | ✅ plan-pitfalls.md, methodology-evolution.md, TEMPLATE-report.md |
+| פורמט חדש מתועד | ✅ grep front-matter reports-format.md |
+
+| קובץ | מה |
+|------|------|
+| `SKILL.md` | שכבת הזיקוק + שני gates (סעיפים חדשים) + רשומות agent |
+| `docs/decisions/bds.md` | entry חדש: זיקוק + פורמט MD-front-matter + שני gates (רציונל) |
+| `docs/plans/slice-2-distillation.md` | סטטוס → הושלם |
+
+**חריגות**:
+- systemd-analyze לא זמין בcontainer — קריאה ידנית (תקין, תועד)
+- distill-run.sh step 4 (opencode) — לא הורץ (יקר, לא נדרש ב-e2e)
+- reports/README.md עודכן ב-sub-repo ישירות (לא tracked ב-git השיטה)
+
+---
+
+## 2026-06-01 — slice-2-distillation: Commit 5 — שני gates: plan-gate + runtime-gate
+
+ניסוח כללי-שיטה שעד כה לא היו מנוסחים מפורשות:
+
+| קובץ | מה |
+|------|------|
+| `agents/mordechai.md` | §"שני gates" חדש: plan-gate (READY בלבד) + runtime-gate (GO/דחייה-מתועדת) + 2 anti-patterns חדשים |
+| `agents/eliezer.md` | §"הכרז במפורש": חידוד — ציין verdict כלב **GO/PARTIAL/NO-GO** מפורש (runtime-gate) |
+| `agents/yetro.md` | הערה: status==plan-verified מניח READY (plan-gate — חוזה קיים, לא לוגיקה חדשה) |
+| `workflow.md` | §"שני gates" חדש בין שלב 6 ל-7 |
+
+**אימות manual**: grep "plan-gate|READY" + "runtime-gate|GO" + "USABLE-AFTER-FIX" mordechai.md ✅.
+grep "gate|אימות-נקי" workflow.md ✅. Forward-ref "plan-gate למטה" שורה 59 — נסגר ✅.
+**חריגות**: אין. Gates = ניסוח כללים קיימים, לא לוגיקה חדשה.
+
+---
+
+## 2026-06-01 — slice-2-distillation: Commit 4 — פורמט דוח MD-front-matter
+
+עדכון פורמט דוחות-אימות מ-JSON ל-MD עם YAML front-matter (מקור-אמת יחיד):
+
+| קובץ | מה |
+|------|------|
+| `agents/avigail.md` | §"כתיבת דוח JSON" → §"כתיבת דוח MD עם front-matter" + הוראת ציטוט (double-quote ל-`:'\|`) |
+| `agents/calev.md` | אותו דבר + אחוד עם docs/<slice>-verification-report.md |
+| `agents/calev-heavy.md` | שלב 7: הפניה לפורמט החדש ב-calev.md |
+| `docs/reports-format.md` | שכתוב: front-matter schema + ⚠️ הוראת ציטוט + backward-compat + טבלת שדות |
+| `reports/README.md` (sub-repo) | עדכון נתיב `.json` → `.md` + הערת dual-format |
+
+**אימות manual**: grep "front-matter" docs/reports-format.md ✅.
+grep "double-quote|לצטט" agents/avigail.md ✅. grep "reports/.*\.md" agents/*.md ✅.
+round-trip distill.py על fixtures.md: 3/3 avigail ✅.
+**חריגות**: reports/README.md עודכן ישירות ב-main/reports/ (sub-repo פרטי, לא ב-git השיטה).
+
+---
+
+## 2026-06-01 — slice-2-distillation: Commit 3 — systemd timer + distill-run.sh + distill-prompt.txt
+
+נוספו קבצי ה-wrapper + systemd לטיימר הזיקוק היומי:
+
+| קובץ | מה |
+|------|------|
+| `scripts/distill-run.sh` | wrapper: טריגר כמותי → distill.py → worktree branch → מרדכי-אוטומטי |
+| `scripts/distill-prompt.txt` | פרומפט למרדכי-אוטומטי (כולל "אסור לעשות merge") |
+| `systemd/bds-distill.service` | Type=oneshot, ExecStart=$HOME/scripts/distill-run.sh |
+| `systemd/bds-distill.timer` | OnCalendar=daily, Persistent=true |
+| `systemd/README.md` | הוראות התקנה, שינוי סף, בדיקה ידנית, לוגים |
+
+**אימות manual**: `bash -n scripts/distill-run.sh` ✅.
+grep "אסור לעשות merge" scripts/distill-prompt.txt ✅. grep OnCalendar systemd/bds-distill.timer ✅.
+systemd-analyze verify — לא זמין בסביבה (קובץ נקרא ידנית, syntax תקין).
+**חריגות**: systemd-analyze לא זמין בcontainer — קריאה ידנית של ה-unit (תקין).
+
+---
+
+## 2026-06-01 — slice-2-distillation: Commit 2 — יומן גלובלי אבולוציית השיטה
+
+נוסף `docs/methodology-evolution.md` — יומן גלובלי נדיר של התפתחות השיטה.
+5 אירועים: יצירת הצוות (5 סוכנים + רציונל השמות + מה לא עבד), המעבר לפרויקט עצמאי,
+פיצול calev→calev-heavy, שכבת הזיקוק (Commit הנוכחי, כולל פורמט+gates). + 5 עקרונות.
+
+**אימות manual**: `test -f docs/methodology-evolution.md` ✅. grep "merge|זיקוק|calev-heavy" ✅.
+**חריגות**: אין.
+
+---
+
+## 2026-06-01 — slice-2-distillation: Commit 1 — פורמט דוח-זיקוק + קטלוגים + traceability
+
+נוספו קטלוגים ותבניות לשכבת הזיקוק:
+
+| קובץ | מה |
+|------|------|
+| `distillations/README.md` | הסבר שכבת הזיקוק, מבנה, טריגר, חלוקה כמותי/איכותני |
+| `distillations/.gitkeep` | שמירת תיקייה ב-git |
+| `distillations/TEMPLATE-report.md` | תבנית 4-חלקים לדוח זיקוק (מבט-לאחור, התפלגות, חדשות, עדכוני-קטלוג) |
+| `plan-pitfalls.md` | קטלוג טעויות-תכנון (אביגיל) — 2 קטגוריות + traceability מקורות |
+| `patterns.md` (עדכון) | שורה 2: "+ זיקוק אוטומטי מ-reports/"; סעיף Traceability בסוף |
+
+**אימות manual**: `test -f plan-pitfalls.md && test -f distillations/TEMPLATE-report.md` ✅.
+grep "הנחה לא-מאומתת" plan-pitfalls.md ✅. grep "מקורות" patterns.md ✅.
+**חריגות**: אין.
+
+---
+
+## 2026-06-01 — slice-2-distillation: Commit 0 — distill.py מנוע כמותי + tests
+
+בוצע TDD (red→green). הוקמה תשתית הזיקוק הכמותי: `scripts/distill.py`,
+`tests/test_distill.py` (37 טסטים), `tests/fixtures/sample-reports/` (4 fixtures md + 1 json).
+
+| קובץ | מה |
+|------|------|
+| `scripts/distill.py` | מנוע כמותי: parse_report_file (dual-format .md/.json), load_reports (סלחני), count_by_severity_category, compute_hitrate, traceability_index, flag_noncanonical, compute_delta, count_new_reports_since, build_data, main (CLI) |
+| `tests/test_distill.py` | 37 unittest: כל פונקציה, כולל: dual-format, date normalization, summary-עם-נקודתיים, סלחנות (None ב-broken yaml/json/no-fm), threshold trigger |
+| `tests/fixtures/sample-reports/projA/*.md` | 2 fixtures md בפורמט חדש (YAML front-matter) |
+| `tests/fixtures/sample-reports/projA/slice-3-calev.json` | 1 fixture json פורמט ישן (backward-compat) |
+| `tests/fixtures/sample-reports/projB/*.md` | 2 fixtures md (avigail + calev עם mode/dod_items) |
+
+**אימות**: `python3 tests/test_distill.py` → 37/37 ✅.
+`distill.py --check-only --threshold 999` → exit 1 ✅; `--threshold 0` → exit 0 ✅.
+`git check-ignore tests/fixtures/sample-reports/...` → ריק ✅ (לא נתפס ע"י gitignore).
+**חריגות**: אין.
+
+---
+
 ## 2026-05-29 — ‏בניית מערכת האורקסטרציה (commits 03b1a6d→1f9308c, ‏ב-my-skills)
 
 ‏אליעזר בנה את התשתית הראשונית של מערכת ה-5 ‏סוכנים, ‏לפי `orchestration-design.md`

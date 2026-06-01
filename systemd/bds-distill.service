@@ -1,0 +1,10 @@
+[Unit]
+Description=BDS Distillation — זיקוק דוחות אביגיל/כלב (יומי)
+Documentation=https://github.com/brief-driven-slices/main/systemd/README.md
+
+[Service]
+Type=oneshot
+ExecStart=%h/projects/brief-driven-slices/main/scripts/distill-run.sh
+StandardOutput=journal
+StandardError=journal
+# EnvironmentFile=%h/.config/bds/distill.env   # לשינוי BDS_DISTILL_THRESHOLD

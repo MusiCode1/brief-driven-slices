@@ -170,6 +170,35 @@ Commits: git log <base>..HEAD
 
 ‏פירוט הקריטריונים ב-[`recommendations.md`](recommendations.md) §7-8.
 
+## שני gates — אימות-נקי כתנאי
+
+> **plan-gate**: לפני dispatch (§שלב 2 → §שלב 4)
+> **runtime-gate**: לפני merge (§שלב 6 → §שלב 7)
+
+### plan-gate — dispatch רק על READY
+
+| מצב אביגיל | פעולה |
+|-----------|-------|
+| ✅ READY | status=plan-verified → dispatch |
+| 🟡 USABLE-AFTER-FIX | **תיקון + אביגיל שוב** (לא dispatch עד READY) |
+| ❌ NEEDS-REWORK | rewrite + אביגיל שוב |
+
+> plan-verified = מרדכי קיבל READY מאביגיל. לא פחות.
+
+### runtime-gate — merge רק על GO
+
+| מצב כלב | פעולה |
+|---------|-------|
+| ✅ GO | אפשר למזג (אחרי אישור משתמשת) |
+| ⚠️ PARTIAL | (א) סבב fix + כלב שוב עד GO, **או** (ב) דחייה מפורשת (תיעוד+אישור) |
+| ❌ NO-GO | חובה: סבב fix + כלב שוב, **או** דחייה מפורשת |
+
+> merge על PARTIAL/NO-GO ללא תיעוד ואישור = חוב שקט. **אסור**.
+>
+> **פירוט מלא**: `agents/mordechai.md` §"שני gates".
+
+---
+
 ## ‏שלב 7: ‏Merge ל-dev (‏רק אחרי אישור המשתמשת)
 
 > [!warning] ‏Tama ‏לא ‏עושה merge על דעת עצמה

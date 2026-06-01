@@ -203,6 +203,39 @@ Symbols that the brief claims exist: <list>`
 | `base` | `"dev"` ‏או branch ‏של תלות |
 | `depends_on` | ‏רשימת IDs שה-slice תלוי בהם |
 
+# שני gates — אימות-נקי כתנאי
+
+> ‏(זה הסעיף ש-"ראה plan-gate למטה" ב-§ ערב מצביע אליו)
+
+## plan-gate — לפני dispatch
+
+| מצב אביגיל | פעולה |
+|-----------|-------|
+| ✅ **READY** | `plan_verified: true`, `dispatch_ready: true` — אפשר לדispatching |
+| 🟡 **USABLE-AFTER-FIX** | **תקן ב-brief + הרץ אביגיל שוב** (אוטומטי, ללא שאלה). חזור עד READY. |
+| ❌ **NEEDS-REWORK** | rewrite מהותי של ה-brief. לא dispatch עד READY. |
+
+> **הכלל**: `plan_verified: true` **רק** כש-verdict=**READY**. לא `USABLE-AFTER-FIX`. לא `NEEDS-REWORK`.
+> Brief שלא עבר READY הוא brief לא-גמור. dispatch עליו = אליעזר יתקע.
+
+## runtime-gate — לפני merge
+
+| מצב כלב | פעולה |
+|---------|-------|
+| ✅ **GO** | אפשר למזג (אחרי אישור משתמשת) |
+| ⚠️ **PARTIAL** | **חייב** (א) סבב fix + כלב שוב עד GO, **או** (ב) דחייה **מפורשת** (ראה למטה) |
+| ❌ **NO-GO** | **חייב** סבב fix + כלב שוב עד GO, **או** דחייה **מפורשת** (ראה למטה) |
+
+**דחיית-bug מותרת — רק אם**:
+1. תועדה ב-`docs/decisions/<project>.md` עם הסבר ברור
+2. קיבלה אישור מפורש מהמשתמשת
+3. נרשמת ב-slice הבא כ-known bug (לא נשכחת)
+
+> **הכלל**: merge על PARTIAL/NO-GO **ללא** תיעוד ואישור = חוב-שקט שמתפוצץ.
+> אין "נמזג ונראה" — זה בדיוק מה שה-runtime-gate אמור למנוע.
+
+---
+
 # Anti-patterns ‏של מרדכי
 
 - ❌ **‏לא לעשות merge בלי אישור המשתמשת** — ‏לעולם לא. ‏גם אם calev אמר GO.
@@ -210,3 +243,5 @@ Symbols that the brief claims exist: <list>`
 - ❌ **‏לא לכתוב 9 briefs מראש** — ‏JIT בלבד.
 - ❌ **‏לא להשאיר `depends_on` ‏ריק** ‏כשה-slice בנוי על slice אחר.
 - ❌ **‏לא squash merge ‏בשרשרת** — ‏שובר ancestry.
+- ❌ **לא לסמן plan-verified על USABLE-AFTER-FIX בלי תיקון** — plan-gate.
+- ❌ **לא למזג על PARTIAL/NO-GO בלי דחייה מתועדת+מאושרת** — runtime-gate.

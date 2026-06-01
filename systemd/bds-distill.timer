@@ -1,0 +1,12 @@
+[Unit]
+Description=BDS Distillation Timer — טיימר יומי לזיקוק דוחות
+Requires=bds-distill.service
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+# הטריגר האמיתי כמותי (BDS_DISTILL_THRESHOLD), לא רק זמני.
+# הסקריפט יצא בשקט אם אין מספיק דוחות חדשים.
+
+[Install]
+WantedBy=timers.target

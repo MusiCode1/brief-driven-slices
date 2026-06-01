@@ -182,39 +182,62 @@ git diff main..dev -- <path>        # ‏מה השתנה ב-dev מ-main
 - ❌ NEEDS-REWORK — ‏בעיות מבניות בbrief (e.g. ‏הbrief לא תואם ל-codebase ב-dev).
 ```
 
-# ‏כתיבת דוח JSON מתויג (‏חובה אחרי הדוח ה-Markdown)
+# ‏כתיבת דוח MD עם front-matter (‏חובה — פורמט חדש)
 
-‏אחרי שסיימת את דוח ה-Markdown, ‏כתוב גם JSON מתויג ל-`~/projects/brief-driven-slices/main/reports/<project>/<slice>-avigail.json`.
+‏אחרי שסיימת את דוח ה-Markdown, ‏שמור אותו ל-`~/projects/brief-driven-slices/main/reports/<project>/<slice>-avigail.md`
+‏עם **YAML front-matter** בראש (מקור-אמת יחיד — אין JSON נפרד).
 
 **‏גזירת `<project>`**: ‏מה-prompt (שדה "Project root: <path>") → basename. ‏אם לא קיים → `unknown` + warn.
 
-```json
-{
-  "project": "<project>",
-  "slice": "<slice>",
-  "verifier": "avigail",
-  "date": "<ISO 8601>",
-  "verdict": "READY | USABLE-AFTER-FIX | NEEDS-REWORK",
-  "findings": [
-    {
-      "id": 1,
-      "severity": "blocker",
-      "category": "missing-symbol",
-      "summary": "<תיאור קצר>",
-      "source_brief": "<§4 Commit X>",
-      "source_code": "<packages/.../file.ts:line>",
-      "cost_estimate": "15-30min"
-    }
-  ]
-}
+```markdown
+---
+project: "<project>"
+slice: "<slice>"
+verifier: "avigail"
+date: "2026-05-30"
+verdict: "READY | USABLE-AFTER-FIX | NEEDS-REWORK"
+findings:
+  - id: 1
+    severity: "blocker"
+    category: "missing-symbol"
+    summary: "loadSession is missing in acp-client"
+    source_brief: "§4 Commit 0"
+    source_code: "packages/frontend/src/acp-client.ts:22"
+    cost_estimate: "15-30min"
+---
+
+# Plan Verification — <slice>
+
+> **Brief**: docs/plans/<slice>.md
+> **Base tip**: <hash>
+> **Verdict**: ✅ READY / 🟡 USABLE-AFTER-FIX / ❌ NEEDS-REWORK
+
+... (גוף הדוח המלא כאן — בדיוק מה שכתבת) ...
 ```
+
+## ‏הוראת ציטוט חובה (אל תדלג)
+
+כל `summary` ושדה-string ב-front-matter שמכיל `:` (נקודתיים), `'` (גרש), `|` (pipe),
+או `#` — **חייב להיות עטוף ב-double-quote** (כפול `"`), אחרת yaml.safe_load יישבר.
+
+**דוגמאות**:
+- ✅ `summary: "passes string|boolean: fails"` — מצוטט, תקין
+- ❌ `summary: passes string|boolean: fails` — לא מצוטט, YAML שבור
+- ✅ `summary: "missing loadSession"` — ללא תו מיוחד, גם עובד
+- ✅ `summary: 'missing loadSession'` — single quote גם עובד (אבל לא אם יש `'` בתוכן)
+
+## ‏ערכים קנוניים
 
 **‏ערכי `severity`**: `blocker` | `regression` | `confusion` | `type-error` | `outdated` | `minor`
 
 **‏ערכי `category` (‏אביגיל — plan)**:
 `missing-symbol` | `dropped-branch` | `type-error` | `wrong-line-number` | `naming-inconsistency` | `wrong-path` | `outdated-risk` | `missing-dependency`
 
-‏אם לא בטוח — השתמש ב-`unique`. ‏ה-brief השני יזקק.
+‏אם לא בטוח — השתמש ב-`unique`. ‏הזיקוק יזקק.
+
+## ‏backward-compat
+
+‏דוחות ישנים בפורמט `.json` עדיין קיימים ונתמכים על ידי `distill.py`. ‏לא ממירים אותם.
 
 # When stuck — lessons learned
 

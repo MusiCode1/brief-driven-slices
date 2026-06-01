@@ -247,3 +247,55 @@ build agent רגיל, יתרו, אליעזר, וכל שאר הסוכנים. רק
 ‏התובנה עלתה מ-session אחר (תכנון opencode-config-tools): ‏מרדכי שם עמד לכתוב
 ‏decision לריפו השיטה, ‏המשתמשת תפסה. ‏אותו יום הקובץ `opencode-config-tools.md`
 ‏נכתב בטעות תחת brief-driven-slices ‏והועבר לפרויקט שלו — ‏אישוש אמפירי לאותה מסקנה.
+
+---
+
+## 2026-06-01 — slice-2-distillation: שכבת הזיקוק
+
+### ‏המנגנון המשולב (כמותי → איכותני → branch → merge-אנושי)
+
+**מה הוחלט**:
+- `distill.py` כמותי-בלבד (ספירה, hitrate, delta, traceability) → `<date>-data.json`
+- מרדכי-אוטומטי קורא ה-data ומפרש → `<date>-report.md` + עדכון קטלוגים
+- תוצר ב-**branch `bds-distill-<date>`** — **לא main**
+- **merge תמיד אנושי** — מרדכי בבוקר סוקר
+
+**הרציונל**: ה-merge הוא נקודת אי-חזרה (עיקרון בסיסי). הפרדת כמותי/איכותני מסייעת:
+הסקריפט מספק facts (מה הצטבר), המודל מספק פרשנות (מה זה אומר).
+
+**3 הגנות נגד merge אוטומטי**:
+1. פרומפט מרדכי-אוטומטי אוסר merge מפורשות
+2. worktree של branch נפרד — merge ל-main דורש פעולה מפורשת
+3. SOUL.md אוסר merge בלי אישור משתמשת
+
+**חלופות שנדחו**:
+- "merge אוטומטי אם כלב GO" — נדחה. merge = נקודת אי-חזרה, תמיד אנושי.
+- "distill.py כותב הכל (כולל פרשנות)" — נדחה. סקריפט לא מפרש, לא מנסח כללים.
+
+### פורמט דוח-אימות MD-front-matter (במקום JSON טהור)
+
+**מה הוחלט**:
+דוחות שאביגיל וכלב כותבים = קובץ `.md` עם YAML front-matter + גוף MD מלא.
+מחליף את ה-JSON הטהור (backward-compat נשמר — `load_reports` dual-format).
+
+**הרציונל**: ה-MD המפורט שמאמת כותב ב-Task result **נעלם** כשהסשן נסגר.
+`findings:[]` לא מבדיל "נבדק היטב" מ"כמעט לא נבדק". הפורמט החדש שומר הכל:
+- YAML front-matter = data מובנה (פרסיבלי ע"י `distill.py` + yaml.safe_load)
+- גוף MD = הדוח המלא (נגיש לאדם, לא נאבד)
+- מקור-אמת יחיד (לא שני קבצים)
+
+**הסיכון**: front-matter שבור (summary עם `:` לא-מצוטט) → yaml.safe_load זורק.
+מיטיגציה: (1) parse_report_file סלחני — None+warn; (2) הוראת ציטוט מפורשת ב-agents.
+
+### שני gates (plan-gate + runtime-gate)
+
+**מה הוחלט**:
+- **plan-gate**: `plan_verified=true` רק כש-אביגיל verdict=**READY**
+- **runtime-gate**: merge רק כש-כלב verdict=**GO** (או דחייה מפורשת+מתועדת+מאושרת)
+
+**הרציונל**: עד slice זה, ה-gates היו אמורים אבל לא מנוסחים כתנאי מפורש.
+היה אפשרי ל-מרדכי לסמן plan-verified על USABLE-AFTER-FIX (בלי לתקן).
+ולמזג על PARTIAL בלי תיעוד. אלה gaps בחוזה שצריך לסגור.
+
+runtime-gate **לא חוסם מוחלט** — דחיית-bug מותרת אם מתועדת ב-decisions + מאושרת.
+זה ה-tradeoff: לא לחסום release על bug קטן, אבל לא לאבד track.

@@ -273,40 +273,66 @@ tools:
 - **WS** — `websocat` ‏או script Bun/Node
 - **E2E** — playwright-cli (screenshots, snapshots, click, upload, eval)
 
-# ‏כתיבת דוח JSON מתויג לריפו השיטה (‏בנוסף ל-Markdown, ‏חובה בכל mode)
+# ‏כתיבת דוח MD עם front-matter לריפו השיטה (‏חובה בכל mode — פורמט חדש)
 
-‏אחרי שכתבת דוח Markdown בריפו הפרויקט, ‏כתוב גם JSON מתויג ל-`~/projects/brief-driven-slices/main/reports/<project>/<slice>-calev.json`.
+‏שמור את הדוח שכתבת ל-`~/projects/brief-driven-slices/main/reports/<project>/<slice>-calev.md`
+‏עם **YAML front-matter** בראש (מקור-אמת יחיד — הdוח המלא + data מובנה, לא שני קבצים).
 
-‏שני קוראים שונים: ‏MD לאדם בבוקר, ‏JSON לזיקוק חוצה-פרויקטי (brief שני).
+> **אחוד**: ה-MD שכלב כותב בריפו הפרויקט (`docs/<slice>-verification-report.md`) מתאחד עם
+> ה-reports/ של השיטה. במקום שני עותקים — קובץ אחד ב-`reports/` עם front-matter.
 
 **‏גזירת `<project>`**: מה-prompt (שדה "Project root" / brief path) → basename. ‏אם לא קיים → `unknown` + warn.
 
-```json
-{
-  "project": "<project>",
-  "slice": "<slice>",
-  "verifier": "calev",
-  "date": "<ISO 8601>",
-  "mode": "phase | light | heavy",
-  "verdict": "GO | NO-GO | PARTIAL",
-  "findings": [
-    {
-      "id": 1,
-      "severity": "blocker",
-      "category": "bubble-grouping",
-      "summary": "<תיאור קצר>",
-      "source_brief": "<DoD item N>",
-      "source_code": "<file:line>",
-      "cost_estimate": "15-30min"
-    }
-  ]
-}
+```markdown
+---
+project: "<project>"
+slice: "<slice>"
+verifier: "calev"
+date: "2026-05-30"
+mode: "phase | light | heavy"
+verdict: "GO | NO-GO | PARTIAL"
+dod_items:
+  - "distill.py tests pass"
+  - "no regressions"
+spot_check: "ran happy path — OK"
+findings:
+  - id: 1
+    severity: "blocker"
+    category: "bubble-grouping"
+    summary: "chunks render as separate bubbles instead of concat"
+    source_brief: "DoD item 2"
+    source_code: "src/Chat.svelte:88"
+    cost_estimate: "30min"
+---
+
+# <Slice> — Verification Report (Light)
+
+> **תאריך:** <date>
+> **Tier:** light
+> **Commit:** <hash>
+
+... (גוף הדוח המלא — בדיוק מה שכתבת) ...
 ```
+
+## ‏הוראת ציטוט חובה (אל תדלג)
+
+כל `summary`, `spot_check`, ושדה-string ב-front-matter שמכיל `:`, `'`, `|`, `#`
+— **חייב להיות עטוף ב-double-quote** (כפול `"`), אחרת yaml.safe_load יישבר.
+
+**דוגמאות**:
+- ✅ `summary: "passes string|boolean: fails"` — מצוטט, תקין
+- ❌ `summary: passes: fails` — לא מצוטט, YAML שבור
+
+## ‏ערכים קנוניים
 
 **‏ערכי `severity`**: `blocker` | `regression` | `confusion` | `type-error` | `outdated` | `minor`
 
 **‏ערכי `category` (‏כלב — runtime)**:
 `bubble-grouping` | `cross-store-null` | `spec-drift` | `regression` | `mobile-desktop` | `reload-reconnect` | `library-compat` | `unique`
+
+## ‏backward-compat
+
+‏דוחות ישנים בפורמט `.json` עדיין קיימים ונתמכים על ידי `distill.py`. ‏לא ממירים אותם.
 
 # When stuck on tooling — lessons learned
 
