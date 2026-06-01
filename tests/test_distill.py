@@ -49,6 +49,19 @@ class TestParseReportFile(unittest.TestCase):
         # Should be a string, not datetime object
         self.assertIsInstance(r.get("date"), str)
 
+    def test_md_date_as_date_object_normalized(self):
+        """Date as date-only ISO 8601 (YYYY-MM-DD) is normalized to string."""
+        with tempfile.NamedTemporaryFile(suffix=".md", mode="w", delete=False) as f:
+            # date-only ISO 8601 is parsed by YAML as datetime.date, not datetime
+            f.write("---\nproject: x\nslice: s\nverifier: avigail\ndate: 2026-05-01\nverdict: READY\nfindings: []\n---\n# body\n")
+            fpath = Path(f.name)
+        r = distill.parse_report_file(fpath)
+        self.assertIsNotNone(r)
+        # Must be string, not datetime.date object
+        self.assertIsInstance(r.get("date"), str)
+        self.assertEqual(r.get("date"), "2026-05-01")
+        fpath.unlink()
+
     def test_md_summary_with_colon(self):
         """Summary field containing colons is parsed correctly."""
         p = FIXTURES / "projA" / "slice-2-avigail.md"

@@ -5,6 +5,18 @@
 
 ---
 
+## 2026-06-01 — slice-2-distillation: תיקון post-calev — date.date normalization
+
+כלב מצא bug minor: `parse_report_file` ניר datetime.datetime אבל לא datetime.date.
+YAML מפרסר "2026-05-01" (date-only) כ-date object — לא datetime.
+
+תיקון: `from datetime import date as date_type, datetime` + elif לnormalization.
+טסט חדש (38 ✅): `test_md_date_as_date_object_normalized`.
+
+**חריגות**: אין.
+
+---
+
 ## 2026-06-01 — slice-2-distillation: Commit 6 — e2e + תיעוד סגירה
 
 commit סגירה — manual e2e + תיעוד 4+5 ב-decisions + עדכון SKILL.md/workflow.md + סטטוס brief.

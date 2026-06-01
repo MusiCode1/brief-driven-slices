@@ -14,7 +14,7 @@ import argparse
 import json
 import sys
 import warnings
-from datetime import datetime
+from datetime import date as date_type, datetime
 from pathlib import Path
 from typing import TypedDict
 
@@ -107,9 +107,15 @@ def parse_report_file(path: Path) -> "Report | None":
             if not isinstance(data, dict):
                 print(f"[distill warn] {path}: front-matter is not a dict", file=sys.stderr)
                 return None
-            # Normalize date: datetime → string
-            if isinstance(data.get("date"), datetime):
-                data["date"] = data["date"].isoformat()
+            # Normalize date: datetime or date → string
+            # YAML parses ISO 8601 "2026-05-01" as datetime.date
+            # and "2026-05-01T14:30:00" as datetime.datetime
+            # Both must be converted to string for consistency
+            d = data.get("date")
+            if isinstance(d, datetime):
+                data["date"] = d.isoformat()
+            elif isinstance(d, date_type):
+                data["date"] = d.isoformat()
             data.setdefault("findings", [])
             return data  # type: ignore[return-value]
         except (yaml.YAMLError, OSError) as e:
