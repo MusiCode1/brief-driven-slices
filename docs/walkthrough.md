@@ -5,6 +5,25 @@
 
 ---
 
+## 2026-06-01 — slice-2-distillation: Commit 4 — פורמט דוח MD-front-matter
+
+עדכון פורמט דוחות-אימות מ-JSON ל-MD עם YAML front-matter (מקור-אמת יחיד):
+
+| קובץ | מה |
+|------|------|
+| `agents/avigail.md` | §"כתיבת דוח JSON" → §"כתיבת דוח MD עם front-matter" + הוראת ציטוט (double-quote ל-`:'\|`) |
+| `agents/calev.md` | אותו דבר + אחוד עם docs/<slice>-verification-report.md |
+| `agents/calev-heavy.md` | שלב 7: הפניה לפורמט החדש ב-calev.md |
+| `docs/reports-format.md` | שכתוב: front-matter schema + ⚠️ הוראת ציטוט + backward-compat + טבלת שדות |
+| `reports/README.md` (sub-repo) | עדכון נתיב `.json` → `.md` + הערת dual-format |
+
+**אימות manual**: grep "front-matter" docs/reports-format.md ✅.
+grep "double-quote|לצטט" agents/avigail.md ✅. grep "reports/.*\.md" agents/*.md ✅.
+round-trip distill.py על fixtures.md: 3/3 avigail ✅.
+**חריגות**: reports/README.md עודכן ישירות ב-main/reports/ (sub-repo פרטי, לא ב-git השיטה).
+
+---
+
 ## 2026-06-01 — slice-2-distillation: Commit 3 — systemd timer + distill-run.sh + distill-prompt.txt
 
 נוספו קבצי ה-wrapper + systemd לטיימר הזיקוק היומי:

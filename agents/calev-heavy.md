@@ -86,9 +86,10 @@ tools:
 ‏לכל bug חדש — ‏סווג לקטגוריות ב-`patterns.md`. ‏אם לא נכנס — "unique".
 
 ### ‏שלב 7 — ‏דוח (10 דק')
-‏פורמט מלא ב-`calev.md` §Mode:heavy שלב 7. **‏בנוסף** — ‏כתוב JSON מתויג
-‏ל-`~/projects/brief-driven-slices/main/reports/<project>/<slice>-calev.json`
-‏(severity + category פר finding), ‏כמו ב-calev.md §reports.
+‏פורמט מלא ב-`calev.md` §Mode:heavy שלב 7. **פורמט הדוח** (חדש — MD עם front-matter):
+‏כתוב ל-`~/projects/brief-driven-slices/main/reports/<project>/<slice>-calev.md`
+‏עם YAML front-matter בראש + גוף MD מלא.
+**ראה `calev.md` §"כתיבת דוח MD עם front-matter" לפורמט המדויק + הוראת הציטוט.**
 
 ## ‏נקודות שכבר נפלנו עליהן (‏חובה ב-heavy)
 
