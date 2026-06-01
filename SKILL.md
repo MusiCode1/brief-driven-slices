@@ -97,6 +97,32 @@ description: |
 ‏מרדכי ‏מוודא, ‏עושה merge ‏ל-dev, ‏מוחק worktree.
 ```
 
+## שכבת הזיקוק (לולאת שיפור עצמית)
+
+הדוחות שאביגיל וכלב כותבים (`reports/<project>/`) מזוקקים תקופתית ל-3 שכבות זיכרון:
+
+| שכבה | קובץ | מי | תדירות |
+|------|------|-----|---------|
+| **קטלוגים חיים** | `plan-pitfalls.md` (avigail), `patterns.md` (calev) | מרדכי (זיקוק) | כל זיקוק |
+| **דוחות-זיקוק** | `distillations/<date>-report.md` | מרדכי-אוטומטי | כל זיקוק |
+| **יומן גלובלי** | `docs/methodology-evolution.md` | מרדכי | נדיר (שינוי שיטה) |
+
+**המנגנון**: `systemd` timer יומי → `distill.py` כמותי → branch ייעודי → **merge אנושי בבוקר**.
+מרדכי-אוטומטי כותב ל-branch, **לא ל-main**. merge תמיד אנושי.
+
+---
+
+## שני gates — אימות-נקי כתנאי
+
+| Gate | מתי | הכלל |
+|------|-----|------|
+| **plan-gate** | לפני dispatch | `plan_verified=true` רק על READY מאביגיל. USABLE-AFTER-FIX → תקן+שוב |
+| **runtime-gate** | לפני merge | merge רק על GO מכלב. PARTIAL/NO-GO → fix או דחייה מתועדת+מאושרת |
+
+**פירוט מלא**: `agents/mordechai.md` §"שני gates".
+
+---
+
 ## ‏מפת הקבצים
 
 | ‏קובץ | ‏מתי לקרוא |
@@ -117,12 +143,14 @@ description: |
 
 | ‏סוכן | ‏מתי |
 |------|------|
-| [`agents/mordechai.md`](agents/mordechai.md) | ‏session ‏תכנון — ‏כותב briefs, ‏ממזג, ‏מחליט |
+| [`agents/mordechai.md`](agents/mordechai.md) | ‏session ‏תכנון — ‏כותב briefs, ‏ממזג, ‏מחליט, ‏מריץ זיקוק |
 | [`agents/yetro.md`](agents/yetro.md) | ‏session ‏לילי — ‏מריץ queue אוטומטית |
 | [`agents/eliezer.md`](agents/eliezer.md) | **‏מבצע** (all mode — Task ‏או primary) |
-| [`agents/avigail.md`](agents/avigail.md) | **‏חובה לפני handoff** — ‏בודקת brief + depends_on |
-| [`agents/calev.md`](agents/calev.md) | **‏חובה בסוף** — mode: phase/light (Sonnet) |
+| [`agents/avigail.md`](agents/avigail.md) | **‏חובה לפני handoff** — ‏בודקת brief + depends_on, ‏כותבת דוח MD-front-matter |
+| [`agents/calev.md`](agents/calev.md) | **‏חובה בסוף** — mode: phase/light (Sonnet), ‏כותב דוח MD-front-matter |
 | [`agents/calev-heavy.md`](agents/calev-heavy.md) | heavy tier (complexity 8+, Opus) |
+| [`distillations/README.md`](distillations/README.md) | שכבת הזיקוק — מבנה, טריגר, חלוקה כמותי/איכותני |
+| [`docs/reports-format.md`](docs/reports-format.md) | פורמט MD-front-matter + הוראת ציטוט + backward-compat |
 
 ## ‏שלוש תובנות ‏ליבה
 

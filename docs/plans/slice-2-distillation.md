@@ -1,7 +1,7 @@
 # Slice 2 — Distillation layer (זיקוק) — תוכנית
 
 > **תאריך**: 2026-05-30
-> **סטטוס**: plan-verified ✅ (אביגיל, סבב 3 — READY; reports/bds/slice-2-distillation-avigail-v3.json)
+> **סטטוס**: הושלם ✅ (2026-06-01 — אליעזר; verifier-slice-light verdict: TBD)
 > **Complexity**: 7/10 (verifier: light + verifier-phase על Commit 0, 3, 6)
 > **Commits**: 7 (0: distill.py | 1: פורמט-זיקוק+קטלוגים | 2: methodology-evolution | 3: timer+wrapper | 4: פורמט דוח MD-front-matter | 5: שני gates | 6: e2e+תיעוד-סגירה)
 > **תלויות (`depends_on`)**: [] — additive על main. בנוי מעל התשתית של slice-bds-extraction-and-reporting (שכבר merged): הדוחות המתויגים ב-`reports/<project>/<slice>-<verifier>.{json,md}`.

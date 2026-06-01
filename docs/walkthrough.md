@@ -5,6 +5,31 @@
 
 ---
 
+## 2026-06-01 — slice-2-distillation: Commit 6 — e2e + תיעוד סגירה
+
+commit סגירה — manual e2e + תיעוד 4+5 ב-decisions + עדכון SKILL.md/workflow.md + סטטוס brief.
+
+| בדיקה | תוצאה |
+|-------|-------|
+| distill.py על fixtures (.md + .json) | ✅ 3 avigail + 2 calev, שני פורמטים נטענו |
+| distill.py על reports אמיתי (18 דוחות) | ✅ לא קרס, noncanonical מסומן, ספירה הגיונית |
+| distill-run.sh threshold=0 כמותי (ללא opencode) | ✅ data.json נוצר, main לא נגע |
+| 3 קטלוגים/יומן קיימים | ✅ plan-pitfalls.md, methodology-evolution.md, TEMPLATE-report.md |
+| פורמט חדש מתועד | ✅ grep front-matter reports-format.md |
+
+| קובץ | מה |
+|------|------|
+| `SKILL.md` | שכבת הזיקוק + שני gates (סעיפים חדשים) + רשומות agent |
+| `docs/decisions/bds.md` | entry חדש: זיקוק + פורמט MD-front-matter + שני gates (רציונל) |
+| `docs/plans/slice-2-distillation.md` | סטטוס → הושלם |
+
+**חריגות**:
+- systemd-analyze לא זמין בcontainer — קריאה ידנית (תקין, תועד)
+- distill-run.sh step 4 (opencode) — לא הורץ (יקר, לא נדרש ב-e2e)
+- reports/README.md עודכן ב-sub-repo ישירות (לא tracked ב-git השיטה)
+
+---
+
 ## 2026-06-01 — slice-2-distillation: Commit 5 — שני gates: plan-gate + runtime-gate
 
 ניסוח כללי-שיטה שעד כה לא היו מנוסחים מפורשות:
