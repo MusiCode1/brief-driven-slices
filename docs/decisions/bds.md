@@ -57,9 +57,15 @@
 
 **‏מחוץ לריפו**: ‏אפס git noise, ‏עדכון חופשי, ‏שורד worktree removes (לעומת בריפו:
 ‏commits מזהמים git log + conflicts; ‏לעומת bare metadata: ‏אובד ב-clone).
-**‏JSON ‏לא YAML**: ‏אביגיל (סבב 2) ‏גילתה ש-**`yq` ‏ו-PyYAML לא זמינים**. JSON
+**‏JSON ‏לא YAML** (ל-state.json): ‏`yq` (ה-binary) ‏לא זמין → JSON
 ‏נפרס ע"י json stdlib (תמיד זמין). ‏מנטרל 3 ‏באגי-פרסור (grep שביר, ‏substring
 ‏15/15d, ‏פרסור טבלה). trade-off: ‏פחות נעים לעריכה ידנית — ‏אבל מרדכי הוא LLM.
+
+> **‏תיקון 2026-06-01**: ‏ההנחה המקורית כאן הייתה "**`yq` ‏ו-PyYAML לא זמינים**" — ‏זה
+> ‏**‏שגוי לגבי PyYAML**. ‏אומת (`env -i /usr/bin/python3 -c "import yaml"` → 6.0.2,
+> ‏ב-`/usr/lib/python3/dist-packages/`, ‏עובד גם מטיימר). ‏רק **`yq` (ה-binary)** ‏חסר.
+> ‏ל-state.json ‏עדיין JSON (טוב ל-LLM); ‏אבל לדוחות-אימות (slice-2) ‏משתמשים ב-YAML
+> ‏front-matter דרך PyYAML. ‏שני דברים שונים: ‏ספריית-python (PyYAML, ‏קיימת) מול binary (yq, ‏חסר).
 
 ## BLOCKED דרך קיום-קובץ, ‏לא exit code
 

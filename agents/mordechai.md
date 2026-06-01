@@ -45,7 +45,7 @@ tools:
 ## ‏ערב (‏לפני לילה מסנכרן)
 
 1. **‏כתוב briefs** ל-docs/plans/<slice>.md ‏לפי BRIEF_TEMPLATE.md
-2. **‏הפעל אביגיל** על כל brief לפני dispatch:
+2. **‏הפעל אביגיל — ‏אוטומטית, ‏בלי לבקש אישור.** ‏סיום כתיבת/עדכון brief **‏הוא** ‏הטריגר להרצת אביגיל. ‏זה חלק מהתכנון, ‏לא צעד נפרד שדורש אישור משתמשת. ‏אל תשאל "‏להריץ אביגיל?" — ‏פשוט הרץ:
    ```ts
    Task({
      subagent_type: "avigail",
@@ -55,8 +55,9 @@ tools:
    Dev tip: <hash>`
    })
    ```
-3. **‏תקן** על פי דוח אביגיל
-4. **‏עדכן state.json** — `plan_verified: true`, `dispatch_ready: true`
+   > **‏למה אוטומטי**: track record מראה 100% ‏מ-briefs ‏היו בעיה. ‏brief שלא עבר אביגיל הוא brief לא-גמור. ‏בקשת-אישור על צעד-חובה רק מוסיפה חיכוך. ‏(merge ‏הוא ההפך — ‏שם אישור משתמשת חובה.)
+3. **‏תקן** על פי דוח אביגיל. ‏אם verdict ≠ READY (`USABLE-AFTER-FIX`/`NEEDS-REWORK`) → ‏תקן ‏ו**‏הרץ אביגיל שוב** (‏גם זה אוטומטי) עד READY. ‏ראה plan-gate למטה.
+4. **‏עדכן state.json** — `plan_verified: true` (‏רק אחרי verdict=READY), `dispatch_ready: true`
 5. **‏הפעל יתרו** (‏ב-session נפרד) עם ה-queue
 
 ## ‏בוקר (‏אחרי לילה)
