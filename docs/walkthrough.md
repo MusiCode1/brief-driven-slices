@@ -5,6 +5,64 @@
 
 ---
 
+## 2026-06-01 — slice-3-report-discipline: Commit 3 — תיעוד חוזה + סגירה
+
+תיעוד החוזה בקבצי ה-reference + עדכון brief לסטטוס "הושלם":
+
+| קובץ | מה |
+|------|------|
+| `docs/reports-format.md` | §חדש "חוזה ה-Task-result (משמעת-דוחות)": שני פורמטים (avigail/calev), כלל הברזל, הפניות |
+| `workflow.md` | §חדש "חוזה ה-Task-result — אינדקס בלבד": diagram + כלל + הפניה ל-reports-format |
+| `docs/decisions/bds.md` | entry חדש: הבעיה שנסגרה (slice-2), ההחלטה, הרציונל לקביעות, יישום |
+| `docs/plans/slice-3-report-discipline.md` | סטטוס → הושלם |
+
+**slice-3-report-discipline סוכם**: 4 commits, 9 קבצים עודכנו, חוזה מנוסח, עקבי, צרכנים מצפים.
+**אימות manual**: grep ✅ × 12 DoD items (לפני calev light).
+**חריגות**: אין סטיות מהbrief.
+
+---
+
+## 2026-06-01 — slice-3-report-discipline: Commit 2 — הצרכנים מצפים לחוזה (mordechai + eliezer)
+
+עדכון `agents/mordechai.md` ו-`agents/eliezer.md` לחוזה החדש:
+- mordechai §"הפעל אביגיל": הערה "מה אביגיל מחזירה = תמצית-אינדקס, פתח את הדוח לתיקון".
+- mordechai §runtime-gate: "לפני merge — פתח את דוח כלב המלא".
+- mordechai anti-pattern: "להחליט על finding מכותרת בלבד = אינדקס לא תחליף".
+- eliezer §"מה לעשות עם calev": "פתח reports/.../calev.md לפני תיקון, לא מהכותרת".
+- eliezer §"Feedback loop": הוסף path לדוח כלב בדיווח למרדכי.
+
+**אימות manual**: grep ✅ × 4 (פתח+אינדקס, runtime-gate, תמצית+פתח, אינדקס).
+**חריגות**: אין.
+
+---
+
+## 2026-06-01 — slice-3-report-discipline: Commit 1 — חוזה result אצל calev + calev-heavy
+
+הרחבת חוזה ה-Task-result ל-`agents/calev.md` ו-`agents/calev-heavy.md`:
+- §"מה אתה לא עושה": anti-pattern "לא לכתוב ניתוח ב-Task-result".
+- §"פורמט דוח" בכל 3 modes (phase/light/heavy): משפט "הדוח מפורט — הערוץ היחיד לניתוח".
+- §חדש "מה אתה מחזיר ב-Task-result": אינדקס קבוע (verdict+report+mode+DoD+findings+כותרות בלבד).
+- Anti-pattern בסוף: "result = אינדקס, דוח = בשר".
+- calev-heavy: הפניה מפורשת לחוזה.
+
+**עקביות avigail/calev**: שניהם ≥1 "כותרות בלבד" ✅. מבנה זהה, הבדלים לגיטימיים: verdicts, DoD, mode.
+**אימות manual**: grep ✅ × 4.
+**חריגות**: אין.
+
+---
+
+## 2026-06-01 — slice-3-report-discipline: Commit 0 — חוזה result + חובת-דוח אצל avigail
+
+הוספת חוזה ה-Task-result ל-`agents/avigail.md`:
+- משפט חובה בראש §"פורמט הדוח": "הדוח חייב להיות מפורט ומלא — הערוץ היחיד לניתוח."
+- §חדש "מה אתה מחזיר ב-Task-result": אינדקס קבוע (verdict+report+findings+כותרות בלבד).
+- Anti-pattern חדש: "result-שמן = תקלה".
+
+**אימות manual**: grep ✅ × 4 (חייב-מפורט, אינדקס-קבוע, כותרות-בלבד, תקלה).
+**חריגות**: אין.
+
+---
+
 ## 2026-06-01 — slice-2-distillation: תיקון post-calev — date.date normalization
 
 כלב מצא bug minor: `parse_report_file` ניר datetime.datetime אבל לא datetime.date.

@@ -91,6 +91,8 @@ tools:
 ‏עם YAML front-matter בראש + גוף MD מלא.
 **ראה `calev.md` §"כתיבת דוח MD עם front-matter" לפורמט המדויק + הוראת הציטוט.**
 
+**חוזה ה-Task-result זהה ל-`calev.md` §"מה אתה מחזיר ב-Task-result"** — אינדקס בלבד, אפס ניתוח. verdict+report+mode+DoD+findings (כותרות בלבד). שום הסבר, evidence, או המלצה ב-result — הכל בדוח.
+
 ## ‏נקודות שכבר נפלנו עליהן (‏חובה ב-heavy)
 
 ‏לכל UI-heavy slice — ‏בדוק במפורש: Bubble grouping, Cross-store data,

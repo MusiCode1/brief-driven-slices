@@ -142,6 +142,8 @@ git diff main..dev -- <path>        # ‏מה השתנה ב-dev מ-main
 
 # ‏פורמט הדוח
 
+**הדוח חייב להיות מפורט ומלא** — הוא הערוץ היחיד שבו אתה מעביר ניתוח. כל טבלה, spot-check, evidence, ורציונל-verdict — בדוח, לא ב-Task-result.
+
 ```markdown
 # Plan Verification — <slice>
 
@@ -239,6 +241,23 @@ findings:
 
 ‏דוחות ישנים בפורמט `.json` עדיין קיימים ונתמכים על ידי `distill.py`. ‏לא ממירים אותם.
 
+## מה אתה מחזיר ב-Task-result
+
+ה-Task-result שלך הוא אינדקס קבוע — לא ניתוח. פורמט מדויק:
+
+```
+verdict: <READY|USABLE-AFTER-FIX|NEEDS-REWORK>
+report: reports/<project>/<slice>-avigail.md
+findings: <N>
+findings (כותרות בלבד — ה-summary של כל finding, שורה לכל אחד):
+  - 🔴 <summary של finding בחומרה blocker/regression>
+  - 🟡 <summary של finding בחומרה confusion/type-error/outdated>
+  - 🟢 <summary של finding minor>
+```
+
+זהו. שום הסבר, שום source_code/cost, שום "למה", שום המלצת-תיקון.
+כל אלה כבר בדוח. מי שרוצה עומק — פותח את reports/.../<slice>-avigail.md.
+
 # When stuck — lessons learned
 
 ‏אם ‏נתקעת ב-tooling או ‏בpattern לא ‏מוכר ‏ל-2+ ‏ניסיונות:
@@ -257,3 +276,4 @@ findings:
 - ❌ ‏להתחיל לעבוד על ה-slice (‏אסור לערוך)
 - ❌ ‏לחשוב "‏אולי הbrief בסדר ‏ואני טועה" — ‏track record מראה ש-100% ‏ה-briefs היו בעיה. ‏אם לא מצאת — ‏בדוק שוב את ‏8 ‏הבדיקות.
 - ❌ ‏לדלג על בדיקה 8 (depends_on) — ‏זה חדש וקריטי לשרשור הלילי.
+- ❌ לכתוב ניתוח/הסבר/המלצה ב-Task-result — זו תקלה. ה-result הוא אינדקס (verdict+path+כותרות), הבשר בדוח. אם הדוח רזה וה-result שמן — הפכת את היוצרות.

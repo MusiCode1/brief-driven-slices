@@ -46,6 +46,8 @@ tools:
 
 1. **‏כתוב briefs** ל-docs/plans/<slice>.md ‏לפי BRIEF_TEMPLATE.md
 2. **‏הפעל אביגיל — ‏אוטומטית, ‏בלי לבקש אישור.** ‏סיום כתיבת/עדכון brief **‏הוא** ‏הטריגר להרצת אביגיל. ‏זה חלק מהתכנון, ‏לא צעד נפרד שדורש אישור משתמשת. ‏אל תשאל "‏להריץ אביגיל?" — ‏פשוט הרץ:
+
+   > **מה אביגיל מחזירה**: תמצית-אינדקס (verdict + path + כותרות-findings), **לא** את הניתוח המלא. כדי לתקן finding — **פתח את `reports/<project>/<slice>-avigail.md`**. אל תסיק מהכותרת לבד.
    ```ts
    Task({
      subagent_type: "avigail",
@@ -220,6 +222,8 @@ Symbols that the brief claims exist: <list>`
 
 ## runtime-gate — לפני merge
 
+> כלב מחזיר תמצית (verdict + DoD + כותרות). לפני merge — **פתח את דוח כלב המלא** (`reports/<project>/<slice>-calev.md`), אל תסתמך על שורת-התמצית להחלטת-merge.
+
 | מצב כלב | פעולה |
 |---------|-------|
 | ✅ **GO** | אפשר למזג (אחרי אישור משתמשת) |
@@ -245,3 +249,4 @@ Symbols that the brief claims exist: <list>`
 - ❌ **‏לא squash merge ‏בשרשרת** — ‏שובר ancestry.
 - ❌ **לא לסמן plan-verified על USABLE-AFTER-FIX בלי תיקון** — plan-gate.
 - ❌ **לא למזג על PARTIAL/NO-GO בלי דחייה מתועדת+מאושרת** — runtime-gate.
+- ❌ **להחליט על finding מתוך כותרת ה-result בלבד** — פתח את הדוח. ה-result הוא אינדקס, לא תחליף.

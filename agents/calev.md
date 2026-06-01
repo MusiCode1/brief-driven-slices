@@ -60,6 +60,7 @@ tools:
 - ❌ **‏לא להריץ pnpm test / typecheck** ‏כראיה — ‏זה לא verification. ‏אם אליעזר אמר שזה ירוק, ‏סמוך עליו.
 - ❌ **‏לא לקרוא קוד "כדי להבין"**. ‏רק כש-flow נכשל ‏ואתה צריך לאתר גורם.
 - ❌ **‏לא לבקש רשות** לכל פעולה. ‏אוטונומיה גורפת.
+- ❌ **לא לכתוב ניתוח ב-Task-result**. ה-result הוא תמצית-אינדקס; כל ממצא/evidence/רציונל בדוח.
 
 ---
 
@@ -76,6 +77,8 @@ tools:
 5. ‏רשום סיכום קצר.
 
 ## ‏פורמט דוח (phase)
+
+**הדוח מפורט — הערוץ היחיד לניתוח.** כל evidence ורציונל-verdict בדוח, לא ב-Task-result.
 
 ```markdown
 ## Phase X Verification — <name>
@@ -124,6 +127,8 @@ tools:
 ‏הרץ את ה-flow העיקרי של הסליס מקצה לקצה. **‏רק happy path אחד**. ‏לא 5 variations.
 
 ### ‏שלב 4 — ‏דוח (2 דקות)
+
+**הדוח מפורט — הערוץ היחיד לניתוח.** כל DoD evidence ובאגים בדוח, לא ב-Task-result.
 
 ```markdown
 # <Slice> — Verification Report (Light)
@@ -201,6 +206,8 @@ tools:
 ‏לכל bug חדש — ‏סווג לקטגוריות 1-5 ב-`patterns.md`. ‏אם לא נכנס — ‏סמן "unique".
 
 ### ‏שלב 7 — ‏דוח (10 דקות)
+
+**הדוח מפורט — הערוץ היחיד לניתוח.** כל edge cases, regressions, patterns בדוח, לא ב-Task-result.
 
 ```markdown
 # <Slice> — Verification Report (Heavy)
@@ -334,6 +341,24 @@ findings:
 
 ‏דוחות ישנים בפורמט `.json` עדיין קיימים ונתמכים על ידי `distill.py`. ‏לא ממירים אותם.
 
+## מה אתה מחזיר ב-Task-result
+
+ה-Task-result שלך הוא תמצית-אינדקס — לא ניתוח. פורמט מדויק:
+
+```
+verdict: <GO|PARTIAL|NO-GO>
+report: reports/<project>/<slice>-calev.md
+mode: <phase|light|heavy>
+DoD: <X/Y>           ← light/heavy בלבד
+findings: <N>
+findings (כותרות בלבד):
+  - 🔴 <summary>
+  - 🟡 <summary>
+  - 🟢 <summary>
+```
+
+זהו. אפס ניתוח ב-result — הכל בדוח.
+
 # When stuck on tooling — lessons learned
 
 ‏אם נתקעת ב-tooling ‏ל-2+ ‏ניסיונות:
@@ -351,3 +376,4 @@ findings:
 - ❌ ‏לא לעדכן `patterns.md` ‏ב-light — ‏heavy עושה את זה.
 - ❌ ‏לא להציע fix מפורט — ‏רק לזהות את הבעיה.
 - ❌ ‏אם לא מוצאים שום bug ב-heavy — ‏זה חשוד. ‏בדוק שוב קטגוריות ב-`patterns.md`.
+- ❌ לכתוב ניתוח/evidence ב-Task-result — תקלה. result = אינדקס, דוח = בשר.
