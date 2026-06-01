@@ -1,4 +1,5 @@
 ---
+name: mordechai
 description: >
   Strategic planner — writes detailed briefs, reviews brief verification
   reports from Avigail (plan-verifier), dispatches Eliezer (executor)

@@ -1,4 +1,5 @@
 ---
+name: avigail
 description: >
   Plan verifier — bug-hunts in a brief BEFORE it goes to eliezer (executor).
   Reads the brief independently, validates every symbol/API/file:line

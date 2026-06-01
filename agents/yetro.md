@@ -1,4 +1,5 @@
 ---
+name: yetro
 description: >
   Orchestrator — runs the nightly slice queue automatically. Dispatches
   Eliezer (executor) via tmux, polls for completion, runs Calev (verifier),

@@ -1,4 +1,5 @@
 ---
+name: calev-heavy
 description: >
   Runtime verifier — HEAVY tier (complexity 8+). Same role as calev
   (runtime verification in a real environment), but runs on Opus because

@@ -1,4 +1,5 @@
 ---
+name: calev
 description: >
   Runtime verifier (Sonnet) — checks that the executor's work actually
   works in a real environment. Handles the two lightweight tiers via the

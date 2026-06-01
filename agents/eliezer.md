@@ -1,4 +1,5 @@
 ---
+name: eliezer
 description: >
   Implementation agent — executes a brief phase-by-phase.
   Testing approach per phase comes FROM the brief (tdd / integration /
