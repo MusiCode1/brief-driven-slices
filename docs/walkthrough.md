@@ -5,6 +5,20 @@
 
 ---
 
+## 2026-06-01 — slice-3-report-discipline: Commit 2 — הצרכנים מצפים לחוזה (mordechai + eliezer)
+
+עדכון `agents/mordechai.md` ו-`agents/eliezer.md` לחוזה החדש:
+- mordechai §"הפעל אביגיל": הערה "מה אביגיל מחזירה = תמצית-אינדקס, פתח את הדוח לתיקון".
+- mordechai §runtime-gate: "לפני merge — פתח את דוח כלב המלא".
+- mordechai anti-pattern: "להחליט על finding מכותרת בלבד = אינדקס לא תחליף".
+- eliezer §"מה לעשות עם calev": "פתח reports/.../calev.md לפני תיקון, לא מהכותרת".
+- eliezer §"Feedback loop": הוסף path לדוח כלב בדיווח למרדכי.
+
+**אימות manual**: grep ✅ × 4 (פתח+אינדקס, runtime-gate, תמצית+פתח, אינדקס).
+**חריגות**: אין.
+
+---
+
 ## 2026-06-01 — slice-3-report-discipline: Commit 1 — חוזה result אצל calev + calev-heavy
 
 הרחבת חוזה ה-Task-result ל-`agents/calev.md` ו-`agents/calev-heavy.md`:

@@ -213,6 +213,8 @@ mode: phase
 
 ## ‏מה לעשות עם דוח ה-calev
 
+כלב מחזיר תמצית-אינדקס (verdict + כותרות). הספירה (0 / 1-2 / 3+) נגזרת מ-`findings: <N>` ב-result. **כדי להבין finding ולתקן — פתח את `reports/.../<slice>-calev.md`**, אל תתקן מהכותרת.
+
 ```
 ‏0 bugs   → ✅ commit + phase הבא
 ‏1-2 bugs → ⚠️ ‏תקן אותם באותו phase (RED test ראשון אם logic)
@@ -356,3 +358,5 @@ mode: light   # ‏ל-calev (light) בלבד; calev-heavy לא צריך שורת
 - ❌ **>5 critical** — ‏סימן רע. מרדכי ‏תחליט: ‏brief מתוקן? ‏פיצול ל-sub-slices?
 
 ‏לא להיעלב מ-feedback. ‏ה-calev ‏לא קורא קוד ‏ולא שופט אסתטיקה — ‏הוא רק מפעיל ובודק.
+
+הדיווח שלך למרדכי כבר כולל verdict כלב מפורש (runtime-gate); הוסף את ה-path לדוח כלב כדי שמרדכי יפתח אותו (`reports/<project>/<slice>-calev.md`).
