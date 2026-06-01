@@ -5,6 +5,21 @@
 
 ---
 
+## 2026-06-01 — slice-3-report-discipline: Commit 1 — חוזה result אצל calev + calev-heavy
+
+הרחבת חוזה ה-Task-result ל-`agents/calev.md` ו-`agents/calev-heavy.md`:
+- §"מה אתה לא עושה": anti-pattern "לא לכתוב ניתוח ב-Task-result".
+- §"פורמט דוח" בכל 3 modes (phase/light/heavy): משפט "הדוח מפורט — הערוץ היחיד לניתוח".
+- §חדש "מה אתה מחזיר ב-Task-result": אינדקס קבוע (verdict+report+mode+DoD+findings+כותרות בלבד).
+- Anti-pattern בסוף: "result = אינדקס, דוח = בשר".
+- calev-heavy: הפניה מפורשת לחוזה.
+
+**עקביות avigail/calev**: שניהם ≥1 "כותרות בלבד" ✅. מבנה זהה, הבדלים לגיטימיים: verdicts, DoD, mode.
+**אימות manual**: grep ✅ × 4.
+**חריגות**: אין.
+
+---
+
 ## 2026-06-01 — slice-3-report-discipline: Commit 0 — חוזה result + חובת-דוח אצל avigail
 
 הוספת חוזה ה-Task-result ל-`agents/avigail.md`:
