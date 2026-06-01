@@ -1,5 +1,5 @@
 {
-  "project": "voice-acp",
+  "project": "my-app",
   "max_timeout_min": 120,
   "max_slices_per_night": 10,
   "require_calev_before_next": true,

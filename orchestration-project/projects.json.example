@@ -1,16 +1,16 @@
 [
   {
-    "name": "voice-acp",
-    "repo_root": "/home/user/projects/voice-acp",
+    "name": "my-app",
+    "repo_root": "/home/user/projects/my-app",
     "active": true,
-    "state_dir": "~/.local/state/brief-driven-slices/voice-acp",
-    "notes": "‏פרויקט ראשי — BE + FE + ACP"
+    "state_dir": "~/.local/state/brief-driven-slices/my-app",
+    "notes": "‏פרויקט ראשי — BE + FE"
   },
   {
-    "name": "anat",
-    "repo_root": "/home/user/projects/anat",
+    "name": "my-other-app",
+    "repo_root": "/home/user/projects/my-other-app",
     "active": false,
-    "state_dir": "~/.local/state/brief-driven-slices/anat",
+    "state_dir": "~/.local/state/brief-driven-slices/my-other-app",
     "notes": "‏לא פעיל כרגע"
   }
 ]
