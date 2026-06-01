@@ -136,13 +136,14 @@ cd .worktrees/slice-2-distillation
 
 > זה הליבה הניתנת-לבדיקה. כל הספירה/מדידה/דלתא/traceability — pure על קלט קבצים, פלט JSON. **כל הלוגיקה הבדיקה של ה-slice כאן.** שאר ה-commits הם IO-wiring (פורמטים, systemd) שנבדקים manual/none.
 
-> **הערה על `reports/`**: `reports/` הוא **sub-repo נפרד gitignored** ב-main (`.gitignore:4`). זה מכוון (decisions/bds.md — reports לשיטה, repo פרטי). distill.py קורא ממנו ברמת-filesystem (`Path.glob`) — gitignore לא משפיע על קריאה. ה-fixtures ב-`tests/fixtures/reports/` **אינם** מוחרגים (אומת) — הם tracked, חלק מה-slice.
+> **הערה על `reports/` ו-gitignore (קריטי)**: `reports/` הוא **sub-repo נפרד gitignored** ב-main (`.gitignore:4`, הדפוס `reports/`). זה מכוון (decisions/bds.md — reports לשיטה, repo פרטי). distill.py קורא ממנו ברמת-filesystem (`Path.glob`) — gitignore לא משפיע על קריאה.
+> **⚠️ מלכודת fixtures (אומת `git check-ignore`)**: הדפוס `reports/` ב-.gitignore (בלי `/` מוביל) תופס **כל** ספרייה בשם `reports` בכל עומק — כולל מיקום נאיבי כמו `tests/fixtures/reports/`. **הפתרון**: ה-fixtures ב-`tests/fixtures/sample-reports/` (שם שלא נתפס ע"י הדפוס) — tracked, חלק מה-slice. אליעזר: ודא `git check-ignore -v tests/fixtures/sample-reports/...` מחזיר ריק לפני commit.
 
 **קבצים חדשים**:
 - `scripts/distill.py`
 - `tests/test_distill.py` — unittest (stdlib). **אין pytest בסביבה** (§6) — חובה `import unittest`, לא pytest.
-- `tests/fixtures/reports/<project>/*.md` — קבצי דוח סינתטיים **בפורמט החדש** (YAML front-matter + גוף MD): ≥2 projects, ≥2 verifiers, severity/category מגוונים, ולפחות אחד עם `date` ISO 8601 ו-`summary` שמכיל נקודתיים (לוודא ציטוט נכון). **fixtures, לא הדוחות האמיתיים.**
-- `tests/fixtures/reports/<project>/*.json` — לפחות **דוח אחד בפורמט הישן** (`.json`) — לבדוק backward-compat ש-`load_reports` עדיין טוען אותו.
+- `tests/fixtures/sample-reports/<project>/*.md` — קבצי דוח סינתטיים **בפורמט החדש** (YAML front-matter + גוף MD): ≥2 projects, ≥2 verifiers, severity/category מגוונים, ולפחות אחד עם `date` ISO 8601 ו-`summary` שמכיל נקודתיים (לוודא ציטוט נכון). **fixtures, לא הדוחות האמיתיים.** (שם `sample-reports` ולא `reports` — אחרת gitignore מחריג, ראה הערה למעלה.)
+- `tests/fixtures/sample-reports/<project>/*.json` — לפחות **דוח אחד בפורמט הישן** (`.json`) — לבדוק backward-compat ש-`load_reports` עדיין טוען אותו.
 
 **API skeleton** (החתימה המדויקת — executor אסור לשנות):
 
@@ -286,7 +287,7 @@ def main() -> int:
 ```bash
 python3 -c "import yaml; print(yaml.__version__)"   # 6.0.2 — וודא PyYAML זמין לפני הכל
 python3 tests/test_distill.py          # כל ה-unittest ירוקים
-python3 scripts/distill.py --reports-dir tests/fixtures/reports --out /tmp/d.json
+python3 scripts/distill.py --reports-dir tests/fixtures/sample-reports --out /tmp/d.json
 python3 -c "import ast; ast.parse(open('scripts/distill.py').read())"  # syntax
 ```
 
@@ -427,7 +428,7 @@ grep -q "front-matter" docs/reports-format.md
 grep -q "double-quote\|לצטט\|ציטוט" agents/avigail.md      # הוראת הציטוט קיימת
 grep -q "reports/.*\.md" agents/avigail.md agents/calev.md  # הנתיב החדש
 # 2. round-trip: כתוב fixture .md בפורמט החדש, ודא distill.py טוען אותו
-python3 scripts/distill.py --reports-dir tests/fixtures/reports --out /tmp/d.json
+python3 scripts/distill.py --reports-dir tests/fixtures/sample-reports --out /tmp/d.json
 python3 -c "import json; d=json.load(open('/tmp/d.json')); assert d['avigail']['hitrate']['reports']>0"
 ```
 
@@ -451,6 +452,7 @@ python3 -c "import json; d=json.load(open('/tmp/d.json')); assert d['avigail']['
 **קבצים שמשתנים**:
 - `agents/mordechai.md` — סעיף חדש **"שני gates — אימות-נקי כתנאי"**: plan-gate (אל תסמן plan-verified בלי READY; USABLE-AFTER-FIX → תקן+הרץ אביגיל שוב) + runtime-gate (אל תמזג בלי GO; דחיית-bug רק מתועדת+מאושרת). הוסף ל-Anti-patterns: "❌ לסמן plan-verified על USABLE-AFTER-FIX בלי תיקון", "❌ למזג על PARTIAL/NO-GO בלי דחייה מתועדת".
   > **הערה ל-executor**: עדכון §ערב צעד 2 (הרצת-אביגיל-אוטומטית) + Anti-pattern "❌ לשאול 'להריץ אביגיל?'" — **כבר בוצע ע"י מרדכי ו-committed ל-main** לפני פתיחת ה-worktree (זה היה חלק מהתכנון, ראה decisions). ה-worktree שנפתח מ-main **יכלול** את השינוי. אם משום מה אינו שם (base ישן) — Escalate, אל תשכתב. החלק שנשאר ל-Commit 5 הוא ה-gates עצמם.
+  > **חשוב (סגירת forward-ref)**: `mordechai.md` כבר מכיל הפניה-קדימה "ראה plan-gate למטה" (שו' ~59, נכנסה ב-commit ההוא). Commit 5 **חייב** למקם את סעיף ה-gates ב-`mordechai.md` (עם כותרת שמכילה "plan-gate") כך שההפניה תיפתר. אחרת נשארת הפניה תלויה.
 - `agents/eliezer.md` (§"Feedback loop" / "בסוף הסליס") — חידוד: אליעזר מדווח את verdict כלב **מפורשות** בהכרזת-הסיום ("כלב verdict: GO/PARTIAL/NO-GO"), כדי שמרדכי יוכל לאכוף את runtime-gate. (אליעזר עדיין לא ממזג — זה לא משתנה.)
 - `agents/yetro.md` (§"מצא slice הבא", שורה ~62) — חידוד שה-`status==plan-verified` שיתרו בודק **מניח** READY (מרדכי לא מסמן plan-verified אחרת). זה תיעוד של חוזה קיים, לא לוגיקה חדשה ביתרו.
 - `workflow.md` — תיעוד שני ה-gates כחלק מתיאור השיטה.
@@ -472,7 +474,7 @@ grep -q "gate\|אימות-נקי\|אימות נקי" workflow.md
 **קבצים שמשתנים**:
 - `SKILL.md` / `workflow.md` — הוסף את שכבת הזיקוק לתיאור השיטה (3 שכבות זיכרון, מי מריץ, הטריגר). (workflow.md כבר נגעו ב-Commit 5 ל-gates — כאן מוסיפים את שכבת הזיקוק.)
 - `docs/walkthrough.md` — ערך חדש (skill `update-walkthrough`): מה נבנה ב-slice הזה (כולל הפורמט החדש וה-gates).
-- `docs/decisions/bds.md` — ערך חדש (מרדכי): הרציונל של (א) המנגנון המשולב (טיימר→כמותי→מרדכי-אוטומטי→branch→מרג'-אנושי) והחלוקה כמותי/איכותני; (ב) **פורמט דוח MD-front-matter** (למה במקום JSON: מקור-אמת יחיד, ה-MD המלא לא נעלם); (ג) **שני ה-gates** (plan-gate/runtime-gate — אימות-נקי כתנאי, ולמה runtime-gate לא חוסם מוחלט). **הערה**: תיקון ההנחה "אין PyYAML" כבר בוצע ב-`docs/decisions/bds.md` §"state מחוץ לריפו" (סביב שו' 60-65, הערת תיקון 2026-06-01) — אין צורך לתקן שוב, רק להפנות אליו מהערך החדש.
+- `docs/decisions/bds.md` — ערך חדש (מרדכי): הרציונל של (א) המנגנון המשולב (טיימר→כמותי→מרדכי-אוטומטי→branch→מרג'-אנושי) והחלוקה כמותי/איכותני; (ב) **פורמט דוח MD-front-matter** (למה במקום JSON: מקור-אמת יחיד, ה-MD המלא לא נעלם); (ג) **שני ה-gates** (plan-gate/runtime-gate — אימות-נקי כתנאי, ולמה runtime-gate לא חוסם מוחלט). **הערה**: תיקון ההנחה "אין PyYAML" כבר בוצע ב-`docs/decisions/bds.md` §"state מחוץ לריפו" (הערת תיקון 2026-06-01, עוגן-טקסט "תיקון 2026-06-01") — אין צורך לתקן שוב, רק להפנות אליו מהערך החדש.
 - ה-brief הזה (סטטוס → הושלם).
 
 **Manual e2e** (תעד ב-commit msg):
