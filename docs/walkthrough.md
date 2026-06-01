@@ -5,6 +5,23 @@
 
 ---
 
+## 2026-06-01 — slice-2-distillation: Commit 5 — שני gates: plan-gate + runtime-gate
+
+ניסוח כללי-שיטה שעד כה לא היו מנוסחים מפורשות:
+
+| קובץ | מה |
+|------|------|
+| `agents/mordechai.md` | §"שני gates" חדש: plan-gate (READY בלבד) + runtime-gate (GO/דחייה-מתועדת) + 2 anti-patterns חדשים |
+| `agents/eliezer.md` | §"הכרז במפורש": חידוד — ציין verdict כלב **GO/PARTIAL/NO-GO** מפורש (runtime-gate) |
+| `agents/yetro.md` | הערה: status==plan-verified מניח READY (plan-gate — חוזה קיים, לא לוגיקה חדשה) |
+| `workflow.md` | §"שני gates" חדש בין שלב 6 ל-7 |
+
+**אימות manual**: grep "plan-gate|READY" + "runtime-gate|GO" + "USABLE-AFTER-FIX" mordechai.md ✅.
+grep "gate|אימות-נקי" workflow.md ✅. Forward-ref "plan-gate למטה" שורה 59 — נסגר ✅.
+**חריגות**: אין. Gates = ניסוח כללים קיימים, לא לוגיקה חדשה.
+
+---
+
 ## 2026-06-01 — slice-2-distillation: Commit 4 — פורמט דוח MD-front-matter
 
 עדכון פורמט דוחות-אימות מ-JSON ל-MD עם YAML front-matter (מקור-אמת יחיד):

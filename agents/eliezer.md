@@ -297,7 +297,10 @@ Task({
   prompt: `Slice <slice> ‏הושלם. ... mode: light  # ‏ל-light בלבד; calev-heavy לא צריך mode`
 })
 ```
-- [ ] **‏הכרז במפורש**: "אליעזר סיים. Verification report ‏ב-<path>. ‏הסטיות: ..."
+- [ ] **‏הכרז במפורש**: "אליעזר סיים. **כלב verdict: GO/PARTIAL/NO-GO** (ציין מפורשות). Verification report ‏ב-<path>. ‏הסטיות: ..."
+
+  > **למה verdict מפורש**: מרדכי מפעיל את **runtime-gate** לפי ה-verdict. אם לא מצוין —
+  > מרדכי יצטרך לחפש בדוח, או שיחמיץ PARTIAL שצריך תיקון. ציין שחור על גבי לבן.
 
 ## ‏מה אתה לא עושה בסוף
 

@@ -56,13 +56,13 @@ tools:
    ‏בדוק: git rev-parse <base_branch> == dev_tip?
      ‏אם לא → ‏עצור ושאל מרדכי ("dev_tip drift detected")
    │
-   ▼ [‏מצא slice הבא]
-   ‏slice שעומד בכל התנאים:
-     status == "plan-verified"
-     dispatch_ready == true
-     ‏כל depends_on ∈ {merged, verified}
-     (‏תלות ב-failed/blocked/crashed → ‏סמן blocked-by:<id>, ‏דלג)
-   ‏אם אין → "queue empty for <project>", ‏עבור לפרויקט הבא
+    ▼ [‏מצא slice הבא]
+    ‏slice שעומד בכל התנאים:
+      status == "plan-verified"     # מניח READY מאביגיל — מרדכי לא מסמן plan-verified אחרת (plan-gate)
+      dispatch_ready == true
+      ‏כל depends_on ∈ {merged, verified}
+      (‏תלות ב-failed/blocked/crashed → ‏סמן blocked-by:<id>, ‏דלג)
+    ‏אם אין → "queue empty for <project>", ‏עבור לפרויקט הבא
    │
    ▼ [‏קבע base — שרשור]
    ‏אם כל depends_on במצב merged → base = dev
