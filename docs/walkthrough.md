@@ -5,6 +5,26 @@
 
 ---
 
+## 2026-06-01 — slice-2-distillation: Commit 0 — distill.py מנוע כמותי + tests
+
+בוצע TDD (red→green). הוקמה תשתית הזיקוק הכמותי: `scripts/distill.py`,
+`tests/test_distill.py` (37 טסטים), `tests/fixtures/sample-reports/` (4 fixtures md + 1 json).
+
+| קובץ | מה |
+|------|------|
+| `scripts/distill.py` | מנוע כמותי: parse_report_file (dual-format .md/.json), load_reports (סלחני), count_by_severity_category, compute_hitrate, traceability_index, flag_noncanonical, compute_delta, count_new_reports_since, build_data, main (CLI) |
+| `tests/test_distill.py` | 37 unittest: כל פונקציה, כולל: dual-format, date normalization, summary-עם-נקודתיים, סלחנות (None ב-broken yaml/json/no-fm), threshold trigger |
+| `tests/fixtures/sample-reports/projA/*.md` | 2 fixtures md בפורמט חדש (YAML front-matter) |
+| `tests/fixtures/sample-reports/projA/slice-3-calev.json` | 1 fixture json פורמט ישן (backward-compat) |
+| `tests/fixtures/sample-reports/projB/*.md` | 2 fixtures md (avigail + calev עם mode/dod_items) |
+
+**אימות**: `python3 tests/test_distill.py` → 37/37 ✅.
+`distill.py --check-only --threshold 999` → exit 1 ✅; `--threshold 0` → exit 0 ✅.
+`git check-ignore tests/fixtures/sample-reports/...` → ריק ✅ (לא נתפס ע"י gitignore).
+**חריגות**: אין.
+
+---
+
 ## 2026-05-29 — ‏בניית מערכת האורקסטרציה (commits 03b1a6d→1f9308c, ‏ב-my-skills)
 
 ‏אליעזר בנה את התשתית הראשונית של מערכת ה-5 ‏סוכנים, ‏לפי `orchestration-design.md`

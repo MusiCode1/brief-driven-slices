@@ -1,0 +1,19 @@
+{
+  "project": "projA",
+  "slice": "slice-3",
+  "verifier": "calev",
+  "date": "2026-04-20",
+  "mode": "light",
+  "verdict": "PARTIAL",
+  "findings": [
+    {
+      "id": 1,
+      "severity": "blocker",
+      "category": "cross-store-null",
+      "summary": "messageId hardcoded to null in addSegment call",
+      "source_brief": "DoD item 3",
+      "source_code": "src/player.ts:55",
+      "cost_estimate": "30min"
+    }
+  ]
+}
