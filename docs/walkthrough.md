@@ -5,6 +5,17 @@
 
 ---
 
+## 2026-06-01 — slice-2-distillation: Commit 2 — יומן גלובלי אבולוציית השיטה
+
+נוסף `docs/methodology-evolution.md` — יומן גלובלי נדיר של התפתחות השיטה.
+5 אירועים: יצירת הצוות (5 סוכנים + רציונל השמות + מה לא עבד), המעבר לפרויקט עצמאי,
+פיצול calev→calev-heavy, שכבת הזיקוק (Commit הנוכחי, כולל פורמט+gates). + 5 עקרונות.
+
+**אימות manual**: `test -f docs/methodology-evolution.md` ✅. grep "merge|זיקוק|calev-heavy" ✅.
+**חריגות**: אין.
+
+---
+
 ## 2026-06-01 — slice-2-distillation: Commit 1 — פורמט דוח-זיקוק + קטלוגים + traceability
 
 נוספו קטלוגים ותבניות לשכבת הזיקוק:
