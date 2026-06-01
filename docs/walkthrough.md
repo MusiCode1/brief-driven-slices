@@ -5,6 +5,23 @@
 
 ---
 
+## 2026-06-01 — slice-3-report-discipline: Commit 3 — תיעוד חוזה + סגירה
+
+תיעוד החוזה בקבצי ה-reference + עדכון brief לסטטוס "הושלם":
+
+| קובץ | מה |
+|------|------|
+| `docs/reports-format.md` | §חדש "חוזה ה-Task-result (משמעת-דוחות)": שני פורמטים (avigail/calev), כלל הברזל, הפניות |
+| `workflow.md` | §חדש "חוזה ה-Task-result — אינדקס בלבד": diagram + כלל + הפניה ל-reports-format |
+| `docs/decisions/bds.md` | entry חדש: הבעיה שנסגרה (slice-2), ההחלטה, הרציונל לקביעות, יישום |
+| `docs/plans/slice-3-report-discipline.md` | סטטוס → הושלם |
+
+**slice-3-report-discipline סוכם**: 4 commits, 9 קבצים עודכנו, חוזה מנוסח, עקבי, צרכנים מצפים.
+**אימות manual**: grep ✅ × 12 DoD items (לפני calev light).
+**חריגות**: אין סטיות מהbrief.
+
+---
+
 ## 2026-06-01 — slice-3-report-discipline: Commit 2 — הצרכנים מצפים לחוזה (mordechai + eliezer)
 
 עדכון `agents/mordechai.md` ו-`agents/eliezer.md` לחוזה החדש:

@@ -170,6 +170,22 @@ Commits: git log <base>..HEAD
 
 ‏פירוט הקריטריונים ב-[`recommendations.md`](recommendations.md) §7-8.
 
+## חוזה ה-Task-result — אינדקס בלבד
+
+המאמת (אביגיל/כלב) כותב דוח מלא → מחזיר אינדקס → הצרכן פותח את הדוח.
+
+```
+מאמת              Task-result (אינדקס)        דוח מלא
+┌──────────┐ ──── verdict+report+כותרות ───► מרדכי/אליעזר
+│ אביגיל / │                                    │
+│  כלב     │ ──── front-matter+גוף MD ──────► reports/<project>/<slice>-*.md
+└──────────┘                                    │
+                                    חייבים לפתוח לכל החלטה על finding
+```
+
+> **כלל**: ניתוח ב-Task-result = תקלה. ה-result הוא אינדקס, הבשר בדוח.
+> פירוט: `docs/reports-format.md` §"חוזה ה-Task-result (משמעת-דוחות)".
+
 ## שני gates — אימות-נקי כתנאי
 
 > **plan-gate**: לפני dispatch (§שלב 2 → §שלב 4)

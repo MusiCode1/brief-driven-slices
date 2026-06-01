@@ -160,3 +160,42 @@ summary: boolean | string issue
 ## ‏מטרה
 
 ‏חומר-גלם מצטבר לזיקוק חוצה-פרויקטי (`distill.py` + מרדכי). ‏ה-severity הוא הציר העיקרי למדידה.
+
+---
+
+## חוזה ה-Task-result (משמעת-דוחות)
+
+**הדוח הוא הערוץ היחיד לניתוח.** ה-Task-result של כל מאמת הוא **תמצית-אינדקס בלבד** — לא ניתוח.
+
+### פורמט Task-result לאביגיל
+
+```
+verdict: <READY|USABLE-AFTER-FIX|NEEDS-REWORK>
+report: reports/<project>/<slice>-avigail.md
+findings: <N>
+findings (כותרות בלבד):
+  - 🔴 <summary>
+  - 🟡 <summary>
+  - 🟢 <summary>
+```
+
+### פורמט Task-result לכלב (calev / calev-heavy)
+
+```
+verdict: <GO|PARTIAL|NO-GO>
+report: reports/<project>/<slice>-calev.md
+mode: <phase|light|heavy>
+DoD: <X/Y>           ← light/heavy בלבד
+findings: <N>
+findings (כותרות בלבד):
+  - 🔴 <summary>
+  - 🟡 <summary>
+```
+
+### כלל הברזל
+
+- **ניתוח ב-Task-result = תקלה.** result-שמן + דוח-רזה = הפכת את היוצרות.
+- **הצרכן (מרדכי/אליעזר) חייב לפתוח את הדוח** לכל החלטה על finding. ה-result הוא אינדקס — לא תחליף.
+- הפורמט **קבוע** — אין מצב שה-result מספיק בלי הדוח.
+
+> ראה `agents/avigail.md` §"מה אתה מחזיר ב-Task-result" ו-`agents/calev.md` §"מה אתה מחזיר ב-Task-result" לפורמט המדויק.
