@@ -1,6 +1,6 @@
 # דפוסי כשל של Executor Agent
 
-> מבוסס על: 1 case study (Slice 9 — drive-coding frontend refactor, מאי 2026).
+> מבוסס על: 1 case study (Slice 9 — drive-coding frontend refactor, מאי 2026) + זיקוק אוטומטי מ-reports/ (ראה distillations/).
 > יתעדכן בכל case study חדש.
 
 המונחים:
@@ -201,3 +201,29 @@ test("text_chunks of same kind go to same bubble", () => {
 ## קטגוריה X (placeholder)
 
 > מקום לקטגוריה חדשה שתעלה מ-case study הבא.
+
+---
+
+## Traceability — מקורות
+
+> כל קטגוריה מצביעה על הדוחות (reports/) שתרמו לה.
+> מבנה: `> מקורות: project/slice-verifier, ...`
+> מעודכן בכל זיקוק (ראה distillations/).
+
+**קטגוריה 1 — TDD ירוק ≠ התנהגות נכונה**:
+> מקורות: drive-coding/slice-9-calev (case study ראשוני — לא דוח פורמלי)
+
+**קטגוריה 2 — צנרת בין-Stores / Modules נשכחת**:
+> מקורות: drive-coding/slice-9-calev (case study ראשוני — לא דוח פורמלי)
+
+**קטגוריה 3 — Spec Drift**:
+> מקורות: drive-coding/slice-9-calev (case study ראשוני — לא דוח פורמלי)
+
+**קטגוריה 4 — אינטראקציות עם ספריות חיצוניות**:
+> מקורות: drive-coding/slice-9-calev (case study ראשוני — לא דוח פורמלי)
+
+**קטגוריה 5 — CSS / ויזואלי = שטח מת**:
+> מקורות: drive-coding/slice-9-calev (case study ראשוני — לא דוח פורמלי)
+
+> הערה: כשיצטברו דוחות calev פורמליים (reports/), הzיקוק האוטומטי יעדכן את הtraceability
+> עם מקורות מדויקים (project/slice-verifier).

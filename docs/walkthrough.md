@@ -5,6 +5,24 @@
 
 ---
 
+## 2026-06-01 — slice-2-distillation: Commit 1 — פורמט דוח-זיקוק + קטלוגים + traceability
+
+נוספו קטלוגים ותבניות לשכבת הזיקוק:
+
+| קובץ | מה |
+|------|------|
+| `distillations/README.md` | הסבר שכבת הזיקוק, מבנה, טריגר, חלוקה כמותי/איכותני |
+| `distillations/.gitkeep` | שמירת תיקייה ב-git |
+| `distillations/TEMPLATE-report.md` | תבנית 4-חלקים לדוח זיקוק (מבט-לאחור, התפלגות, חדשות, עדכוני-קטלוג) |
+| `plan-pitfalls.md` | קטלוג טעויות-תכנון (אביגיל) — 2 קטגוריות + traceability מקורות |
+| `patterns.md` (עדכון) | שורה 2: "+ זיקוק אוטומטי מ-reports/"; סעיף Traceability בסוף |
+
+**אימות manual**: `test -f plan-pitfalls.md && test -f distillations/TEMPLATE-report.md` ✅.
+grep "הנחה לא-מאומתת" plan-pitfalls.md ✅. grep "מקורות" patterns.md ✅.
+**חריגות**: אין.
+
+---
+
 ## 2026-06-01 — slice-2-distillation: Commit 0 — distill.py מנוע כמותי + tests
 
 בוצע TDD (red→green). הוקמה תשתית הזיקוק הכמותי: `scripts/distill.py`,
