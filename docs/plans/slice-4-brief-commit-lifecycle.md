@@ -168,9 +168,12 @@ status: ‏מאושר  ───►│  commit #2 (מרדכי)        │       
 
 ```bash
 grep -n "Commit ה-brief — ‏מתי ולאיזה branch" workflow.md   # ‏סעיף קיים
-grep -n "committed ל-base \*\*לפני\*\*" workflow.md          # ‏שתי האזהרות
-grep -c "טיוטה → ‏מאושר" workflow.md                          # ‏לפחות 1 (‏הטבלה)
+grep -n "committed ל-base" workflow.md | grep -c "worktree"  # ‏≥1 (‏האזהרות)
+grep -c "מאושר" workflow.md                                  # ‏≥1 (‏הטבלה — ‏בלי ** ‏שמכיל RLM)
 ```
+
+> ‏הערה: ‏הטקסט המוסף מכיל RLM (U+200F) ‏בתוך `**‏לפני**`. ‏אל תכלול `**...**`
+> ‏ב-grep patterns — ‏השתמש ב-substring פשוט (`committed ל-base`) ‏שאינו תלוי ב-RLM.
 
 ---
 
@@ -221,10 +224,11 @@ grep -c "טיוטה → ‏מאושר" workflow.md                          # �
 **Verification**:
 
 ```bash
-grep -n "‏וקמט\*\* (status: ‏טיוטה)" agents/mordechai.md
+# ‏patterns ‏נקיים — ‏בלי ** ‏ובלי גבול-RLM:
+grep -n "וקמט" agents/mordechai.md
 grep -n "קמט את ה-brief המעודכן" agents/mordechai.md
 grep -n "לא עורך את ה-brief ב-" briefs/EXECUTOR_DISPATCH.md
-grep -n "מרדכי מקמט: ‏טיוטה" briefs/BRIEF_TEMPLATE.md
+grep -n "מרדכי מקמט" briefs/BRIEF_TEMPLATE.md
 ```
 
 ---
@@ -270,14 +274,20 @@ grep -n "slice-4" docs/walkthrough.md
 
 | # | ‏בדיקה | ‏איך |
 |---|------|------|
+> **‏כלל-זהב ל-grep ב-DoD הזה**: ‏אל תכלול `**...**` (markdown bold) ‏ב-pattern —
+> ‏הטקסט המוסף מכיל RLM (U+200F) ‏בין `**` ‏למילה, ‏ו-grep ‏פשוט לא יתפוס.
+> ‏השתמש ב-substring "‏נקי" (‏בלי `*`, ‏בלי גבול-RLM). ‏כל ה-patterns למטה ‏כבר ‏נקיים.
+
+| # | ‏בדיקה | ‏איך |
+|---|------|------|
 | 1 | ‏workflow §שלב 2 ‏מכיל סעיף "‏Commit ה-brief" ‏עם טבלת 4 מעברים | `grep -n "Commit ה-brief — ‏מתי ולאיזה branch" workflow.md` |
-| 2 | ‏workflow ‏מכיל אזהרת "‏committed ל-base לפני worktree" | `grep -n "committed ל-base \*\*לפני\*\*" workflow.md` |
+| 2 | ‏workflow ‏מכיל אזהרת "‏committed ל-base לפני worktree" | `grep -n "committed ל-base" workflow.md \| grep worktree` |
 | 3 | ‏workflow ‏מכיל אזהרת "‏אליעזר עורך רק בworktree" | `grep -n "רק בworktree שלו" workflow.md` |
 | 4 | ‏workflow §שלב 4 ‏מכיל precondition info-block | `grep -n "Precondition: ‏ה-brief committed" workflow.md` |
-| 5 | `agents/mordechai.md` §ערב צעד 1 ‏כולל "‏וקמט (status: ‏טיוטה)" | `grep -n "וקמט" agents/mordechai.md` |
+| 5 | `agents/mordechai.md` §ערב צעד 1 ‏כולל "‏וקמט" | `grep -n "וקמט" agents/mordechai.md` |
 | 6 | `agents/mordechai.md` ‏כולל צעד "‏קמט brief מעודכן (מאושר)" | `grep -n "קמט את ה-brief המעודכן" agents/mordechai.md` |
 | 7 | `EXECUTOR_DISPATCH.md` §11 ‏כולל "‏לא עורך brief ב-main/dev" | `grep -n "לא עורך את ה-brief ב-" briefs/EXECUTOR_DISPATCH.md` |
-| 8 | `BRIEF_TEMPLATE.md` front-matter ‏מבהיר מי מקמט status | `grep -n "מרדכי מקמט: ‏טיוטה" briefs/BRIEF_TEMPLATE.md` |
+| 8 | `BRIEF_TEMPLATE.md` front-matter ‏מבהיר מי מקמט status | `grep -n "מרדכי מקמט" briefs/BRIEF_TEMPLATE.md` |
 | 9 | decisions entry קיים | `grep -n "slice-4-brief-commit-lifecycle" docs/decisions/bds.md` |
 | 10 | ‏טסטים קיימים לא נשברו (‏רגרסיה) | `python3 -m pytest tests/ -q` → ‏ירוק |
 | 11 | ‏אין קישורים שבורים שהוספנו | ‏קריאה ידנית — ‏כל הפניה ל-§ ‏מצביעה על סעיף קיים |
@@ -289,7 +299,7 @@ grep -n "slice-4" docs/walkthrough.md
 | ‏סיכון | ‏מקור | ‏מיטיגציה |
 |------|------|----------|
 | ‏עריכה משנה line numbers שמסמכים אחרים מצטטים | ‏ניסיון פנימי | ‏ה-slice לא מוחק תוכן, ‏רק מוסיף; ‏מסמכים מצטטים §-כותרות לא שורות. ‏אם הוספה מזיזה — ‏בדוק grep references |
-| ‏RTL/עברית בקוד-בלוקים של grep ‏ב-DoD לא תואם בפועל | ‏עברית ב-grep patterns | ‏אליעזר: ‏אם grep מחזיר 0 ‏בגלל RLM/ניקוד — ‏השתמש ב-substring קצר יותר. ‏המהות: ‏הסעיף קיים, ‏לא ה-grep המדויק |
+| ‏RTL/עברית בקוד-בלוקים של grep ‏ב-DoD לא תואם בפועל | ‏עברית + RLM (U+200F) ‏ב-grep patterns | **‏טופל**: ‏כל ה-patterns ב-§5 ‏נוקו מ-`**...**` (‏RLM מסתתר אחרי `**`). ‏כלל-זהב מתועד בראש §5: ‏substring נקי, ‏בלי markdown-bold. ‏fallback: ‏אם בכל-זאת 0 — ‏substring קצר יותר |
 | ‏סטייה מ-"docs only" — ‏פיתוי לתקן staleness ב-§שלב 3 | scope creep | ‏§2 ‏אוסר במפורש. ‏staleness ‏מתועד ב-§9 כ-slice עתידי |
 | ‏זליגת-עריכה ל-main (‏האירוני — ‏על slice שמתעד בדיוק את זה) | handoff slice-3 | ‏אליעזר עובד **‏רק** ‏ב-`.worktrees/slice-4-.../`, ‏לא ב-`main/` |
 
