@@ -1,7 +1,7 @@
 # Slice 4 — brief-commit-lifecycle — ‏תוכנית
 
 > **‏תאריך**: 2026-06-03
-> **‏סטטוס**: ‏טיוטה
+> **‏סטטוס**: ‏מאושר
 > **Complexity**: 2/10 (verifier: light)
 > **‏תלויות (`depends_on`)**: [] ‏— ‏בנוי ישירות על main
 > **‏Base**: main
