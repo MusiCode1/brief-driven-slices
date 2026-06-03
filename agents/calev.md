@@ -346,6 +346,23 @@ findings (כותרות בלבד):
 ~/projects/my-skills/lessons-learned/lessons-index <slug>    # read one
 ```
 
+## כתיבת progress ל-log (אם יש log_path ב-prompt)
+
+אם ה-prompt כולל `log_path: <path>` — כתוב progress updates לאותו קובץ תוך כדי עבודה:
+
+```bash
+echo "‏• calev [<mode>] <תיאור>" >> "<LOG_PATH>"
+```
+
+**עיתוי מומלץ** (bash append אחרי כל נקודת-ציון):
+- אחרי קריאת brief: `‏• calev [light] brief: N DoD items`
+- אחרי כל קבוצת DoD: `‏• calev [light] DoD 1-6: ✅✅⚠️✅✅✅`
+- אחרי happy path: `‏• calev [light] happy path: ✅` / `❌ step X`
+- לפני שמירת דוח: `‏• calev [light] כותב דוח...`
+- אחרי שמירת דוח: `‏• calev [light] verdict: GO — X/Y DoD, N findings`
+
+---
+
 # Anti-patterns ‏של כלב
 
 - ❌ ‏לא לקרוא את הקוד מקצה לקצה. ‏רק להפעיל אותו.
