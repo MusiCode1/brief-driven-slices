@@ -1,0 +1,190 @@
+{
+  "agents": {
+    "mordechai": {
+      "description": "Strategic planner — writes detailed briefs, reviews brief verification reports, dispatches executors/verifiers, and is the only role authorized to merge after explicit user approval.",
+      "prompt": "prompts/mordechai.md",
+      "codex": {
+        "name": "mordechai",
+        "model_reasoning_effort": "high",
+        "sandbox_mode": "workspace-write",
+        "nickname_candidates": ["Mordechai"]
+      },
+      "opencode": {
+        "name": "mordechai",
+        "mode": "primary",
+        "model": "anthropic/claude-opus-4-8",
+        "permission": {
+          "edit": "allow",
+          "bash": "allow",
+          "webfetch": "allow",
+          "external_directory": "allow"
+        },
+        "tools": {
+          "read": true,
+          "glob": true,
+          "grep": true,
+          "write": true,
+          "edit": true,
+          "bash": true,
+          "webfetch": true,
+          "task": true,
+          "todowrite": true
+        }
+      }
+    },
+    "yetro": {
+      "description": "Orchestrator — runs the nightly slice queue automatically, dispatches executors, polls outcomes, runs verifiers, archives passing briefs, and writes a morning summary.",
+      "prompt": "prompts/yetro.md",
+      "codex": {
+        "name": "yetro",
+        "model_reasoning_effort": "medium",
+        "sandbox_mode": "workspace-write",
+        "nickname_candidates": ["Yetro"]
+      },
+      "opencode": {
+        "name": "yetro",
+        "mode": "primary",
+        "model": "anthropic/claude-sonnet-4-6",
+        "permission": {
+          "edit": "allow",
+          "bash": "allow",
+          "webfetch": "allow",
+          "external_directory": "allow"
+        },
+        "tools": {
+          "read": true,
+          "glob": true,
+          "grep": true,
+          "write": true,
+          "edit": true,
+          "bash": true,
+          "webfetch": true,
+          "task": true,
+          "todowrite": true
+        }
+      }
+    },
+    "eliezer": {
+      "description": "Implementation agent — executes a verified brief phase-by-phase in the assigned worktree, following the testing strategy chosen by the planner.",
+      "prompt": "prompts/eliezer.md",
+      "codex": {
+        "name": "eliezer",
+        "model_reasoning_effort": "medium",
+        "sandbox_mode": "workspace-write",
+        "nickname_candidates": ["Eliezer"]
+      },
+      "opencode": {
+        "name": "eliezer",
+        "mode": "all",
+        "model": "anthropic/claude-sonnet-4-6",
+        "permission": {
+          "edit": "allow",
+          "bash": "allow",
+          "webfetch": "allow",
+          "external_directory": "allow"
+        },
+        "tools": {
+          "read": true,
+          "glob": true,
+          "grep": true,
+          "write": true,
+          "edit": true,
+          "bash": true,
+          "webfetch": true,
+          "task": true,
+          "todowrite": true
+        }
+      }
+    },
+    "avigail": {
+      "description": "Plan verifier — bug-hunts in a brief before it goes to the executor, validating factual claims against the real codebase.",
+      "prompt": "prompts/avigail.md",
+      "codex": {
+        "name": "avigail",
+        "model_reasoning_effort": "high",
+        "sandbox_mode": "read-only",
+        "nickname_candidates": ["Avigail"]
+      },
+      "opencode": {
+        "name": "avigail",
+        "mode": "subagent",
+        "model": "anthropic/claude-opus-4-8",
+        "permission": {
+          "edit": "deny",
+          "bash": "allow",
+          "webfetch": "allow",
+          "external_directory": "allow"
+        },
+        "tools": {
+          "read": true,
+          "glob": true,
+          "grep": true,
+          "write": true,
+          "bash": true,
+          "webfetch": true,
+          "todowrite": true
+        }
+      }
+    },
+    "calev": {
+      "description": "Runtime verifier — checks phase or light end-of-slice behavior against the original brief in a real environment.",
+      "prompt": "prompts/calev.md",
+      "codex": {
+        "name": "calev",
+        "model_reasoning_effort": "medium",
+        "sandbox_mode": "workspace-write",
+        "nickname_candidates": ["Calev"]
+      },
+      "opencode": {
+        "name": "calev",
+        "mode": "subagent",
+        "model": "anthropic/claude-sonnet-4-6",
+        "permission": {
+          "edit": "allow",
+          "bash": "allow",
+          "webfetch": "allow",
+          "external_directory": "allow"
+        },
+        "tools": {
+          "read": true,
+          "glob": true,
+          "grep": true,
+          "write": true,
+          "bash": true,
+          "webfetch": true,
+          "todowrite": true
+        }
+      }
+    },
+    "calev-heavy": {
+      "description": "Runtime verifier — heavy tier for complexity 8+ slices, covering visual review, E2E flows, edge cases, regressions, and pattern classification.",
+      "prompt": "prompts/calev-heavy.md",
+      "codex": {
+        "name": "calev-heavy",
+        "model_reasoning_effort": "high",
+        "sandbox_mode": "workspace-write",
+        "nickname_candidates": ["Calev Heavy"]
+      },
+      "opencode": {
+        "name": "calev-heavy",
+        "mode": "subagent",
+        "model": "anthropic/claude-opus-4-8",
+        "permission": {
+          "edit": "deny",
+          "bash": "allow",
+          "webfetch": "allow",
+          "external_directory": "allow"
+        },
+        "tools": {
+          "read": true,
+          "glob": true,
+          "grep": true,
+          "write": true,
+          "bash": true,
+          "webfetch": true,
+          "todowrite": true
+        }
+      }
+    }
+  }
+}

@@ -5,6 +5,29 @@
 
 ---
 
+## 2026-06-05 — תאימות Codex + שכבת CLI adapters
+
+נוספה שכבת תאימות ל-CLI מרובים בלי לשבור את OpenCode:
+
+| קובץ | מה |
+|------|----|
+| `AGENTS.md` | הנחיות פרויקט כלליות לסוכני קוד + מיפוי roles |
+| `agent-definitions/agents.json` | מקור אמת למטא-דאטה של הסוכנים לפי CLI |
+| `agent-definitions/prompts/*.md` | מקור אמת לגופי הפרומפטים הארוכים |
+| `scripts/generate-cli-configs.py` | גנרטור stdlib-only ל-Codex/OpenCode |
+| `cli-configs/` | תוצרי adapters לפי CLI |
+| `cli-configs/codex/agents/*.toml` | custom agents generated ל-Codex עבור mordechai/yetro/eliezer/avigail/calev/calev-heavy |
+| `cli-configs/opencode/agents/*.md` | agents generated ל-OpenCode |
+| `cli-configs/codex/config.toml` | defaults ל-subagents של Codex |
+| `scripts/install-cli-configs.sh` | generation + התקנה ל-OpenCode/Codex/all |
+| `scripts/install-agents.sh` | wrapper תאימות אחורה ל-OpenCode |
+| `README.md`, `SKILL.md`, `docs/decisions/bds.md` | תיעוד מקור האמת, generated outputs, והרציונל |
+
+**אימות**: JSON נטען ✅; TOML נטען עם `tomllib` ✅; `bash -n` לשני סקריפטי ההתקנה ✅; התקנת ניסיון לתיקיות זמניות ✅; generator idempotent ✅.
+**חריגות**: `.localappdata/` ו-`.specstory/` קיימות כ-untracked מלפני השינוי ולא נגעו בהן.
+
+---
+
 ## 2026-06-01 — slice-3-report-discipline: Commit 3 — תיעוד חוזה + סגירה
 
 תיעוד החוזה בקבצי ה-reference + עדכון brief לסטטוס "הושלם":

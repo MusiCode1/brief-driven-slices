@@ -9,7 +9,9 @@ before any code is written**, executed by a separate agent in an isolated git
 worktree, **verified again at runtime**, and only then — with a human in the loop —
 merged.
 
-It is a methodology plus a concrete set of OpenCode agents that implement it.
+It is a methodology plus concrete agent adapters for coding CLIs. OpenCode was
+the first implementation; Codex custom agents are now supported through a
+separate adapter layer.
 
 ---
 
@@ -88,7 +90,7 @@ omits it.
 
 ## The team — five agents, biblical names
 
-The pipeline is implemented as five OpenCode agents. The names are Hebrew/biblical,
+The pipeline is implemented as five roles with CLI-specific adapters. The names are Hebrew/biblical,
 each chosen because the character embodies that exact role. (This started as a
 Hebrew-language project; the names stuck because the rationale is genuinely apt.)
 
@@ -158,13 +160,16 @@ are always human(-model)-driven.
 | Path | What it is |
 |------|------------|
 | [`SKILL.md`](SKILL.md) | The OpenCode skill definition — loads the whole methodology into an agent's context |
+| [`AGENTS.md`](AGENTS.md) | Project-level instructions for coding agents |
+| [`agent-definitions/`](agent-definitions/) | Canonical agent metadata (`agents.json`) and prompt bodies (`prompts/*.md`) |
 | [`workflow.md`](workflow.md) | The end-to-end protocol, step by step |
 | [`worktrees.md`](worktrees.md) | The worktree convention and parallel-executor setup |
 | [`orchestration.md`](orchestration.md) | Mode 2 internals — Yitro, the state machine, chaining, BLOCKED handling |
 | [`patterns.md`](patterns.md) | Catalog of execution mistakes (Calev feeds it) |
 | [`plan-pitfalls.md`](plan-pitfalls.md) | Catalog of planning mistakes (Avigail feeds it) |
 | [`recommendations.md`](recommendations.md) | The brief template rationale and the guard-rails |
-| [`agents/`](agents/) | The five agent definitions (`mordechai`, `yitro`, `eliezer`, `avigail`, `calev`, plus `calev-heavy`) |
+| [`agents/`](agents/) | Generated legacy OpenCode-compatible agent files |
+| [`cli-configs/`](cli-configs/) | Generated CLI-specific adapters and install notes for OpenCode, Codex, and future CLIs |
 | [`briefs/`](briefs/) | `BRIEF_TEMPLATE.md`, the executor-dispatch boilerplate, and the `state.json` template |
 | [`docs/decisions/bds.md`](docs/decisions/bds.md) | **The "why" journal** — every design decision and the alternatives that were rejected |
 | [`docs/methodology-evolution.md`](docs/methodology-evolution.md) | Global journal of how the methodology itself changed |
@@ -173,13 +178,40 @@ are always human(-model)-driven.
 
 ---
 
-## Installing the agents (OpenCode)
+## Installing CLI adapters
+
+Install every supported CLI adapter:
+
+```bash
+bash scripts/install-cli-configs.sh all
+```
+
+Install one adapter:
+
+```bash
+bash scripts/install-cli-configs.sh opencode
+bash scripts/install-cli-configs.sh codex
+```
+
+OpenCode receives symlinks in `~/.config/opencode/agents/`.
+Codex receives TOML custom agents in `~/.codex/agents/`, plus a project
+`.codex/config.toml` with the BDS subagent defaults.
+
+`scripts/install-cli-configs.sh` regenerates CLI outputs from
+`agent-definitions/agents.json` and `agent-definitions/prompts/*.md` before it
+installs them. To regenerate without installing:
+
+```bash
+python3 scripts/generate-cli-configs.py all
+```
+
+Legacy OpenCode command:
 
 ```bash
 bash scripts/install-agents.sh
 ```
 
-This symlinks the agent definitions into `~/.config/opencode/agents/`.
+This remains as a wrapper around `install-cli-configs.sh opencode`.
 
 ---
 

@@ -47,7 +47,8 @@ description: |
 > ‏על brief סטטי, ‏כלב-heavy על edge-cases/regressions/patterns). ‏Sonnet למקום
 > ‏שהאמת מגיעה מ**‏הרצה** (אליעזר ביצוע, ‏יתרו מכני, ‏כלב phase/light — runtime).
 
-‏להתקנת symlinks: `bash ~/projects/brief-driven-slices/main/scripts/install-agents.sh`
+‏להתקנת כל adapters: `bash ~/projects/brief-driven-slices/main/scripts/install-cli-configs.sh all`
+‏לתאימות OpenCode ישנה: `bash ~/projects/brief-driven-slices/main/scripts/install-agents.sh`
 
 ## ‏שלושת מצבי ‏ההפעלה
 
@@ -130,16 +131,21 @@ description: |
 | [`orchestration.md`](orchestration.md) | ‏Mode 2 — ‏יתרו, state machine, ‏שרשור, BLOCKED |
 | [`workflow.md`](workflow.md) | ‏לפני התחלת slice ‏חדש — ‏הפרוטוקול המלא |
 | [`worktrees.md`](worktrees.md) | ‏כשמכינים worktree, ‏או שני executors במקביל |
+| [`agent-definitions/`](agent-definitions/) | ‏מקור האמת לסוכנים: `agents.json` + `prompts/*.md` |
 | [`patterns.md`](patterns.md) | 5 ‏קטגוריות הכשל שזוהו ב-Slice 9 — ‏רקע לwhy |
 | [`recommendations.md`](recommendations.md) | 10 ‏סעיפים ל-template ‏וההגנות |
 | [`briefs/BRIEF_TEMPLATE.md`](briefs/BRIEF_TEMPLATE.md) | ‏Skeleton ‏ל-brief ‏חדש |
 | [`briefs/EXECUTOR_DISPATCH.md`](briefs/EXECUTOR_DISPATCH.md) | Boilerplate ‏ל-dispatch ‏ל-אליעזר (‏פר-פרויקט) |
 | [`briefs/state.template.json`](briefs/state.template.json) | ‏Template ‏ל-state.json ‏פר-פרויקט |
 | [`orchestration-project/`](orchestration-project/) | ‏Template ‏לפרויקט הבית של יתרו |
+| [`cli-configs/`](cli-configs/) | ‏Adapters ‏ל-CLI שונים: OpenCode, Codex, ובהמשך אחרים |
+| [`AGENTS.md`](AGENTS.md) | ‏הנחיות פרויקט כלליות לסוכני קוד |
 
-## ‏הסוכנים (sub-agents ‏ב-OpenCode)
+## ‏הסוכנים (roles ‏עם adapters ‏ל-CLI)
 
-‏מקושרים ‏סמלית ל-`~/.config/opencode/agents/` ‏דרך `install-agents.sh`. ‏ב-`agents/`:
+‏מקור האמת הוא `agent-definitions/agents.json` ‏למטא-דאטה ו-`agent-definitions/prompts/*.md` ‏לגוף הפרומפט.
+‏`agents/*.md` ‏ו-`cli-configs/*/agents/*` ‏הם תוצרים generated. ‏OpenCode מקבל symlinks
+‏דרך `install-cli-configs.sh opencode`; ‏Codex מקבל custom agents ‏ב-TOML ‏דרך `install-cli-configs.sh codex`.
 
 | ‏סוכן | ‏מתי |
 |------|------|

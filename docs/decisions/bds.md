@@ -114,6 +114,51 @@ Mode 1 ‏(סינכרוני, ‏Task, ‏slice בודד) / Mode 2 ‏(לילי, 
 
 # ‏החלטות פר-slice (כרונולוגי)
 
+## 2026-06-05 — מקור אמת לסוכנים + generated adapters ל-CLI מרובים
+
+### ההחלטה
+
+הגדרות הסוכנים מפוצלות לשני מקורות אמת:
+
+- `agent-definitions/agents.json` — מטא-דאטה מובנה לכל role ולכל CLI.
+- `agent-definitions/prompts/*.md` — גוף הפרומפט הארוך של כל role.
+
+כל קובץ agent ספציפי ל-CLI הוא תוצר generated:
+
+- `cli-configs/codex/agents/*.toml`
+- `cli-configs/opencode/agents/*.md`
+- `agents/*.md` כתאימות OpenCode legacy.
+
+### הרציונל
+
+הפרויקט צריך לתמוך בכמה CLI במקביל בלי לשכפל פרומפטים. Codex דורש TOML עם
+`developer_instructions`, OpenCode דורש Markdown עם front matter, ו-CLI עתידיים
+כנראה ידרשו מבנה נוסף. אם כל פורמט יוחזק ידנית, שינוי באביגיל/כלב/אליעזר יסטה
+בקלות בין כלים.
+
+לכן הפרומפט הוא קובץ Markdown יחיד, וה-metadata הוא JSON יחיד. ה-renderers
+הספציפיים לכל CLI אחראים רק לאריזה.
+
+### למה JSON ולא YAML
+
+נבחר `agents.json` כדי להישאר ב-stdlib של Python ולשמור עקביות עם `state.json`.
+אין תלות ב-PyYAML או ב-binary חיצוני. JSON פחות נוח לעריכה ידנית, אבל מתאים
+למטא-דאטה קשיח שהגנרטור צורך.
+
+### חלופות שנדחו
+
+- להמשיך לערוך `agents/*.md` ו-`cli-configs/codex/*.toml` ידנית — נדחה בגלל drift.
+- להשתמש ב-YAML — נדחה כדי להימנע מתלות חיצונית ולשמור על דפוס JSON קיים.
+- להפוך `cli-configs/codex/agents/*.toml` למקור האמת — נדחה כי הוא ספציפי ל-Codex.
+
+### יישום
+
+`scripts/generate-cli-configs.py` מייצר את הפלטים מתוך `agent-definitions/`.
+`scripts/install-cli-configs.sh` מריץ generation לפני copy/symlink, כך שהתקנה תמיד
+מתבססת על המקור העדכני.
+
+---
+
 ## 2026-05-30 — slice bds-extraction: שתי סטיות שאליעזר עשה בבנייה
 
 ### ‏סטייה 1 — SOUL.md: איסור merge/push על קוד executor
