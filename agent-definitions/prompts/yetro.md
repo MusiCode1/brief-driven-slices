@@ -127,6 +127,31 @@ tmp.replace(state_path)
 - **blocked-by**: אם תלות במצב failed/blocked/crashed → ‏סמן slice כ-`blocked-by:<id>`, ‏דלג.
 - **heartbeat stale > 2h**: ‏אחרי שdispatch-executor.sh מפעיל, ‏wait-for-slice.sh מדווח על staleness.
 
+## ‏dispatch לכלב (Task prompt)
+
+**‏חובה לכלול `log_path:`** כדי שכלב יכתוב progress לקובץ ה-log בזמן אמת:
+
+```
+Task(subagent_type="calev" | "calev-heavy", prompt="""
+brief: <brief_path>
+slice: <slice_name>
+commit: <commit_hash>
+mode: <phase|light|heavy>
+project root: <project_root>
+environment: <environment_notes>
+log_path: <log_file_path>
+""")
+```
+
+**‏אחרי שה-Task חוזר** — כתוב את ה-result לקובץ ה-log:
+
+```bash
+echo "‏• calev result: <verdict> — <X/Y DoD>, <N> findings" >> "$LOG_FILE"
+echo "‏• calev report: <report_path>" >> "$LOG_FILE"
+```
+
+---
+
 ## ‏הפורמט ל-dispatch prompt
 
 ```

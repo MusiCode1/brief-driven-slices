@@ -1,7 +1,15 @@
 # דפוסי כשל של Executor Agent
 
-> מבוסס על: 1 case study (Slice 9 — drive-coding frontend refactor, מאי 2026) + זיקוק אוטומטי מ-reports/ (ראה distillations/).
-> יתעדכן בכל case study חדש.
+> מבוסס על: case study יסוד (Slice 9 — drive-coding frontend refactor, מאי 2026)
+> **+ זיקוק 2026-06-27 מ-118 דוחות כלב ב-10 projects** (ראה `distillations/2026-06-27-report.md`).
+> hitrate כלב: 40/118 דוחות עם ממצא (34%), ממוצע 0.54 — נמוך, כי כלב הוא קו-הגנה אחרון
+> אחרי אביגיל. יתעדכן בכל זיקוק / case study חדש.
+>
+> ⚠️ **ממצא-על מהזיקוק**: `unique` הוא הקטגוריה **הגדולה ביותר אצל כלב (31, ≈48% מהממצאים)** —
+> רוב באגי-הריבור **לא נכנסים** ל-5 הקטגוריות של Slice 9. הסיבה: Slice 9 היה frontend-refactor,
+> והשיטה התפשטה מאז ל-backend/CLI/infra (obsidian-web, opencode-config, mitm-proxy, bds עצמו).
+> 5 הקטגוריות תקפות ל-UI-heavy slices; מחוץ לזה הטקסונומיה דקה מדי. לא מקדמים `unique` לקטגוריה
+> (היא ה-fallback התקין) — אבל הסעיף "זיקוק 2026-06-27" למטה מסכם את התת-דפוסים שצצים בה.
 
 המונחים:
 - **Planner** = Opus 4.7/4.6 שכותב את ה-brief
@@ -198,9 +206,34 @@ test("text_chunks of same kind go to same bubble", () => {
 
 ---
 
-## קטגוריה X (placeholder)
+## קטגוריה 6: `reload-reconnect` — מצב לא שורד reload/reconnect (מועמדת)
 
-> מקום לקטגוריה חדשה שתעלה מ-case study הבא.
+**תדירות:** 3 ב-זיקוק 2026-06-27. **טרם קטגוריה מלאה** — מסומנת כמועמדת.
+
+**מנגנון:** ה-slice עובד ב-happy-path, אבל אחרי refresh של הדף / ניתוק-וחיבור מחדש של
+WS, ה-state לא משוחזר נכון: turn תקוע, connection לא מתאושש, session לא נטען מחדש.
+כלב תופס את זה רק כי שלב 4 ב-heavy ("edge cases — reload/reconnect") הוא חובה.
+
+**הגנה:** ב-brief — לכל slice עם WS/session-state, DoD item מפורש "reload mid-flow → state נשמר".
+זה כבר ב-`agents/calev.md` §"נקודות שכבר נפלנו עליהן" — להעלות גם ל-brief.
+
+> מקורות (3): drive-coding/chat-render-polish, opencode-config/slice-D-memfs-claude-spike, voice-acp/slice-fix-turnstate-stuck
+
+---
+
+## זיקוק 2026-06-27 — התפלגות ממצאי כלב (118 דוחות)
+
+| category | count | ממופה לקטגוריה | הערה |
+|----------|-------|----------------|------|
+| `unique` | 31 | — (fallback) | רוב הממצאים. טקסונומיה דקה מחוץ ל-UI. ראה ממצא-העל בראש הקובץ. |
+| `spec-drift` | 13 | קטגוריה 3 | "הסר X" שלא קרה / variant שנשכח |
+| `regression` | 7 | מטא-תופעה | feature ישן שנשבר — בדיוק מה ש-heavy שלב 5 נועד לתפוס |
+| `reload-reconnect` | 3 | קטגוריה 6 (חדש) | ראה למעלה |
+| `cross-store-null` | 3 | קטגוריה 2 | null שחוצה stores |
+| `library-compat` | 2 | קטגוריה 4 | ספרייה מול framework |
+
+**verdicts:** GO 101, PARTIAL 11, NO-GO 5, GO-WITH-NOTE 1 — כלב תפס 16 slices שלא היו מוכנים
+ל-merge (חוב-שקט שנמנע).
 
 ---
 
@@ -208,22 +241,25 @@ test("text_chunks of same kind go to same bubble", () => {
 
 > כל קטגוריה מצביעה על הדוחות (reports/) שתרמו לה.
 > מבנה: `> מקורות: project/slice-verifier, ...`
-> מעודכן בכל זיקוק (ראה distillations/).
+> מעודכן בכל זיקוק (ראה `distillations/`). `trace` מלא ב-`distillations/2026-06-27-data.json`.
 
 **קטגוריה 1 — TDD ירוק ≠ התנהגות נכונה**:
-> מקורות: drive-coding/slice-9-calev (case study ראשוני — לא דוח פורמלי)
+> מקורות: drive-coding/slice-9 (case study יסוד). נפח runtime נמוך כי אביגיל תופסת dropped-branch מוקדם.
 
-**קטגוריה 2 — צנרת בין-Stores / Modules נשכחת**:
-> מקורות: drive-coding/slice-9-calev (case study ראשוני — לא דוח פורמלי)
+**קטגוריה 2 — צנרת בין-Stores / Modules נשכחת** (`cross-store-null`):
+> מקורות: drive-coding/slice-chat-virtualization, obsidian-web/server-bootstrap-perf, voice-acp/slice-redesign-6-modals
 
-**קטגוריה 3 — Spec Drift**:
-> מקורות: drive-coding/slice-9-calev (case study ראשוני — לא דוח פורמלי)
+**קטגוריה 3 — Spec Drift** (`spec-drift`, 13):
+> מקורות: bds/bds-extraction-and-reporting, drive-coding/slice-chat-virtualization, obsidian-web/server-bootstrap-perf, voice-acp/slice-redesign-3-settings, voice-acp/slice-redesign-6-modals, voice-acp/slice-ws-reconnect-infra
 
-**קטגוריה 4 — אינטראקציות עם ספריות חיצוניות**:
-> מקורות: drive-coding/slice-9-calev (case study ראשוני — לא דוח פורמלי)
+**קטגוריה 4 — אינטראקציות עם ספריות חיצוניות** (`library-compat`):
+> מקורות: drive-coding/slice-chat-virtualization, obsidian-web/server-bootstrap-perf
 
 **קטגוריה 5 — CSS / ויזואלי = שטח מת**:
-> מקורות: drive-coding/slice-9-calev (case study ראשוני — לא דוח פורמלי)
+> מקורות: drive-coding/slice-9 (case study יסוד). נתפס כיום ב-heavy שלב 2 (סקירה ויזואלית mobile+desktop).
 
-> הערה: כשיצטברו דוחות calev פורמליים (reports/), הzיקוק האוטומטי יעדכן את הtraceability
-> עם מקורות מדויקים (project/slice-verifier).
+**קטגוריה 6 — reload-reconnect**:
+> מקורות: drive-coding/chat-render-polish, opencode-config/slice-D-memfs-claude-spike, voice-acp/slice-fix-turnstate-stuck
+
+**רגרסיות** (`regression`, 7 — מטא, חוצה-קטגוריות):
+> מקורות: drive-coding/slice-release-cli-hardening, drive-coding/slice-ws-error-survival, learn-games-project/slice-3.6a-kit-settings-config-cleanup, voice-acp/slice-22-tts-ordering, voice-acp/slice-redesign-3-settings, voice-acp/slice-ws-reconnect-infra

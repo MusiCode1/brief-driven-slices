@@ -117,7 +117,10 @@ class NewThing {
 (‏לא רק שמות — ‏החתימה המדויקת. ‏executor אסור לשנות.)
 
 **DELETE block** (‏אם רלוונטי):
-> DELETE block: `path/to/file.svelte` ‏שורות 468-490 (block ‏של `<form class="text-form">`)
+> DELETE: `path/to/file.svelte` — block של `<form class="text-form">` (grep anchor: `class="text-form"`)
+>
+> ⚠️ **עגן ב-anchor, לא במספר-שורה.** מספרי-שורות מתיישנים ברגע שה-base זז — זו טעות
+> ה-`wrong-line-number` (#1 ב-`plan-pitfalls.md`). תן symbol/pattern ש-grep ימצא, לא `שורות 468-490`.
 
 **Verification**:
 

@@ -43,35 +43,30 @@
 
 **‏זה חובה. ‏לדלג עליו זה לעלות בממוצע 30-60 ‏דק' ‏debug ‏באג'נטים בסיסיים.**
 
-‏מ-3 plan verifiers שרצו ב-voice-acp:
-- ‏מצאו ‏9 ‏בעיות ב-3 briefs (avg 3/brief)
-- 100% ‏מהbריפים היו בעיה ‏פוטנציאלית
-- ‏עלות ‏~‏10 ‏דק' פר verifier round
+‏ה-track record (זיקוק 2026-06-27, 106 דוחות אביגיל):
+- hitrate **82%** — 87/106 בריפים עם ממצא אמיתי
+- ‏ממוצע **2.74 ממצאים/brief**; **45% מהבריפים** נדרשו תיקון (verdict ≠ READY) לפני dispatch
+- ‏עלות ‏~‏10 ‏דק' פר סבב
 
-‏איך מפעילים:
+**‏איך מפעילים** — דרך הסוכן `avigail` (לא prompt ידני):
 
 ```ts
 Task({
-  subagent_type: "general",   // ‏או "plan-verifier" ‏אם הוגדר ‏ב-OpenCode
+  subagent_type: "avigail",
   description: "Verify <slice> plan",
-  prompt: `‏אתה plan-verifier. ‏קרא את ה-brief ‏ב-docs/plans/<slice>.md ‏ובדוק:
-
-1. **‏כל symbol/API ‏ש-brief טוען שקיים — ‏אמת ב-dev tip ‏בפועל** (grep, ‏file:line).
-2. ‏Pseudo-code — ‏וודא שלא מחסיר branches קיימים ‏(typeof === "string", etc.)
-3. ‏Line numbers — ‏אמת שהם נכונים ב-version הנוכחי.
-4. ‏Type errors צפויים (‏noUncheckedIndexedAccess, ‏וכו') — ‏סמן.
-5. ‏Naming inconsistency פנימי ‏ב-brief.
-6. ‏File paths שהbrief טוען שקיימים — ‏אמת.
-7. ‏Risks/escalations מיושנים — ‏סמן.
-
-‏החזר דוח: ‏רשימת ‏בעיות מסווגות (🔴 blocker / 🟡 confusion / 🟢 minor), 
-‏עם file:line ‏ספציפי, ‏ו-verdict: ✅ READY / 🟡 USABLE-AFTER-FIX / ❌ NEEDS-REWORK.`
+  prompt: `בדקי את ה-brief: docs/plans/<slice>.md
+Project root: <path>
+Dev tip: <hash>
+Symbols שה-brief טוען שקיימים: <list>`
 })
 ```
 
-‏אם הוגדר ‏סוכן ‏`plan-verifier` ‏מותאם — ‏עדיף ‏(קובץ ‏[`agents/plan-verifier.md`](agents/plan-verifier.md)).
+‏אביגיל מריצה 8 בדיקות (פירוט מלא ב-[`agents/avigail.md`](agents/avigail.md)), ביניהן:
+symbols/APIs מול **dev tip** (לא main), pseudo-code שלא מחסיר branches, **anchors קיימים
+(לא מספרי-שורות — ראה `plan-pitfalls.md` קט' 1)**, type errors צפויים, naming-inconsistency,
+file paths + gitignore-trap, risks מיושנים, ו-`depends_on`.
 
-‏Tama ‏מתקן לפי הדוח (~‏15-20 ‏דק' ‏בממוצע), ‏ועובר ל-handoff.
+‏מרדכי מתקן לפי הדוח (~‏15-20 ‏דק') ‏ומריץ אביגיל שוב עד READY (plan-gate), ‏ואז handoff.
 
 ## ‏שלב 4: ‏Worktree setup
 

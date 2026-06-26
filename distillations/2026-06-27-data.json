@@ -1,0 +1,914 @@
+{
+  "date": "2026-06-27T02:15:11.036234",
+  "report_ids": [
+    "CodeNomad/slice-1-provider-types-and-registry-calev.md",
+    "bds/bds-extraction-calev.json",
+    "bds/slice-2-distillation-avigail-v2.json",
+    "bds/slice-2-distillation-avigail-v3.json",
+    "bds/slice-2-distillation-avigail.json",
+    "bds/slice-2-distillation-calev-light.md",
+    "bds/slice-2-distillation-calev-phase0.json",
+    "bds/slice-2-distillation-calev-phase3.json",
+    "bds/slice-3-report-discipline-avigail-v2.json",
+    "bds/slice-3-report-discipline-avigail.md",
+    "bds/slice-3-report-discipline-calev-light.md",
+    "brief-driven-slices/slice-4-brief-commit-lifecycle-avigail.md",
+    "dev/slice-23-agent-options-panel-avigail-v2.json",
+    "dev/slice-23-agent-options-panel-avigail-v3.json",
+    "dev/slice-23-agent-options-panel-avigail.json",
+    "drive-coding/cache-headers-version-avigail.md",
+    "drive-coding/slice-P1a-provider-abstraction-avigail-r2.md",
+    "drive-coding/slice-P1a-provider-abstraction-avigail-r3.md",
+    "drive-coding/slice-P1a-provider-abstraction-avigail.md",
+    "drive-coding/slice-P1a-provider-abstraction-calev.md",
+    "drive-coding/slice-P1b-acp-adapter-avigail-r2.md",
+    "drive-coding/slice-P1b-acp-adapter-avigail-r3.md",
+    "drive-coding/slice-P1b-acp-adapter-avigail-r4.md",
+    "drive-coding/slice-P1b-acp-adapter-avigail.md",
+    "drive-coding/slice-P1b-acp-adapter-calev.md",
+    "drive-coding/slice-active-agents-backend-avigail.md",
+    "drive-coding/slice-active-agents-backend-calev.md",
+    "drive-coding/slice-active-agents-widget-avigail.md",
+    "drive-coding/slice-active-processes-layout-avigail-r2.md",
+    "drive-coding/slice-active-processes-layout-avigail.md",
+    "drive-coding/slice-active-processes-layout-calev.md",
+    "drive-coding/slice-agent-busy-indicator-avigail-r2.md",
+    "drive-coding/slice-agent-busy-indicator-avigail.md",
+    "drive-coding/slice-agent-busy-indicator-calev-heavy.md",
+    "drive-coding/slice-bundle-single-artifact-avigail.md",
+    "drive-coding/slice-bunx-single-command-avigail-r2.md",
+    "drive-coding/slice-bunx-single-command-avigail.md",
+    "drive-coding/slice-bunx-single-command-calev.md",
+    "drive-coding/slice-chat-render-polish-avigail.md",
+    "drive-coding/slice-chat-render-polish-calev-live.md",
+    "drive-coding/slice-chat-render-polish-calev.md",
+    "drive-coding/slice-chat-virtualization-avigail-r7.md",
+    "drive-coding/slice-chat-virtualization-avigail-r8.md",
+    "drive-coding/slice-chat-virtualization-avigail.md",
+    "drive-coding/slice-chat-virtualization-calev-heavy-v2.md",
+    "drive-coding/slice-chat-virtualization-calev-heavy.md",
+    "drive-coding/slice-chat-virtualization-calev.md",
+    "drive-coding/slice-claude-thinking-meta-avigail.md",
+    "drive-coding/slice-claude-thinking-meta-calev.md",
+    "drive-coding/slice-display-toggle-consistency-avigail.md",
+    "drive-coding/slice-display-toggle-consistency-calev.md",
+    "drive-coding/slice-enter-toggle-avigail.md",
+    "drive-coding/slice-enter-toggle-calev.md",
+    "drive-coding/slice-fe-build-decouple-avigail.md",
+    "drive-coding/slice-fe-build-decouple-calev.md",
+    "drive-coding/slice-fix-claude-duplicate-bubbles-avigail.md",
+    "drive-coding/slice-frontend-rename-cutover-avigail.md",
+    "drive-coding/slice-header-title-responsive-avigail.md",
+    "drive-coding/slice-header-title-responsive-calev.md",
+    "drive-coding/slice-input-autogrow-avigail.md",
+    "drive-coding/slice-input-autogrow-calev.md",
+    "drive-coding/slice-integrate-dev-sync-avigail-r2.md",
+    "drive-coding/slice-integrate-dev-sync-calev-commit1.md",
+    "drive-coding/slice-latex-math-avigail-r2.md",
+    "drive-coding/slice-latex-math-avigail-r3.md",
+    "drive-coding/slice-latex-math-avigail.md",
+    "drive-coding/slice-latex-math-bidi-fix-avigail.md",
+    "drive-coding/slice-latex-math-bidi-fix-calev.md",
+    "drive-coding/slice-latex-math-calev.md",
+    "drive-coding/slice-latex-math-invisibles-avigail.md",
+    "drive-coding/slice-latex-math-invisibles-calev.md",
+    "drive-coding/slice-latex-math-verification-report.md",
+    "drive-coding/slice-mode-label-scroll-avigail.md",
+    "drive-coding/slice-mode-label-scroll-calev.md",
+    "drive-coding/slice-new-session-warm-avigail.md",
+    "drive-coding/slice-new-session-warm-calev.md",
+    "drive-coding/slice-npm-publish-calev.md",
+    "drive-coding/slice-npm-publish-commit1-calev.md",
+    "drive-coding/slice-npm-publish-commit2-calev.md",
+    "drive-coding/slice-reconnect-warm-attach-avigail.md",
+    "drive-coding/slice-reconnect-warm-attach-calev.md",
+    "drive-coding/slice-release-cli-hardening-avigail-r2.md",
+    "drive-coding/slice-release-cli-hardening-avigail.md",
+    "drive-coding/slice-release-cli-hardening-calev.md",
+    "drive-coding/slice-release-package-avigail.md",
+    "drive-coding/slice-release-package-calev.md",
+    "drive-coding/slice-release-package-commit1-calev.md",
+    "drive-coding/slice-remove-idle-reaper-avigail-r2.md",
+    "drive-coding/slice-remove-idle-reaper-avigail.md",
+    "drive-coding/slice-remove-idle-reaper-calev.md",
+    "drive-coding/slice-review-fixes-2-calev.md",
+    "drive-coding/slice-session-prefs-per-cwd-avigail-r2.md",
+    "drive-coding/slice-session-prefs-per-cwd-avigail-r3.md",
+    "drive-coding/slice-session-prefs-per-cwd-avigail.md",
+    "drive-coding/slice-session-title-header-avigail.md",
+    "drive-coding/slice-session-title-header-calev.md",
+    "drive-coding/slice-ui-polish-batch-avigail.md",
+    "drive-coding/slice-wake-lock-avigail.md",
+    "drive-coding/slice-wake-lock-calev.md",
+    "drive-coding/slice-win-home-env-driveroot-avigail.md",
+    "drive-coding/slice-win-home-env-driveroot-calev.md",
+    "drive-coding/slice-windows-adaptation-avigail.md",
+    "drive-coding/slice-windows-adaptation-calev.md",
+    "drive-coding/slice-wire-observability-bridge-avigail.md",
+    "drive-coding/slice-wire-observability-bridge-calev.md",
+    "drive-coding/slice-wire-recorder-jsonl-avigail.md",
+    "drive-coding/slice-wire-recorder-jsonl-calev.md",
+    "drive-coding/slice-ws-error-survival-avigail-commit3.md",
+    "drive-coding/slice-ws-error-survival-avigail.md",
+    "drive-coding/slice-ws-error-survival-calev.md",
+    "drive-coding/slice-ws-error-survival-commit2-calev.md",
+    "drive-coding/slice-ws-reconnect-fix-nbug2-calev.md",
+    "drive-coding/slice-ws-reconnect-infra-calev.md",
+    "learn-games-project/slice-1-commit1-phase-calev.json",
+    "learn-games-project/slice-1-kit-config-unify-calev.json",
+    "learn-games-project/slice-2-hide-overlay-non-fk-calev.json",
+    "learn-games-project/slice-3-kit-settings-snippet-avigail.json",
+    "learn-games-project/slice-3-kit-settings-snippet-calev.json",
+    "learn-games-project/slice-3.5-kit-rename-booster-config-avigail.md",
+    "learn-games-project/slice-3.5-kit-rename-booster-config-calev.md",
+    "learn-games-project/slice-3.6-avigail.md",
+    "learn-games-project/slice-3.6-kit-settings-no-booster-avigail.md",
+    "learn-games-project/slice-3.6a-commit0-calev.md",
+    "learn-games-project/slice-3.6a-kit-settings-config-cleanup-calev.md",
+    "learn-games-project/slice-3.6a-v2-calev.md",
+    "learn-games-project/slice-3.6b-kit-settings-show-booster-calev.md",
+    "learn-games-project/slice-3.6b-kit-settings-show-booster-phase0-calev.md",
+    "learn-games-project/slice-4-find-letter-kit-adoption-avigail.json",
+    "learn-games-project/slice-4-find-letter-kit-adoption-calev.md",
+    "learn-games-project/slice-4-find-letter-kit-adoption-phase1-calev.md",
+    "mitm-proxy-prj/2026-05-31-mitm-architecture-research-avigail.json",
+    "mitm-proxy-prj/slice-01-outbound-skeleton-avigail.json",
+    "obsidian-web/client-rename-calev.md",
+    "obsidian-web/client-rename-symmetric-urls-avigail.md",
+    "obsidian-web/fix-clipboard-recursion-calev.md",
+    "obsidian-web/livesync-install-avigail.md",
+    "obsidian-web/livesync-install-calev.md",
+    "obsidian-web/livesync-requesturl-calev-light.md",
+    "obsidian-web/livesync-requesturl-phase-calev.md",
+    "obsidian-web/local-vaults-opfs-avigail.md",
+    "obsidian-web/local-vaults-opfs-calev.md",
+    "obsidian-web/local-vaults-opfs-commit4-phase-calev.md",
+    "obsidian-web/server-bootstrap-perf-avigail.md",
+    "obsidian-web/server-bootstrap-perf-calev-fix.md",
+    "obsidian-web/server-bootstrap-perf-calev-round5.md",
+    "obsidian-web/server-bootstrap-perf-calev.md",
+    "obsidian-web/server-bootstrap-perf-phase2-commit1-calev.md",
+    "opencode-config-tools/slice-conversations-status-calev.md",
+    "opencode-config-tools/slice-conversations-status-commit2-calev.md",
+    "opencode-config-tools/slice-list-message-count-avigail.json",
+    "opencode-config-tools/slice-list-message-count-calev.json",
+    "opencode-config/slice-1-spawn-agent-avigail.md",
+    "opencode-config/slice-A-claude-provider-scaffold-calev.md",
+    "opencode-config/slice-B-claude-provider-skills-source-calev.md",
+    "opencode-config/slice-C-claude-provider-install-avigail.md",
+    "opencode-config/slice-D-memfs-claude-spike-avigail.md",
+    "opencode-config/slice-D-memfs-claude-spike-calev.md",
+    "opencode-config/slice-E-memfs-claude-mcp-server-avigail.md",
+    "opencode-config/slice-E-memfs-claude-mcp-server-calev.md",
+    "opencode-config/slice-E-memfs-claude-mcp-server-final-calev.md",
+    "opencode-config/slice-F-memfs-claude-hook-install-avigail.md",
+    "provider-abstraction/slice-acp-stdio-subpath-avigail.md",
+    "provider-abstraction/slice-acp-stdio-subpath-calev.md",
+    "voice-acp/slice-22-calev.json",
+    "voice-acp/slice-22-phase2-calev.json",
+    "voice-acp/slice-22-tts-ordering-avigail.json",
+    "voice-acp/slice-23-agent-options-panel-avigail.json",
+    "voice-acp/slice-23-calev.json",
+    "voice-acp/slice-24-client-keyed-proxy-cache-calev.md",
+    "voice-acp/slice-25-bridge-leak-fix-calev.md",
+    "voice-acp/slice-26-bridge-idle-reaper-calev.md",
+    "voice-acp/slice-26-bridge-idle-reaper-phase-calev.md",
+    "voice-acp/slice-6-audio-cues-avigail.md",
+    "voice-acp/slice-6-audio-cues-calev.md",
+    "voice-acp/slice-A-status-bubble-avigail.md",
+    "voice-acp/slice-cli-specs-override-avigail.md",
+    "voice-acp/slice-cli-specs-override-calev.md",
+    "voice-acp/slice-fix-409-replace-flag-calev.md",
+    "voice-acp/slice-fix-idle-flaky-calev.md",
+    "voice-acp/slice-fix-null-msgid-grouping-avigail.md",
+    "voice-acp/slice-fix-null-msgid-grouping-calev.md",
+    "voice-acp/slice-fix-switch-session-warm-avigail.md",
+    "voice-acp/slice-fix-switch-session-warm-calev-light.md",
+    "voice-acp/slice-fix-switch-session-warm-calev-phase.md",
+    "voice-acp/slice-fix-turnstate-stuck-calev.md",
+    "voice-acp/slice-folder-hidden-calev.md",
+    "voice-acp/slice-model-status-control-replay-avigail.md",
+    "voice-acp/slice-model-status-control-replay-calev.md",
+    "voice-acp/slice-model-status-control-replay-commit1-calev.md",
+    "voice-acp/slice-model-status-control-replay-commit3-calev.md",
+    "voice-acp/slice-model-status-control-replay-commit4-calev.md",
+    "voice-acp/slice-msr-v2-avigail.md",
+    "voice-acp/slice-msr-v2-calev.md",
+    "voice-acp/slice-new-session-warm-avigail.md",
+    "voice-acp/slice-palettes-expansion-avigail.md",
+    "voice-acp/slice-palettes-expansion-calev.md",
+    "voice-acp/slice-provider-1-normalized-events-avigail.md",
+    "voice-acp/slice-pwa-installable-avigail.md",
+    "voice-acp/slice-pwa-installable-calev.md",
+    "voice-acp/slice-redesign-1-foundation-avigail.md",
+    "voice-acp/slice-redesign-1-foundation-calev.md",
+    "voice-acp/slice-redesign-2-layout-shell-avigail.md",
+    "voice-acp/slice-redesign-2-layout-shell-calev.md",
+    "voice-acp/slice-redesign-3-settings-calev-r2.md",
+    "voice-acp/slice-redesign-3-settings-calev.md",
+    "voice-acp/slice-redesign-4-input-mic-avigail.md",
+    "voice-acp/slice-redesign-4-input-mic-calev.md",
+    "voice-acp/slice-redesign-5-bubbles-avigail.md",
+    "voice-acp/slice-redesign-5-bubbles-c1-calev.md",
+    "voice-acp/slice-redesign-5-bubbles-calev.md",
+    "voice-acp/slice-redesign-6-modals-avigail.md",
+    "voice-acp/slice-redesign-6-modals-calev.md",
+    "voice-acp/slice-redesign-7-smart-scroll-avigail.md",
+    "voice-acp/slice-redesign-7-smart-scroll-calev.md",
+    "voice-acp/slice-review-fixes-1-calev.md",
+    "voice-acp/slice-review-fixes-2-calev.md",
+    "voice-acp/slice-review-fixes-2-commit2-calev.md",
+    "voice-acp/slice-rtl-ltr-bidi-calev.md",
+    "voice-acp/slice-sessions-autoload-avigail.md",
+    "voice-acp/slice-sessions-autoload-calev.md",
+    "voice-acp/slice-sessions-inline-commit2-calev.md",
+    "voice-acp/slice-sessions-inline-transcribe-resilience-avigail.md",
+    "voice-acp/slice-sessions-inline-transcribe-resilience-calev.md",
+    "voice-acp/slice-ui-polish-1-avigail.md",
+    "voice-acp/slice-ui-polish-1-calev.md",
+    "voice-acp/slice-wake-word-infra-avigail.md",
+    "voice-acp/slice-wake-word-infra-calev.md",
+    "voice-acp/slice-ws-reconnect-fix-nbug2-avigail.md",
+    "voice-acp/slice-ws-reconnect-fix-nbug2-calev.md",
+    "voice-acp/slice-ws-reconnect-infra-avigail.md",
+    "voice-acp/slice-ws-reconnect-infra-calev-heavy.md",
+    "voice-acp/slice-ws-reconnect-infra-calev.md",
+    "voice-acp/slice-ws-reconnect-infra-commit2-calev.md"
+  ],
+  "avigail": {
+    "counts": {
+      "by_severity": {
+        "blocker": 34,
+        "minor": 119,
+        "confusion": 74,
+        "outdated": 9,
+        "warning": 5,
+        "verified-ok": 13,
+        "info": 1,
+        "regression": 21,
+        "wrong-line-number": 5,
+        "major": 1,
+        "type-error": 8
+      },
+      "by_category": {
+        "wrong-path": 25,
+        "outdated-risk": 44,
+        "wrong-line-number": 63,
+        "naming-inconsistency": 32,
+        "missing-dependency": 15,
+        "dropped-branch": 31,
+        "algorithm-gap": 1,
+        "logic-inconsistency": 1,
+        "spec-gap": 1,
+        "type-mismatch": 1,
+        "fix-verification": 5,
+        "stale-state": 1,
+        "typecheck-risk": 1,
+        "style-inconsistency": 1,
+        "error-isolation": 1,
+        "cross-verification": 8,
+        "type-error": 20,
+        "missing-symbol": 20,
+        "unique": 17,
+        "wrong-symbol": 1,
+        "confusion": 1
+      },
+      "total_findings": 290,
+      "total_reports": 106
+    },
+    "hitrate": {
+      "reports": 106,
+      "reports_with_findings": 87,
+      "avg_findings": 2.74,
+      "verdicts": {
+        "USABLE-AFTER-FIX": 44,
+        "READY": 56,
+        "NEEDS-REWORK": 5,
+        "PASS-WITH-NOTES": 1
+      }
+    },
+    "trace": {
+      "wrong-path": [
+        "bds/slice-2-distillation",
+        "bds/slice-3-report-discipline",
+        "drive-coding/slice-P1a-provider-abstraction",
+        "drive-coding/slice-P1b-acp-adapter",
+        "drive-coding/slice-active-agents-backend",
+        "drive-coding/slice-active-processes-layout",
+        "drive-coding/slice-remove-idle-reaper",
+        "drive-coding/slice-session-prefs-per-cwd",
+        "drive-coding/slice-wire-observability-bridge",
+        "learn-games-project/slice-3.5-kit-rename-booster-config",
+        "learn-games-project/slice-4-find-letter-kit-adoption",
+        "voice-acp/slice-fix-null-msgid-grouping",
+        "voice-acp/slice-model-status-control-replay",
+        "voice-acp/slice-new-session-warm",
+        "voice-acp/slice-provider-1-normalized-events",
+        "voice-acp/slice-pwa-installable",
+        "voice-acp/slice-redesign-1-foundation",
+        "voice-acp/slice-redesign-5-bubbles",
+        "voice-acp/slice-redesign-6-modals",
+        "voice-acp/slice-sessions-inline-transcribe-resilience",
+        "voice-acp/slice-wake-word-infra"
+      ],
+      "outdated-risk": [
+        "bds/slice-2-distillation",
+        "drive-coding/cache-headers-version",
+        "drive-coding/slice-P1a-provider-abstraction",
+        "drive-coding/slice-active-agents-backend",
+        "drive-coding/slice-active-agents-widget",
+        "drive-coding/slice-active-processes-layout",
+        "drive-coding/slice-agent-busy-indicator",
+        "drive-coding/slice-bunx-single-command",
+        "drive-coding/slice-chat-render-polish",
+        "drive-coding/slice-chat-virtualization",
+        "drive-coding/slice-fe-build-decouple",
+        "drive-coding/slice-integrate-dev-sync",
+        "drive-coding/slice-model-status-replay-v2",
+        "drive-coding/slice-remove-idle-reaper",
+        "drive-coding/slice-session-prefs-per-cwd",
+        "drive-coding/slice-ui-polish-batch",
+        "drive-coding/slice-wake-lock",
+        "drive-coding/slice-win-home-env-driveroot",
+        "drive-coding/slice-wire-observability-bridge",
+        "drive-coding/slice-ws-error-survival",
+        "mitm-proxy-prj/slice-01-outbound-skeleton",
+        "opencode-config-tools/slice-list-message-count",
+        "voice-acp/slice-22-tts-ordering",
+        "voice-acp/slice-6-audio-cues",
+        "voice-acp/slice-new-session-warm",
+        "voice-acp/slice-provider-1-normalized-events",
+        "voice-acp/slice-pwa-installable",
+        "voice-acp/slice-redesign-1-foundation",
+        "voice-acp/slice-redesign-4-input-mic",
+        "voice-acp/slice-redesign-6-modals",
+        "voice-acp/slice-sessions-autoload",
+        "voice-acp/slice-ws-reconnect-fix-nbug2"
+      ],
+      "wrong-line-number": [
+        "bds/slice-2-distillation",
+        "bds/slice-3-report-discipline",
+        "drive-coding/cache-headers-version",
+        "drive-coding/slice-P1a-provider-abstraction",
+        "drive-coding/slice-P1b-acp-adapter",
+        "drive-coding/slice-active-agents-backend",
+        "drive-coding/slice-active-agents-widget",
+        "drive-coding/slice-active-processes-layout",
+        "drive-coding/slice-agent-busy-indicator",
+        "drive-coding/slice-chat-render-polish",
+        "drive-coding/slice-chat-virtualization",
+        "drive-coding/slice-display-toggle-consistency",
+        "drive-coding/slice-enter-toggle",
+        "drive-coding/slice-header-title-responsive",
+        "drive-coding/slice-input-autogrow",
+        "drive-coding/slice-latex-math-invisibles",
+        "drive-coding/slice-release-cli-hardening",
+        "drive-coding/slice-remove-idle-reaper",
+        "drive-coding/slice-session-prefs-per-cwd",
+        "drive-coding/slice-session-title-header",
+        "drive-coding/slice-ui-polish-batch",
+        "drive-coding/slice-wire-observability-bridge",
+        "drive-coding/slice-ws-error-survival",
+        "learn-games-project/slice-3-kit-settings-snippet",
+        "learn-games-project/slice-3.5-kit-rename-booster-config",
+        "learn-games-project/slice-3.6-kit-settings-no-booster",
+        "learn-games-project/slice-4-find-letter-kit-adoption",
+        "obsidian-web/local-vaults-opfs",
+        "opencode-config-tools/slice-list-message-count",
+        "opencode-config/slice-1-spawn-agent-plugin",
+        "voice-acp/slice-22-tts-ordering",
+        "voice-acp/slice-6-audio-cues",
+        "voice-acp/slice-A-status-bubble",
+        "voice-acp/slice-cli-specs-override",
+        "voice-acp/slice-fix-switch-session-warm",
+        "voice-acp/slice-model-status-control-replay",
+        "voice-acp/slice-redesign-4-input-mic",
+        "voice-acp/slice-redesign-5-bubbles",
+        "voice-acp/slice-redesign-6-modals",
+        "voice-acp/slice-redesign-7-smart-scroll",
+        "voice-acp/slice-sessions-autoload",
+        "voice-acp/slice-sessions-inline-transcribe-resilience",
+        "voice-acp/slice-ui-polish-1"
+      ],
+      "naming-inconsistency": [
+        "bds/slice-2-distillation",
+        "bds/slice-3-report-discipline",
+        "brief-driven-slices/slice-4-brief-commit-lifecycle",
+        "dev/slice-23-agent-options-panel",
+        "drive-coding/slice-P1b-acp-adapter",
+        "drive-coding/slice-active-processes-layout",
+        "drive-coding/slice-latex-math",
+        "drive-coding/slice-model-status-replay-v2",
+        "drive-coding/slice-reconnect-warm-attach",
+        "drive-coding/slice-remove-idle-reaper",
+        "drive-coding/slice-session-prefs-per-cwd",
+        "drive-coding/slice-ui-polish-batch",
+        "drive-coding/slice-wake-lock",
+        "drive-coding/slice-wire-observability-bridge",
+        "drive-coding/slice-ws-error-survival",
+        "learn-games-project/slice-3-kit-settings-snippet",
+        "learn-games-project/slice-3.5-kit-rename-booster-config",
+        "learn-games-project/slice-3.6-kit-settings-no-booster",
+        "learn-games-project/slice-4-find-letter-kit-adoption",
+        "mitm-proxy-prj/2026-05-31-mitm-architecture-research",
+        "obsidian-web/client-rename-symmetric-urls",
+        "obsidian-web/local-vaults-opfs",
+        "opencode-config/slice-D-memfs-claude-spike",
+        "voice-acp/slice-model-status-control-replay",
+        "voice-acp/slice-redesign-4-input-mic",
+        "voice-acp/slice-redesign-7-smart-scroll",
+        "voice-acp/slice-sessions-inline-transcribe-resilience",
+        "voice-acp/slice-wake-word-infra"
+      ],
+      "missing-dependency": [
+        "bds/slice-2-distillation",
+        "dev/slice-23-agent-options-panel",
+        "drive-coding/slice-P1b-acp-adapter",
+        "drive-coding/slice-active-agents-widget",
+        "drive-coding/slice-active-processes-layout",
+        "drive-coding/slice-agent-busy-indicator",
+        "drive-coding/slice-session-prefs-per-cwd",
+        "learn-games-project/slice-4-find-letter-kit-adoption",
+        "mitm-proxy-prj/2026-05-31-mitm-architecture-research",
+        "provider-abstraction/slice-acp-stdio-subpath",
+        "voice-acp/slice-wake-word-infra",
+        "voice-acp/slice-ws-reconnect-fix-nbug2"
+      ],
+      "dropped-branch": [
+        "bds/slice-2-distillation",
+        "dev/slice-23-agent-options-panel",
+        "drive-coding/slice-P1b-acp-adapter",
+        "drive-coding/slice-active-agents-backend",
+        "drive-coding/slice-active-processes-layout",
+        "drive-coding/slice-agent-busy-indicator",
+        "drive-coding/slice-enter-toggle",
+        "drive-coding/slice-input-autogrow",
+        "drive-coding/slice-latex-math",
+        "drive-coding/slice-model-status-replay-v2",
+        "drive-coding/slice-session-prefs-per-cwd",
+        "drive-coding/slice-ui-polish-batch",
+        "drive-coding/slice-wake-lock",
+        "drive-coding/slice-wire-observability-bridge",
+        "learn-games-project/slice-3.6-kit-settings-no-booster",
+        "obsidian-web/local-vaults-opfs",
+        "voice-acp/slice-provider-1-normalized-events",
+        "voice-acp/slice-redesign-6-modals",
+        "voice-acp/slice-ws-reconnect-infra"
+      ],
+      "algorithm-gap": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "logic-inconsistency": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "spec-gap": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "type-mismatch": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "fix-verification": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "stale-state": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "typecheck-risk": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "style-inconsistency": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "error-isolation": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "cross-verification": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "type-error": [
+        "dev/slice-23-agent-options-panel",
+        "drive-coding/slice-P1a-provider-abstraction",
+        "drive-coding/slice-P1b-acp-adapter",
+        "drive-coding/slice-active-agents-widget",
+        "drive-coding/slice-agent-busy-indicator",
+        "drive-coding/slice-bundle-single-artifact",
+        "drive-coding/slice-bunx-single-command",
+        "drive-coding/slice-latex-math",
+        "drive-coding/slice-session-prefs-per-cwd",
+        "mitm-proxy-prj/slice-01-outbound-skeleton",
+        "opencode-config/slice-1-spawn-agent-plugin",
+        "voice-acp/slice-provider-1-normalized-events",
+        "voice-acp/slice-redesign-1-foundation",
+        "voice-acp/slice-redesign-7-smart-scroll"
+      ],
+      "missing-symbol": [
+        "drive-coding/cache-headers-version",
+        "drive-coding/slice-P1a-provider-abstraction",
+        "drive-coding/slice-latex-math",
+        "drive-coding/slice-session-prefs-per-cwd",
+        "drive-coding/slice-ui-polish-batch",
+        "drive-coding/slice-wire-observability-bridge",
+        "learn-games-project/slice-3.6-kit-settings-no-booster",
+        "learn-games-project/slice-4-find-letter-kit-adoption",
+        "voice-acp/slice-A-status-bubble",
+        "voice-acp/slice-redesign-1-foundation",
+        "voice-acp/slice-redesign-6-modals",
+        "voice-acp/slice-wake-word-infra"
+      ],
+      "unique": [
+        "drive-coding/slice-P1a-provider-abstraction",
+        "drive-coding/slice-agent-busy-indicator",
+        "drive-coding/slice-bunx-single-command",
+        "drive-coding/slice-claude-thinking-meta",
+        "drive-coding/slice-display-toggle-consistency",
+        "drive-coding/slice-fe-build-decouple",
+        "drive-coding/slice-header-title-responsive",
+        "drive-coding/slice-release-cli-hardening",
+        "opencode-config/slice-1-spawn-agent-plugin",
+        "voice-acp/slice-fix-switch-session-warm",
+        "voice-acp/slice-redesign-5-bubbles",
+        "voice-acp/slice-ui-polish-1",
+        "voice-acp/slice-ws-reconnect-infra"
+      ],
+      "wrong-symbol": [
+        "drive-coding/slice-P1a-provider-abstraction"
+      ],
+      "confusion": [
+        "learn-games-project/slice-4-find-letter-kit-adoption"
+      ]
+    },
+    "noncanonical": {
+      "algorithm-gap": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "logic-inconsistency": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "spec-gap": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "type-mismatch": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "fix-verification": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "stale-state": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "typecheck-risk": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "style-inconsistency": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "error-isolation": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "cross-verification": [
+        "dev/slice-23-agent-options-panel"
+      ],
+      "unique": [
+        "drive-coding/slice-P1a-provider-abstraction",
+        "drive-coding/slice-agent-busy-indicator",
+        "drive-coding/slice-bunx-single-command",
+        "drive-coding/slice-claude-thinking-meta",
+        "drive-coding/slice-display-toggle-consistency",
+        "drive-coding/slice-fe-build-decouple",
+        "drive-coding/slice-header-title-responsive",
+        "drive-coding/slice-release-cli-hardening",
+        "opencode-config/slice-1-spawn-agent-plugin",
+        "voice-acp/slice-fix-switch-session-warm",
+        "voice-acp/slice-redesign-5-bubbles",
+        "voice-acp/slice-ui-polish-1",
+        "voice-acp/slice-ws-reconnect-infra"
+      ],
+      "wrong-symbol": [
+        "drive-coding/slice-P1a-provider-abstraction"
+      ],
+      "confusion": [
+        "learn-games-project/slice-4-find-letter-kit-adoption"
+      ]
+    },
+    "delta": {
+      "by_category": {
+        "wrong-symbol": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        },
+        "type-error": {
+          "now": 20,
+          "prev": 0,
+          "trend": "new"
+        },
+        "dropped-branch": {
+          "now": 31,
+          "prev": 0,
+          "trend": "new"
+        },
+        "spec-gap": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        },
+        "missing-dependency": {
+          "now": 15,
+          "prev": 0,
+          "trend": "new"
+        },
+        "logic-inconsistency": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        },
+        "algorithm-gap": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        },
+        "style-inconsistency": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        },
+        "naming-inconsistency": {
+          "now": 32,
+          "prev": 0,
+          "trend": "new"
+        },
+        "outdated-risk": {
+          "now": 44,
+          "prev": 0,
+          "trend": "new"
+        },
+        "typecheck-risk": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        },
+        "unique": {
+          "now": 17,
+          "prev": 0,
+          "trend": "new"
+        },
+        "cross-verification": {
+          "now": 8,
+          "prev": 0,
+          "trend": "new"
+        },
+        "stale-state": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        },
+        "wrong-path": {
+          "now": 25,
+          "prev": 0,
+          "trend": "new"
+        },
+        "wrong-line-number": {
+          "now": 63,
+          "prev": 0,
+          "trend": "new"
+        },
+        "confusion": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        },
+        "missing-symbol": {
+          "now": 20,
+          "prev": 0,
+          "trend": "new"
+        },
+        "fix-verification": {
+          "now": 5,
+          "prev": 0,
+          "trend": "new"
+        },
+        "error-isolation": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        },
+        "type-mismatch": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        }
+      }
+    }
+  },
+  "calev": {
+    "counts": {
+      "by_severity": {
+        "blocker": 10,
+        "minor": 49,
+        "minor-functional": 1,
+        "cosmetic": 1,
+        "non-blocking / deviation-ok": 1,
+        "info": 1,
+        "info / flake": 1
+      },
+      "by_category": {
+        "spec-drift": 13,
+        "unique": 31,
+        "reload-reconnect": 3,
+        "cross-store-null": 3,
+        "library-compat": 2,
+        "regression": 7,
+        "Hardcoded-null / Spec-drift": 1,
+        "Spec-drift": 1,
+        "Deviation": 1,
+        "Pre-existing (verified)": 1,
+        "Test-infra": 1
+      },
+      "total_findings": 64,
+      "total_reports": 118
+    },
+    "hitrate": {
+      "reports": 118,
+      "reports_with_findings": 40,
+      "avg_findings": 0.54,
+      "verdicts": {
+        "GO": 101,
+        "NO-GO": 5,
+        "PARTIAL": 11,
+        "GO-WITH-NOTE": 1
+      }
+    },
+    "trace": {
+      "spec-drift": [
+        "bds/bds-extraction-and-reporting",
+        "drive-coding/slice-chat-virtualization",
+        "obsidian-web/server-bootstrap-perf",
+        "voice-acp/slice-redesign-3-settings",
+        "voice-acp/slice-redesign-6-modals",
+        "voice-acp/slice-ws-reconnect-infra"
+      ],
+      "unique": [
+        "brief-driven-slices/slice-2-distillation",
+        "drive-coding/chat-render-polish",
+        "drive-coding/slice-active-agents-backend",
+        "drive-coding/slice-active-processes-layout",
+        "drive-coding/slice-chat-virtualization",
+        "drive-coding/slice-claude-thinking-meta",
+        "drive-coding/slice-npm-publish",
+        "drive-coding/slice-wire-recorder-jsonl",
+        "learn-games-project/slice-3.6a-kit-settings-config-cleanup",
+        "learn-games-project/slice-4-find-letter-kit-adoption",
+        "obsidian-web/local-vaults-opfs",
+        "obsidian-web/server-bootstrap-perf",
+        "opencode-config/slice-D-memfs-claude-spike",
+        "voice-acp/slice-23-agent-options-panel",
+        "voice-acp/slice-25-bridge-leak-fix",
+        "voice-acp/slice-fix-switch-session-warm",
+        "voice-acp/slice-redesign-1-foundation",
+        "voice-acp/slice-redesign-4-input-mic",
+        "voice-acp/slice-redesign-7-smart-scroll",
+        "voice-acp/slice-rtl-ltr-bidi",
+        "voice-acp/slice-sessions-inline-transcribe-resilience",
+        "voice-acp/slice-ws-reconnect-fix-nbug2"
+      ],
+      "reload-reconnect": [
+        "drive-coding/chat-render-polish",
+        "opencode-config/slice-D-memfs-claude-spike",
+        "voice-acp/slice-fix-turnstate-stuck"
+      ],
+      "cross-store-null": [
+        "drive-coding/slice-chat-virtualization",
+        "obsidian-web/server-bootstrap-perf",
+        "voice-acp/slice-redesign-6-modals"
+      ],
+      "library-compat": [
+        "drive-coding/slice-chat-virtualization",
+        "obsidian-web/server-bootstrap-perf"
+      ],
+      "regression": [
+        "drive-coding/slice-release-cli-hardening",
+        "drive-coding/slice-ws-error-survival-commit2",
+        "drive-coding/ws-error-survival",
+        "learn-games-project/slice-3.6a-kit-settings-config-cleanup",
+        "voice-acp/slice-22-tts-ordering",
+        "voice-acp/slice-redesign-3-settings",
+        "voice-acp/slice-ws-reconnect-infra"
+      ],
+      "Hardcoded-null / Spec-drift": [
+        "drive-coding/slice-windows-adaptation"
+      ],
+      "Spec-drift": [
+        "drive-coding/slice-windows-adaptation"
+      ],
+      "Deviation": [
+        "drive-coding/slice-windows-adaptation"
+      ],
+      "Pre-existing (verified)": [
+        "drive-coding/slice-windows-adaptation"
+      ],
+      "Test-infra": [
+        "drive-coding/slice-windows-adaptation"
+      ]
+    },
+    "noncanonical": {
+      "unique": [
+        "brief-driven-slices/slice-2-distillation",
+        "drive-coding/chat-render-polish",
+        "drive-coding/slice-active-agents-backend",
+        "drive-coding/slice-active-processes-layout",
+        "drive-coding/slice-chat-virtualization",
+        "drive-coding/slice-claude-thinking-meta",
+        "drive-coding/slice-npm-publish",
+        "drive-coding/slice-wire-recorder-jsonl",
+        "learn-games-project/slice-3.6a-kit-settings-config-cleanup",
+        "learn-games-project/slice-4-find-letter-kit-adoption",
+        "obsidian-web/local-vaults-opfs",
+        "obsidian-web/server-bootstrap-perf",
+        "opencode-config/slice-D-memfs-claude-spike",
+        "voice-acp/slice-23-agent-options-panel",
+        "voice-acp/slice-25-bridge-leak-fix",
+        "voice-acp/slice-fix-switch-session-warm",
+        "voice-acp/slice-redesign-1-foundation",
+        "voice-acp/slice-redesign-4-input-mic",
+        "voice-acp/slice-redesign-7-smart-scroll",
+        "voice-acp/slice-rtl-ltr-bidi",
+        "voice-acp/slice-sessions-inline-transcribe-resilience",
+        "voice-acp/slice-ws-reconnect-fix-nbug2"
+      ],
+      "Hardcoded-null / Spec-drift": [
+        "drive-coding/slice-windows-adaptation"
+      ],
+      "Spec-drift": [
+        "drive-coding/slice-windows-adaptation"
+      ],
+      "Deviation": [
+        "drive-coding/slice-windows-adaptation"
+      ],
+      "Pre-existing (verified)": [
+        "drive-coding/slice-windows-adaptation"
+      ],
+      "Test-infra": [
+        "drive-coding/slice-windows-adaptation"
+      ]
+    },
+    "delta": {
+      "by_category": {
+        "regression": {
+          "now": 7,
+          "prev": 0,
+          "trend": "new"
+        },
+        "spec-drift": {
+          "now": 13,
+          "prev": 0,
+          "trend": "new"
+        },
+        "cross-store-null": {
+          "now": 3,
+          "prev": 0,
+          "trend": "new"
+        },
+        "Deviation": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        },
+        "Pre-existing (verified)": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        },
+        "unique": {
+          "now": 31,
+          "prev": 0,
+          "trend": "new"
+        },
+        "Hardcoded-null / Spec-drift": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        },
+        "Spec-drift": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        },
+        "library-compat": {
+          "now": 2,
+          "prev": 0,
+          "trend": "new"
+        },
+        "Test-infra": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        },
+        "reload-reconnect": {
+          "now": 3,
+          "prev": 0,
+          "trend": "new"
+        }
+      }
+    }
+  }
+}

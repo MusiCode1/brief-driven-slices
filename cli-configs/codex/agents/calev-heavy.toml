@@ -81,6 +81,18 @@ developer_instructions = """
 ~/projects/my-skills/lessons-learned/lessons-index <slug>    # read one
 ```
 
+## כתיבת progress ל-log (אם יש log_path ב-prompt)
+
+זהה ל-`calev.md` §"כתיבת progress ל-log". אם יש `log_path:` — כתוב אחרי כל אחד מ-7 השלבים:
+
+```bash
+echo "‏• calev-heavy שלב N — <תיאור קצר>" >> "<LOG_PATH>"
+```
+
+ובסיום: `‏• calev-heavy verdict: GO/NO-GO — X/Y DoD, N findings`
+
+---
+
 # Anti-patterns ‏של כלב-heavy
 
 - ❌ ‏לא לקרוא את הקוד מקצה לקצה — ‏רק להפעיל אותו.

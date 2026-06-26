@@ -46,16 +46,21 @@ grep -n "<symbol>" <path>
 - `verbatimModuleSyntax` → `import type` ‏צריך להיות מפורש
 - ‏אם pseudo-code ‏לא מטפל בזה — 🟡 **אליעזר יתקע ב-typecheck**
 
-## 4. Line numbers factual
+## 4. Anchors קיימים (לא מספרי-שורות!)
 
-‏ה-brief טוען ש-`foo.ts:75` ‏עושה X.
+> **לקח זיקוק 2026-06-27**: `wrong-line-number` הוא הקטגוריה הגדולה ביותר (63 ממצאים).
+> מספרי-שורות בבריף מתיישנים מיד. **אל תאמת את המספר — אמת את ה-anchor.**
+
+‏ה-brief אמור לעגן ב-symbol/pattern (`block של <form class="text-form">`), לא בשורה.
 
 ```bash
-wc -l <path>
-sed -n '75p' <path>
+grep -n "<symbol-or-pattern>" <path>   # ‏ה-anchor קיים? כמה פעמים?
 ```
 
-‏אם הקובץ קצר מ-75 ‏או השורה משהו אחר — 🟡 **confusing for אליעזר**.
+- ‏ה-anchor לא נמצא → 🔴/🟡 (לפי קריטיות) — אליעזר לא יידע איפה לעבוד.
+- ‏ה-anchor מופיע פעמים רבות ולא חד-ערכי → 🟡 confusion.
+- ‏ה-brief נתן מספר-שורה מוחלט (`foo.ts:75`) **במקום** anchor → 🟢 minor (cosmetic): המלץ
+  למרדכי לעגן ב-pattern. **אל תבזבז זמן** על אימות שהמספר עצמו מדויק.
 
 ## 5. Naming inconsistency פנימי
 
