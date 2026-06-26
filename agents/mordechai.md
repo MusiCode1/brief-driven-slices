@@ -49,21 +49,33 @@ tools:
    ```
    > **‏למה אוטומטי**: track record מראה 100% ‏מ-briefs ‏היו בעיה. ‏brief שלא עבר אביגיל הוא brief לא-גמור. ‏בקשת-אישור על צעד-חובה רק מוסיפה חיכוך. ‏(merge ‏הוא ההפך — ‏שם אישור משתמשת חובה.)
 3. **‏תקן** על פי דוח אביגיל. ‏אם verdict ≠ READY (`USABLE-AFTER-FIX`/`NEEDS-REWORK`) → ‏תקן ‏ו**‏הרץ אביגיל שוב** (‏גם זה אוטומטי) עד READY. ‏ראה plan-gate למטה.
-4. **‏עדכן state.json** — `plan_verified: true` (‏רק אחרי verdict=READY), `dispatch_ready: true`
-5. **‏הפעל יתרו** (‏ב-session נפרד) עם ה-queue
+4. **‏commit את ה-brief ל-dev — אחרי READY, לפני ביצוע.** ‏ה-brief נכתב על dev/main כקובץ
+   לא-committed. ‏אם לא תעשה לו commit לפני שאליעזר פותח worktree — **הוא עלול להיעלם**
+   (reset/clean של dev, או worktree שנפתח לפני שהקובץ נשמר ל-git).
+   ```bash
+   cd <project>/dev   # ‏או main worktree
+   git add docs/plans/<slice>.md && git commit -m "plan: <slice> — מאומת (אביגיל READY)"
+   ```
+   > ‏הכלל: brief מאומת = artifact יקר (30-45 דק' עבודה + סבב אביגיל). committed לפני ביצוע = לא נעלם.
+5. **‏עדכן state.json** — `plan_verified: true` (‏רק אחרי verdict=READY), `dispatch_ready: true`
+6. **‏הפעל יתרו** (‏ב-session נפרד) עם ה-queue
 
 ## ‏בוקר (‏אחרי לילה)
 
 1. **‏קרא את ה-summary** (runs/<date>.summary.md ‏בפרויקט יתרו)
-2. **‏עבור על slices שעברו** (status=verified) — ‏ממזג ל-dev:
+2. **‏עבור על slices שעברו** (status=verified) — ‏ממזג ל-dev **ו-push מיד**:
    ```bash
    git merge --no-ff <branch>   # ‏חייב merge commit, לא squash (‏ראה הערה)
+   git push                     # ‏אחרי כל merge — push. אחרת העבודה לא מגובה.
    ```
+   > **‏push אחרי כל merge — חובה.** merge מקומי שלא נדחף = עבודה שקיימת רק על המכונה הזו.
 3. **‏עבור על slices שנכשלו** — ‏בחר אחת מארבע אפשרויות (‏ראה §4 ‏למטה)
-4. **‏נקה worktrees** שנמרגו:
+4. **‏נקה worktrees שנמרגו — חובה אחרי תוכנית מלאה + merge** (‏אחרת הם מצטברים בערימות):
    ```bash
    git worktree remove --force .worktrees/<slice>
    git branch -D <slice>
+   git worktree prune          # ‏ניקוי רישומים תלויים
+   git worktree list           # ‏ודא שנשארו רק main + worktrees חיים
    ```
 
 ## ‏כל הזמן

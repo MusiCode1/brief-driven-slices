@@ -68,6 +68,11 @@ file paths + gitignore-trap, risks מיושנים, ו-`depends_on`.
 
 ‏מרדכי מתקן לפי הדוח (~‏15-20 ‏דק') ‏ומריץ אביגיל שוב עד READY (plan-gate), ‏ואז handoff.
 
+> [!warning] ‏commit את ה-brief ל-dev לפני ביצוע
+> ‏ה-brief נכתב על dev/main כקובץ לא-committed. ‏**אחרי READY ולפני שאליעזר פותח worktree —
+> ‏עשה לו `git add docs/plans/<slice>.md && git commit`.** ‏brief מאומת שלא נשמר ל-git עלול
+> ‏להיעלם (reset/clean של dev, ‏או worktree שנפתח לפני השמירה). ‏זה artifact יקר — ‏אל תאבד אותו.
+
 ## ‏שלב 4: ‏Worktree setup
 
 ‏פירוט מלא ב-[`worktrees.md`](worktrees.md). ‏TL;DR:
@@ -229,17 +234,23 @@ git merge --no-ff <slice-name>
 # ‏אם יש conflict ב-walkthrough.md / slices.md — ‏פתור ידנית
 <package-manager> test
 # ‏אם passes — ‏commit ה-merge (‏לפי הסקיל `commit`)
+git push                # ‏אחרי כל merge — push מיד. merge מקומי לא-דחוף = לא מגובה.
 ```
+
+> [!warning] ‏push אחרי כל merge — חובה
+> merge ‏שנשאר מקומי קיים רק על המכונה הזו. ‏push מיד אחרי כל merge ‏ל-dev.
 
 ‏אם 2+ slices ‏רצו במקביל ‏עם BE_PORT שונה — ‏merge ‏את ה-second ‏בנפרד, ‏פתור conflicts בקבצים משותפים (‏ה-`additive design` ‏ב-`docs/conventions/parallel-safe-code.md`).
 
-### ‏Cleanup worktree (‏רק אחרי שה-merge ‏מאומת)
+### ‏Cleanup worktree — חובה אחרי תוכנית מלאה + merge
 
-‏אחרי שה-merge עבר בהצלחה ‏וtests עוברים על dev:
+‏worktrees **‏מצטברים בערימות** אם לא מנקים. ‏אחרי שה-merge עבר בהצלחה, tests עוברים על dev, ‏ונדחף (push):
 
 ```bash
 git worktree remove .worktrees/<slice-name>
 git branch -d <slice-name>
+git worktree prune          # ‏ניקוי רישומים תלויים
+git worktree list           # ‏ודא שנשארו רק main + worktrees חיים
 ```
 
 > [!info] ‏מתי **‏לא** ‏למחוק worktree

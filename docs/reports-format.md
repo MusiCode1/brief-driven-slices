@@ -1,13 +1,28 @@
 # Reports — ‏פורמט דוחות אימות
 
-‏ריפוזיטורי זה (brief-driven-slices) ‏מצבר דוחות אימות מכל הפרויקטים.
+‏מצבר דוחות אימות מכל הפרויקטים, כחומר-גלם לזיקוק חוצה-פרויקטי.
+
+## ‏איפה הדוחות נמצאים (חשוב!)
+
+הדוחות חיים ב-`<bds>/main/reports/<project>/` — אבל זו **ספרייה של ריפו git נפרד ופרטי**
+(`brief-driven-slices-reports` ב-GitHub), **gitignored** בריפו הראשי של השיטה
+(ראה `.gitignore`: `reports/`). הסיבה: הדוחות מכילים שמות/נתיבי projects פרטיים.
+
+| מי | מה |
+|----|-----|
+| **אביגיל / כלב** | כותבים דוחות ל-`reports/<project>/<slice>-<verifier>.md` |
+| **distill.py** | קורא משם בזיקוק |
+| **commit+push** | **חובה לתוך ריפו ה-reports עצמו** — אחרת הדוחות קיימים רק מקומית ועלולים להיעלם |
+
+> ⚠️ **אותו לקח כמו בריפים**: דוח שנכתב ולא נדחף לריפו ה-reports קיים רק על המכונה הזו.
+> מאחר שזה ריפו נפרד, `git commit` בריפו הראשי **לא** תופס אותו. יש לעשות `cd reports && git add … && git commit && git push` בנפרד.
 
 ---
 
 ## ‏מבנה תיקייה
 
 ```
-reports/
+reports/                                  # ← ריפו git נפרד (brief-driven-slices-reports), gitignored ב-main
 └── <project>/                           # e.g. voice-acp/, bds/
     └── <slice>-<verifier>.md            # פורמט חדש: YAML front-matter + גוף MD
     └── <slice>-<verifier>.json          # פורמט ישן (backward-compat, לא ממירים)
