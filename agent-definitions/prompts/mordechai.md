@@ -49,8 +49,9 @@
 3. **‏עבור על slices שנכשלו** — ‏בחר אחת מארבע אפשרויות (‏ראה §4 ‏למטה)
 4. **‏נקה worktrees שנמרגו — חובה אחרי תוכנית מלאה + merge** (‏אחרת הם מצטברים בערימות):
    ```bash
-   git worktree remove --force .worktrees/<slice>
-   git branch -D <slice>
+   git worktree remove --force .worktrees/<name>
+   git branch -D slice/<name>
+   git worktree prune
    git worktree prune          # ‏ניקוי רישומים תלויים
    git worktree list           # ‏ודא שנשארו רק main + worktrees חיים
    ```
@@ -104,7 +105,7 @@ Task({
   prompt: `בצע את ה-brief:
 
 Brief: docs/plans/slice-X.md
-Worktree: .worktrees/slice-X/
+Worktree: .worktrees/X/   # branch: slice/X
 Base: <hash>
 ‏סביבה: BE על port 4000, FE על port 9333...
 

@@ -111,15 +111,15 @@
 
 ```
 ‏לילה ראשון:
-  dispatch A (base=dev, branch=slice-A)
-  → calev GO → status=verified (branch slice-A בחיים)
-  → base של B נקבע = slice-A
-  dispatch B (base=slice-A, branch=slice-B)
+  dispatch A (base=dev, branch=slice/A, dir=.worktrees/A)
+  → calev GO → status=verified (branch slice/A בחיים)
+  → base של B נקבע = slice/A
+  dispatch B (base=slice/A, branch=slice/B, dir=.worktrees/B)
   → B בנוי על קוד של A, גם אם A לא ב-dev עדיין
 
 ‏בוקר:
-  ‏מרדכי ממזג: A → dev (git merge --no-ff slice-A)
-  ‏מרדכי ממזג: B → dev (git merge --no-ff slice-B)
+  ‏מרדכי ממזג: A → dev (git merge --no-ff slice/A) → git push
+  ‏מרדכי ממזג: B → dev (git merge --no-ff slice/B) → git push
 ```
 
 ‏הכלל: ‏חייב merge commits (לא squash) ‏בשרשרת, ‏אחרת git מכפיל commits של A ‏כשממזג B.

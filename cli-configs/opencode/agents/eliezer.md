@@ -145,7 +145,7 @@ pnpm build --force        # ‏או tsc --build --force ל-core/types
 
 ## Worktree path בטעות תחת `dev/`
 
-‏אם cwd ‏שלך ‏הוא `dev/`, ‏ה-`git worktree add .worktrees/...` ‏יצור אותו ב-`dev/.worktrees/...`. **‏השתמש ב-absolute path**: ‏`git worktree add /full/path/.worktrees/<slice> -b <slice> dev`.
+‏אם cwd ‏שלך ‏הוא `dev/`, ‏ה-`git worktree add .worktrees/...` ‏יצור אותו ב-`dev/.worktrees/...`. **‏השתמש ב-absolute path**: ‏`git worktree add /full/path/.worktrees/<name> -b slice/<name> dev` (branch: `slice/<name>`, dir בלי הקידומת).
 
 ## ‏Sub-agent delegation
 

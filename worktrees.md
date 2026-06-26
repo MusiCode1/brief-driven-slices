@@ -24,15 +24,29 @@
 
 ‏אלטרנטיבה: ‏worktree רגיל ‏עם `dev` ‏כ-main directory ‏וworktrees תחת `.worktrees/`. ‏עובד גם.
 
+## ‏מוסכמת שמות — קידומת `slice/` ל-branch, dir בלי הקידומת
+
+> **‏הכלל**: ‏שם ה-branch הוא `slice/<name>`; ‏שם תיקיית ה-worktree הוא `.worktrees/<name>`
+> (**בלי** הקידומת `slice/`). ‏`<name>` ‏הוא השם הנקי (למשל `4-bubble-polish`).
+
+| | ‏ערך | ‏דוגמה |
+|---|------|--------|
+| branch | `slice/<name>` | `slice/4-bubble-polish` |
+| ‏worktree dir | `.worktrees/<name>` | `.worktrees/4-bubble-polish` |
+
+**‏למה `slice/`**: namespace נייטיב של git — `git branch --list 'slice/*'`,
+`git for-each-ref refs/heads/slice/` לניקוי-מסה, ‏והפרדה מ-`fix/`/`spike/` עתידיים.
+**‏למה dir בלי הקידומת**: ‏slash בשם תיקייה יוצר תת-ספרייה מקוננת (`.worktrees/slice/foo`) — ‏מבולגן. ‏dir שטוח.
+
 ## ‏יצירת worktree לslice
 
 ```bash
 cd <project-root>
-git worktree add .worktrees/<slice-name> -b <slice-name> <base-branch>
-cd .worktrees/<slice-name>
+git worktree add .worktrees/<name> -b slice/<name> <base-branch>
+cd .worktrees/<name>
 ```
 
-‏`<base-branch>` ‏הוא בד"כ `dev` ‏(או ‏ה-tip ‏המעודכן ביותר).
+‏`<base-branch>` ‏הוא בד"כ `dev` ‏(או ‏ה-tip ‏המעודכן ביותר). ‏בשרשור — `slice/<dep-name>` ‏(branch של התלות).
 
 ‏אחרי יצירה:
 
@@ -42,7 +56,7 @@ cd .worktrees/<slice-name>
 ```
 
 > [!warning] ‏gotcha: ‏worktree path
-> ‏אם ‏ה-cwd ‏שלך ‏הוא ‏`dev/` ‏(לא הroot), ‏ו-הtagliata ‏הוא ‏`.worktrees/<slice>`, ‏git ‏יצור ‏אותו ‏ב-`dev/.worktrees/<slice>/` ‏ולא ב-`.worktrees/<slice>/` ‏הראשי. **‏פתרון**: ‏השתמש ב-absolute path: ‏`git worktree add /full/path/to/project/.worktrees/<slice> -b <slice> dev`.
+> ‏אם ‏ה-cwd ‏שלך ‏הוא ‏`dev/` ‏(לא הroot), ‏git ‏יצור ‏את ה-worktree ‏ב-`dev/.worktrees/<name>/` ‏ולא ב-`.worktrees/<name>/` ‏הראשי. **‏פתרון**: ‏absolute path: ‏`git worktree add /full/path/to/project/.worktrees/<name> -b slice/<name> dev`.
 
 ## ‏ports — ‏convention לעבודה מקבילה
 
@@ -143,8 +157,9 @@ ssh -i ~/.ssh/pico \
 
 ```bash
 cd <project-root>
-git worktree remove .worktrees/<slice-name>
-git branch -d <slice-name>  # -D ‏אם force
+git worktree remove .worktrees/<name>
+git branch -d slice/<name>  # -D ‏אם force
+git worktree prune          # ‏ניקוי רישומים תלויים
 ```
 
 ‏אם ה-worktree ‏שינויים unstaged — `git worktree remove` ‏יתלונן. ‏החלט: `git stash` ‏או `git worktree remove --force`.
@@ -156,7 +171,7 @@ git branch -d <slice-name>  # -D ‏אם force
 ‏פתרון Linux: symlink ידני מ-source repo:
 
 ```bash
-ln -s ../../<project>/tests/fixtures .worktrees/<slice>/tests/fixtures
+ln -s ../../<project>/tests/fixtures .worktrees/<name>/tests/fixtures
 ```
 
 ‏פתרון Windows: ‏מתועד בסקיל `git-worktree-shared-assets`.

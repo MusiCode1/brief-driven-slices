@@ -42,9 +42,9 @@ developer_instructions = """
    ‏עדכן state.json: base = <base>
    │
    ▼ [‏dispatch]
-   git worktree add <repo>/.worktrees/<slice> -b <slice> <base>
-   ‏כתוב prompt → $STATE/dispatches/<slice>.prompt
-   ‏עדכן state.json: status=in-progress, branch=<slice>, worktree=<path>, started=<ts>
+   git worktree add <repo>/.worktrees/<name> -b slice/<name> <base>   # branch: slice/<name> | dir: .worktrees/<name>
+   ‏כתוב prompt → $STATE/dispatches/<name>.prompt
+   ‏עדכן state.json: status=in-progress, branch=slice/<name>, worktree=<path>, started=<ts>
     bash ~/projects/brief-driven-slices/main/scripts/dispatch-executor.sh \
      <project> <slice> <worktree>
    │

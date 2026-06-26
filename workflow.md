@@ -79,8 +79,8 @@ file paths + gitignore-trap, risks מיושנים, ו-`depends_on`.
 
 ```bash
 cd <project-root>
-git worktree add .worktrees/<slice-name> -b <slice-name> <base-branch>
-cd .worktrees/<slice-name>
+git worktree add .worktrees/<name> -b slice/<name> <base-branch>   # branch: slice/<name> | dir: .worktrees/<name>
+cd .worktrees/<name>
 <package-manager> install
 <package-manager> hooks:install   # ‏אם פרויקט עם pre-commit hooks
 ```
@@ -230,7 +230,7 @@ Commits: git log <base>..HEAD
 
 ```bash
 cd <project-root>/dev   # ‏או main worktree
-git merge --no-ff <slice-name>
+git merge --no-ff slice/<name>
 # ‏אם יש conflict ב-walkthrough.md / slices.md — ‏פתור ידנית
 <package-manager> test
 # ‏אם passes — ‏commit ה-merge (‏לפי הסקיל `commit`)
@@ -247,8 +247,8 @@ git push                # ‏אחרי כל merge — push מיד. merge מקומ
 ‏worktrees **‏מצטברים בערימות** אם לא מנקים. ‏אחרי שה-merge עבר בהצלחה, tests עוברים על dev, ‏ונדחף (push):
 
 ```bash
-git worktree remove .worktrees/<slice-name>
-git branch -d <slice-name>
+git worktree remove .worktrees/<name>
+git branch -d slice/<name>
 git worktree prune          # ‏ניקוי רישומים תלויים
 git worktree list           # ‏ודא שנשארו רק main + worktrees חיים
 ```

@@ -28,12 +28,13 @@
 
 ## 1. Worktree
 
-‏כל slice ‏מקבל worktree משלו ב-`.worktrees/<slice-name>/`. ‏הbrief ‏אומר איזה שם.
+‏כל slice ‏מקבל worktree משלו ב-`.worktrees/<name>/`. ‏הbrief ‏אומר איזה שם.
+‏מוסכמה: **branch = `slice/<name>`**, **dir = `.worktrees/<name>`** (בלי הקידומת `slice/`).
 
 ```bash
 cd <project-root>
-git worktree add .worktrees/<slice-name> -b <slice-name> dev
-cd .worktrees/<slice-name>
+git worktree add .worktrees/<name> -b slice/<name> dev
+cd .worktrees/<name>
 <package-manager> install
 <package-manager> hooks:install    # ‏אם רלוונטי לפרויקט
 ```
