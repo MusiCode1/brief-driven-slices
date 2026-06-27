@@ -96,9 +96,8 @@ Task({
   subagent_type: "executor",
   description: "Execute <slice>",
   prompt: `‏בצע docs/plans/<slice>.md.
-Pre-conditions ‏ב-docs/plans/EXECUTOR_DISPATCH.md (‏פר-פרויקט).
+env הפרויקט (ports/paths/OneCLI/tunnel): AGENTS.md. פרוטוקול גנרי: הסוכן eliezer.
 Base: <dev tip hash>
-<port convention, tunnel notes, OneCLI agent ‏אם רלוונטי>
 Verifier: light (‏או heavy ‏לפי brief)`
 })
 ```

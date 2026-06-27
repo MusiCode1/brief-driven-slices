@@ -1,8 +1,18 @@
-# Executor Dispatch — Pre-conditions ‏וקונבנציות
+# Executor Dispatch — פרוטוקול executor גנרי (לא מועתק פר-פרויקט)
 
-> ‏זה ‏boilerplate **‏פר-פרויקט**. ‏מקם ב-`docs/plans/EXECUTOR_DISPATCH.md` ‏של ‏הפרויקט.
-> ‏ה-brief מפנה אליו ‏ב-§0 ‏ולא חוזר עליו.
-> ‏אם ה-brief סותר משהו פה — ‏הbrief מנצח. ‏אם לא ברור — ‏Escalation.
+> **דוקטרינה (2026-06-27)**: הקובץ הזה הוא **הפרוטוקול הגנרי** — קונבנציות שזהות לכל
+> פרויקט (role, worktree `slice/<name>`, testing-strategy, verifier, escalation, workflow).
+> **אל תעתיק אותו לכל פרויקט** — זה מה שגרם ל-drift.
+>
+> | סוג מידע | היכן הוא חי |
+> |---|---|
+> | **פרוטוקול גנרי** (הקובץ הזה) | בסקיל + בהגדרת הסוכן `eliezer` (מותקנת פר-מכונה) |
+> | **env של הפרויקט** (paths, ports, package manager, OneCLI, tunnel, gotchas) | ב-`AGENTS.md` של הפרויקט — ו-`CLAUDE.md` עושה לו `@import` |
+>
+> כך שינוי-קונבנציה נערך **פעם אחת** (כאן/בסוכן) וכל הפרויקטים יורשים; ו-env פרויקטי הוא
+> קובץ git רגיל ב-`AGENTS.md` (אפס symlink/submodule — נוסע עם `git pull`, עובד Windows+Linux).
+>
+> ‏ה-brief §0 מפנה לשניהם: ל-`AGENTS.md` (env) ולפרוטוקול (כאן/הסוכן). ‏אם ה-brief סותר — ‏הbrief מנצח.
 
 ---
 

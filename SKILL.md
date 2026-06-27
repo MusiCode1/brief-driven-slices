@@ -135,11 +135,18 @@ description: |
 | [`patterns.md`](patterns.md) | 5 ‏קטגוריות הכשל שזוהו ב-Slice 9 — ‏רקע לwhy |
 | [`recommendations.md`](recommendations.md) | 10 ‏סעיפים ל-template ‏וההגנות |
 | [`briefs/BRIEF_TEMPLATE.md`](briefs/BRIEF_TEMPLATE.md) | ‏Skeleton ‏ל-brief ‏חדש |
-| [`briefs/EXECUTOR_DISPATCH.md`](briefs/EXECUTOR_DISPATCH.md) | Boilerplate ‏ל-dispatch ‏ל-אליעזר (‏פר-פרויקט) |
+| [`briefs/EXECUTOR_DISPATCH.md`](briefs/EXECUTOR_DISPATCH.md) | פרוטוקול executor **גנרי** (לא מועתק פר-פרויקט — ראה דוקטרינה למטה) |
 | [`briefs/state.template.json`](briefs/state.template.json) | ‏Template ‏ל-state.json ‏פר-פרויקט |
 | [`orchestration-project/`](orchestration-project/) | ‏Template ‏לפרויקט הבית של יתרו |
 | [`cli-configs/`](cli-configs/) | ‏Adapters ‏ל-CLI שונים: OpenCode, Codex, ובהמשך אחרים |
-| [`AGENTS.md`](AGENTS.md) | ‏הנחיות פרויקט כלליות לסוכני קוד |
+| [`AGENTS.md`](AGENTS.md) | ‏הנחיות פרויקט כלליות לסוכני קוד (של ריפו השיטה עצמו) |
+
+> ### דוקטרינת env פר-פרויקט (2026-06-27)
+> **אל תעתיק `EXECUTOR_DISPATCH.md` לכל פרויקט** — זה גרם ל-drift (מוסכמות שהשתנו בריפו השיטה
+> ולא בפרויקטים). במקום:
+> - **פרוטוקול גנרי** (worktree `slice/<name>`, role, testing, verifier) → חי כאן + בסוכן `eliezer` (מותקן פר-מכונה).
+> - **env של הפרויקט** (paths, ports, OneCLI, tunnel, gotchas) → ב-`AGENTS.md` של הפרויקט, ו-`CLAUDE.md` עושה `@AGENTS.md`.
+> - ה-brief §0 מפנה לשניהם. כך שינוי-קונבנציה נערך פעם אחת, ו-env הוא קובץ git רגיל (אפס symlink/submodule — עובד Windows+multi-machine).
 
 ## ‏הסוכנים (roles ‏עם adapters ‏ל-CLI)
 
