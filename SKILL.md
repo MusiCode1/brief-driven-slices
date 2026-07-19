@@ -58,6 +58,7 @@ description: |
 
 ```
 ‏המשתמשת → ‏מרדכי: "‏בצע slice X"
+‏מרדכי → ‏דף-החלטות (scope + 7 תרחישים/defaults) → ‏המשתמשת מאשרת פעם-אחת
 ‏מרדכי → Task(subagent_type="eliezer", ...)   [‏חוסם]
 ‏אליעזר מבצע, ‏מפעיל כלב, ‏מחזיר
 ‏מרדכי מציג (‏web: preview חי) → ‏המשתמשת מאשרת בעיניים → ‏מרדכי עושה merge → archive brief + cleanup worktree (‏אטומי)
@@ -66,7 +67,7 @@ description: |
 ### Mode 2 — ‏לילי (‏יתרו)
 
 ```
-‏ערב:   ‏מרדכי + ‏אביגיל → briefs מאומתים → state.json
+‏ערב:   ‏מרדכי → ‏דף-החלטות → briefs מאומתים (אביגיל) → state.json
 ‏לילה:  ‏יתרו מריץ queue → tmux → אליעזר → כלב → ‏ארכב
 ‏בוקר:  ‏מרדכי קורא summary → ‏מחליט → merge
 ```
