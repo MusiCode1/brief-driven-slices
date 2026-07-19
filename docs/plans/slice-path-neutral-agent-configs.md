@@ -32,7 +32,13 @@
 - `agent-definitions/prompts/*.md` — ‏המקור. ‏generated נגזר מזה.
 - `agent-definitions/agents.json` — ‏מטא (‏שמות, ‏מודלים, ‏tools).
 - `scripts/generate-cli-configs.py` — ‏רינדור מקור → `cli-configs/*` + `agents/*`.
-- `scripts/install-cli-configs.sh` — ‏symlink/copy ‏מ-`cli-configs/*` ‏ל-`~/.config/{opencode,codex,qoder}/agents`.
+- `scripts/install-cli-configs.sh` — ‏symlink/copy ‏מ-`cli-configs/*` ‏ל-`~/.config/opencode/agents` + `~/.codex/agents`.
+
+> **‏scope-note (blocker אליעזר, 2026-07-19)**: ב-base `fe1a0a3` קיימים **‏רק** ‏שני installers —
+> `install_opencode` ‏ו-`install_codex`. ‏**‏qoder לא committed** (‏קיים כ-WIP לא-מגובה ב-checkout הראשי,
+> ‏לא ב-base). ‏לכן ה-slice מכסה **opencode+codex בלבד**. ‏qoder יקבל path-neutrality **‏כשיוקמט**
+> ‏(ה-`substitute_into` ‏הגנרי יחול עליו אוטומטית אז). ‏אביגיל r1/r2 אימתו מול עץ-עבודה מלוכלך —
+> ‏לקח ל-backlog: ‏לאמת מול ה-base ה-committed, ‏לא מול working tree.
 
 ### ‏הבלאסט-רדיוס המדויק (grep ‏על `agent-definitions/prompts/`)
 
@@ -99,19 +105,18 @@
 ┌────────────────────────────────────────────────────────────┐
 │ install-cli-configs.sh                                       │
 │  קורא paths.env → מחליף {{...}} → כותב עותק קונקרטי          │
-│  לכל 3 ה-CLIs (dst שונה לכל אחד!):                           │
+│  ל-2 ה-CLIs (dst שונה לכל אחד!):                            │
 │    opencode → ${OPENCODE_AGENTS_DIR:-~/.config/opencode/agents}│
 │    codex    → ${CODEX_AGENTS_DIR:-~/.codex/agents}           │
-│    qoder    → ${QODER_AGENTS_DIR:-~/.qoder/agents}           │
 │  ⚠️ opencode היום symlink (ln -sfn) — symlink לא נושא תוכן    │
-│     מוחלף → חייב לעבור ל-copy. codex+qoder כבר cp (רק להוסיף  │
-│     החלפה בזמן ה-copy). ההחלפה חלה על שלושתם.                 │
+│     מוחלף → חייב לעבור ל-copy. codex כבר cp (רק להוסיף        │
+│     החלפה בזמן ה-copy). ההחלפה חלה על שניהם.                  │
 └────────────────────────────────────────────────────────────┘
 ```
 
 **‏עקרון-על**: committed artifacts ‏(מקור + generated) ‏= ‏ניטרליים. ‏הקונקרטי חי **‏רק**
-‏בתיקיות ה-agents של ה-CLIs (opencode=`~/.config/opencode`, codex=`~/.codex`,
-qoder=`~/.qoder` — ‏שלא ב-git) ‏וב-`paths.env` ‏פר-מכונה.
+‏בתיקיות ה-agents של ה-CLIs (opencode=`~/.config/opencode`, codex=`~/.codex`
+‏— ‏שלא ב-git) ‏וב-`paths.env` ‏פר-מכונה.
 
 ---
 
@@ -131,9 +136,9 @@ grep -roh "{{BDS_[A-Z]*}}" agent-definitions/prompts/ | sort | uniq -c   # → 4
 
 ### Commit 1 — ‏מנגנון החלפה + ‏כשל-רועש (approach: tdd) [verifier-phase ‏פה — ‏הכי מסוכן]
 
-> ⚠️ **‏קריטי (finding אביגיל #1)**: ההחלפה + ‏כשל-רועש חלים על **‏שלושת** ה-installers —
-> `install_opencode`, `install_codex`, `install_qoder` — ‏לא רק opencode. ‏אחרת codex/qoder
-> ‏יתקינו placeholder ‏מילולי. ‏חוט אחד משותף שכל שלושתם קוראים לו.
+> ⚠️ **‏קריטי (finding אביגיל #1)**: ההחלפה + ‏כשל-רועש חלים על **‏שני** ה-installers ה-committed —
+> `install_opencode` ‏ו-`install_codex` — ‏לא רק opencode. ‏אחרת codex יתקין placeholder ‏מילולי.
+> ‏חוט אחד משותף ששניהם קוראים לו (‏גנרי — ‏qoder יתחבר אליו כשיוקמט).
 
 **‏קבצים חדשים**:
 - `cli-configs/paths.env.example` — ‏תבנית עם 4 המשתנים + ‏הסבר.
@@ -142,10 +147,10 @@ grep -roh "{{BDS_[A-Z]*}}" agent-definitions/prompts/ | sort | uniq -c   # → 4
 **‏קבצים שמשתנים**: `scripts/install-cli-configs.sh`
 - ‏פונקציה `resolve_paths()` — ‏קוראת `${BDS_PATHS_ENV:-$HOME/.config/bds/paths.env}` (‏או env ‏ישיר), ‏ו-`:?`‎ ‏על כל 4 המשתנים → ‏**כשל-רועש** ‏אם חסר.
 - ‏פונקציה `substitute_into(src, dst)` — ‏sed ‏שמחליף 4 ה-placeholders ‏וכותב ל-dst.
-- **‏חיווט לשלושת ה-installers**:
+- **‏חיווט לשני ה-installers**:
   - `install_opencode`: ‏**`ln -sfn` → `substitute_into`** (symlink ‏לא נושא תוכן מוחלף → ‏חובה copy מוחלף).
   - `install_codex`: ‏ה-`cp` ‏הקיים → `substitute_into`.
-  - `install_qoder`: ‏ה-`cp` ‏הקיים → `substitute_into`.
+  - (`install_qoder` ‏לא קיים ב-base — ‏מחוץ ל-scope; ‏יתחבר ל-`substitute_into` ‏כשיוקמט.)
 - **‏שכבת-הגנה**: ‏אחרי כל התקנה, ‏אם נשאר `{{BDS_` ‏ב-dst → `exit 1`.
 
 **API skeleton** (bash):
@@ -159,14 +164,14 @@ substitute_into() {  # $1=src $2=dst
 }
 ```
 
-**Verification** (‏unittest + ‏שלושת ה-CLIs):
+**Verification** (‏unittest + ‏2 ה-CLIs):
 ```bash
 python3 tests/test_path_substitution.py            # unittest, לא pytest
-# install מזויף לשלושת ה-CLIs (dst נפרד לכל אחד):
+# install מזויף ל-2 ה-CLIs (dst נפרד לכל אחד):
 env BDS_REPORTS=/tmp/fk-r BDS_SCRIPTS=/tmp/fk-s BDS_LESSONS=/tmp/fk-l BDS_ORCH=/tmp/fk-o \
-    OPENCODE_AGENTS_DIR=/tmp/oc CODEX_AGENTS_DIR=/tmp/cx QODER_AGENTS_DIR=/tmp/qo \
+    OPENCODE_AGENTS_DIR=/tmp/oc CODEX_AGENTS_DIR=/tmp/cx \
     bash scripts/install-cli-configs.sh all
-for d in /tmp/oc /tmp/cx /tmp/qo; do
+for d in /tmp/oc /tmp/cx; do
   grep -rl "{{BDS_" "$d" && echo "FAIL: placeholder נשאר ב-$d" || echo "OK: $d מוחלף"
 done
 grep -rq "/tmp/fk-r" /tmp/oc && echo "OK: נתיב מוזרק מופיע"
@@ -206,11 +211,11 @@ grep -rl "{{BDS_" cli-configs/ agents/ | wc -l   # → כל קבצי הסוכנ�
 |---|------|------|
 | 1 | ‏אפס נתיב-מוקשח במקור | `grep -rn "~/projects\|/home/user" agent-definitions/prompts/` → ‏ריק |
 | 2 | ‏4 placeholders בלבד | `grep -roh "{{BDS_[A-Z]*}}" agent-definitions/` → BDS_REPORTS/SCRIPTS/LESSONS/ORCH |
-| 3 | ‏החלפה עובדת ב-**3 ה-CLIs** | `install ... all` ‏עם env מזויף → ‏אין `{{` ‏באף אחד מ-`/tmp/oc,cx,qo`, ‏הנתיב המוזרק מופיע |
+| 3 | ‏החלפה עובדת ב-**2 ה-CLIs** | `install ... all` ‏עם env מזויף → ‏אין `{{` ‏באף אחד מ-`/tmp/oc,cx`, ‏הנתיב המוזרק מופיע |
 | 4 | ‏כשל-רועש | ‏install ‏בלי `BDS_REPORTS` → `exit≠0` ‏עם הודעה ברורה |
 | 5 | ‏committed ‏נשאר ניטרלי | ‏אחרי regenerate: `cli-configs/*` + `agents/*` ‏מכילים `{{BDS_*}}`, ‏לא נתיב מכונה |
 | 6 | ‏טסטים ירוקים | `python3 tests/test_path_substitution.py` (unittest, ‏לא pytest) |
-| 7 | ‏regression: ‏install ‏אמיתי | ‏עם `paths.env` ‏אמיתי → ‏הסוכנים ב-**שלושת** ה-dst (opencode/codex/qoder) ‏מצביעים על נתיבי המכונה |
+| 7 | ‏regression: ‏install ‏אמיתי | ‏עם `paths.env` ‏אמיתי → ‏הסוכנים ב-**שני** ה-dst (opencode/codex) ‏מצביעים על נתיבי המכונה |
 
 ---
 
@@ -256,7 +261,7 @@ grep -rl "{{BDS_" cli-configs/ agents/ | wc -l   # → כל קבצי הסוכנ�
 
 | # | ‏שאלה | ‏ברירת מחדל | ‏חוסם? |
 |---|------|----------|------|
-| 1 | opencode: copy ‏או symlink-לתיקיית-build? | **‏נפתר → copy.** ‏ההחלפה חלה על **‏שלושת** ה-installers (opencode עובר מ-symlink ל-copy; codex/qoder כבר cp). | ✅ ‏(‏הוכרע) |
+| 1 | opencode: copy ‏או symlink-לתיקיית-build? | **‏נפתר → copy.** ‏ההחלפה חלה על **‏שני** ה-installers ה-committed (opencode עובר מ-symlink ל-copy; codex כבר cp). qoder — ‏מחוץ ל-scope (‏לא committed). | ✅ ‏(‏הוכרע) |
 | 2 | env ‏ישיר ‏או קובץ `paths.env`? | **‏שניהם** — env ‏גובר, ‏אחרת קובץ | ❌ |
 | 3 | `{{BDS_ORCH}}`/`{{BDS_LESSONS}}` — ‏חובה, ‏או אופציונליים ‏עם ברירת-מחדל? | ‏חובה (‏כשל-רועש ‏על כולם) | ❌ |
 | 4 | ‏להוסיף `BDS_DOCS` ‏(docs-repo) ‏עכשיו, ‏או ‏להשאיר ל-slice ‏של docs-relocation? | ‏להשאיר — ‏מחוץ ל-scope | ❌ |
