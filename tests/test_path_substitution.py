@@ -26,6 +26,10 @@ def run_bash(snippet, env_overrides=None, unset=None):
     לפונקציות עצמן (resolve_paths / substitute_into / install_*)."""
     env = os.environ.copy()
     env.update(FAKE_ENV)
+    # הרמטיות: אל תקרא את ה-paths.env האמיתי של המכונה (אם הותקן) — הטסטים
+    # בודקים env-only. בלי זה, resolve_paths מוצא משתנים ב-~/.config/bds/paths.env
+    # וטסטי "משתנה חסר → כשל" נכשלים. (התגלה אחרי הפעלת path-neutral על המכונה.)
+    env["BDS_PATHS_ENV"] = "/nonexistent/bds-paths.env"
     if env_overrides:
         env.update(env_overrides)
     if unset:
@@ -97,6 +101,23 @@ class TestSubstituteInto(unittest.TestCase):
             result = run_bash(f'substitute_into "{src}" "{dst}"')
             self.assertNotEqual(result.returncode, 0)
             self.assertTrue(result.stderr.strip(), "expected a noisy error on stderr")
+
+    def test_dst_is_dangling_symlink(self):
+        """regression (install-activation bug 2026-07-19): dst עלול להיות symlink
+        ישן מ-install קודם שמצביע ל-worktree שנמחק (תלוי). ה-redirect `>` עוקב
+        אחרי ה-symlink → ENOENT ("No such file or directory"). substitute_into
+        חייב rm -f לפני הכתיבה → קובץ רגיל טרי."""
+        with tempfile.TemporaryDirectory() as tmp:
+            src = Path(tmp) / "src.md"
+            dst = Path(tmp) / "dst.md"
+            src.write_text("{{BDS_REPORTS}}\n")
+            # dst = symlink תלוי (יעד שלא קיים, בתוך תיקייה שלא קיימת)
+            dst.symlink_to(Path(tmp) / "deleted-worktree" / "x.md")
+            self.assertTrue(dst.is_symlink())
+            result = run_bash(f'substitute_into "{src}" "{dst}"')
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertFalse(dst.is_symlink(), "dst צריך להיות קובץ רגיל, לא symlink")
+            self.assertIn("/tmp/fk-r", dst.read_text())
 
 
 class TestResolvePaths(unittest.TestCase):

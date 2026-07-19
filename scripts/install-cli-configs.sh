@@ -72,6 +72,9 @@ substitute_into() {
   scripts="$(_sed_escape "$BDS_SCRIPTS")"
   lessons="$(_sed_escape "$BDS_LESSONS")"
   orch="$(_sed_escape "$BDS_ORCH")"
+  # rm -f לפני הכתיבה: dst עלול להיות symlink ישן (מ-install קודם) — אולי תלוי
+  # (worktree שנמחק). redirect `>` עוקב אחרי symlink → ENOENT. הסרה מבטיחה קובץ רגיל טרי.
+  rm -f "$dst"
   sed -e "s|{{BDS_REPORTS}}|$reports|g" \
       -e "s|{{BDS_SCRIPTS}}|$scripts|g" \
       -e "s|{{BDS_LESSONS}}|$lessons|g" \
