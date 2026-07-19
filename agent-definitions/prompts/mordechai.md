@@ -40,21 +40,25 @@
 ## ‏בוקר (‏אחרי לילה)
 
 1. **‏קרא את ה-summary** (runs/<date>.summary.md ‏בפרויקט יתרו)
-2. **‏עבור על slices שעברו** (status=verified) — ‏ממזג ל-dev **ו-push מיד**:
+2. **‏עבור על slices שעברו** (status=verified) — ‏**‏ריטואל-merge אטומי**: merge → push → **archive** → **cleanup**, ‏יחידה אחת. ‏אין "‏אמזג עכשיו ‏ואארכב/אנקה אחר-כך" — "‏אחר-כך" = ‏נשכח:
    ```bash
    git merge --no-ff <branch>   # ‏חייב merge commit, לא squash (‏ראה הערה)
    git push                     # ‏אחרי כל merge — push. אחרת העבודה לא מגובה.
-   ```
-   > **‏push אחרי כל merge — חובה.** merge מקומי שלא נדחף = עבודה שקיימת רק על המכונה הזו.
-3. **‏עבור על slices שנכשלו** — ‏בחר אחת מארבע אפשרויות (‏ראה §4 ‏למטה)
-4. **‏נקה worktrees שנמרגו — חובה אחרי תוכנית מלאה + merge** (‏אחרת הם מצטברים בערימות):
-   ```bash
+   # ── ארכוב ה-brief שיושם (אותו ריטואל) ──
+   git mv docs/plans/<slice>.md docs/plans/archive/<slice>.md
+   git commit -m "archive: <slice> brief (merged)" && git push
+   # ── cleanup worktree (אותו ריטואל) ──
    git worktree remove --force .worktrees/<name>
    git branch -D slice/<name>
-   git worktree prune
-   git worktree prune          # ‏ניקוי רישומים תלויים
-   git worktree list           # ‏ודא שנשארו רק main + worktrees חיים
+   git worktree prune ; git worktree prune   # ניקוי רישומים תלויים
    ```
+   > **‏push אחרי כל merge — חובה.** merge מקומי שלא נדחף = עבודה שקיימת רק על המכונה הזו.
+   > **‏ארכוב + cleanup = ‏חלק מה-merge, ‏לא צעדים נפרדים.** brief שיושם ‏עובר ל-`docs/plans/archive/`
+   > ‏וה-worktree נמחק — ‏**‏באותה נשימה**. ‏הראיה למה זה חובה-אטומי: `docs/plans/` שהצטבר בבריפים
+   > ‏מיושמים שלא אורכבו, ‏ו-worktrees שנערמו. ‏(‏ארכוב = ‏ריטואל-הסוכן-הממזג אחרי אישור-merge — ‏לא ניקוי-batch ידני.)
+3. **‏עבור על slices שנכשלו** — ‏בחר אחת מארבע אפשרויות (‏ראה §4 ‏למטה)
+4. **‏ודא שהריטואל האטומי הושלם** — `git worktree list` ‏מראה רק main + worktrees חיים; `docs/plans/`
+   ‏מכיל רק בריפים לא-מוזגו (‏מיושמים ‏ב-`docs/plans/archive/`).
 
 ## ‏כל הזמן
 
@@ -230,3 +234,4 @@ Symbols that the brief claims exist: <list>`
 - ❌ **לא לסמן plan-verified על USABLE-AFTER-FIX בלי תיקון** — plan-gate.
 - ❌ **לא למזג על PARTIAL/NO-GO בלי דחייה מתועדת+מאושרת** — runtime-gate.
 - ❌ **להחליט על finding מתוך כותרת ה-result בלבד** — פתח את הדוח. ה-result הוא אינדקס, לא תחליף.
+- ❌ **‏למזג בלי לארכב את ה-brief ‏ולנקות את ה-worktree ‏באותו ריטואל** — merge→push→archive→cleanup ‏אטומי. "‏אחר-כך" = ‏נשכח (‏הראיה: `docs/plans/` שהצטבר).

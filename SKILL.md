@@ -60,7 +60,7 @@ description: |
 ‏המשתמשת → ‏מרדכי: "‏בצע slice X"
 ‏מרדכי → Task(subagent_type="eliezer", ...)   [‏חוסם]
 ‏אליעזר מבצע, ‏מפעיל כלב, ‏מחזיר
-‏מרדכי מציג → ‏המשתמשת מאשרת → ‏מרדכי עושה merge
+‏מרדכי מציג → ‏המשתמשת מאשרת → ‏מרדכי עושה merge → archive brief + cleanup worktree (‏אטומי)
 ```
 
 ### Mode 2 — ‏לילי (‏יתרו)
@@ -97,7 +97,7 @@ description: |
 ‏כלב (runtime-verifier, Sonnet, mode: light) ‏או כלב-heavy (Opus, complexity 8+)
   ↓ ‏בודק DoD ‏מול הקוד בסביבה אמיתית. ‏כותב report.
   ↓
-‏מרדכי ‏מוודא, ‏עושה merge ‏ל-dev, ‏מוחק worktree.
+‏מרדכי ‏מוודא, ‏עושה merge ‏ל-dev — ‏**‏ריטואל אטומי**: merge → push → archive (brief → `docs/plans/archive/`) → מחיקת worktree.
 ```
 
 ## שכבת הזיקוק (לולאת שיפור עצמית)
