@@ -480,3 +480,83 @@ pnpm build --force      # ‏או tsc --build --force ‏ל-core/types package
 ✅ ‏"‏קרא את ה-brief לבד. ‏אל תסמוך על המסגור של הprompt הזה — ‏הוא הגיע מ-executor."
 
 ‏מתועד ב-`agents/verifier-phase.md`, `agents/verifier-slice-light.md` ‏ב-section "‏כלל יסוד: ‏אל תסמוך על ה-prompt".
+
+---
+
+## שיפורים מסשן 2026-07-19 (זיקוק מלא + אירוע פיזור-דוחות)
+
+> 7 פריטים שצפו בסשן שבו אותרו: פיצול 91 דוחות ל-3 מיקומים לא-מסונכרנים, תזה שגויה
+> ממדגם קטן, ואובדן-גלם עם קריסת-process. מקור: `distillations/2026-07-19-full-report.md`.
+
+### 16. progress/todo-file לסוכנים
+
+**מטפל ב:** נראות + עמידות מול קריסת-process.
+
+**הבעיה:** סשני אביגיל/כלב ארוכים ואטומים — אין לדעת מה הם עושים תוך כדי. וכשה-process
+קורס, הגלם מתפוגג (ה-CLI store מסתובב/נמחק). בסשן הזה אביגיל נקטעה כשה-process יצא.
+
+**הפתרון:** כל מאמת מתחזק **to-do file קבוע** (markdown checklist) בנתיב peekable. הכללה
+של מנגנון ה-`log_path` הקיים של כלב → always-on לכל המאמתים, לא רק בריצות-יתרו.
+
+### 17. path-neutrality בהגדרות הסוכנים
+
+**מטפל ב:** מעבר בין מכונות.
+
+**הבעיה:** ההגדרות מקשיחות `~/projects` (p קטנה). על מכונה עם `~/Projects` (P גדולה) →
+הסוכנים כתבו 90 דוחות לתיקיות שגויות/לא-מגובות.
+
+**הפתרון:** env יחיד פר-מכונה + placeholders (`{{BDS_REPORTS}}`...) במקור-האמת + החלפה
+ב-install-time לשלושת ה-CLIs. **מאומת READY** — `docs/plans/slice-path-neutral-agent-configs.md`.
+
+### 18. כיול-mode של כלב
+
+**מטפל ב:** עלות verifier.
+
+**הבעיה:** `calev-heavy` = median 16.5 דק' Opus; לפי הזיקוק רוב ה-heavy מחזיר GO/0-findings.
+gate מורכבות-8 נדיב מדי.
+
+**הפתרון:** heavy רק ל**סיכון-סוג** (security/concurrency/data-integrity), לא רק ניקוד;
+`mode` מפורש-חובה בכל dispatch; default=רגיל. ⚠️ **לכייל, לא לקצץ** — כלב תופס 11 blockers
+ב-155 ריצות (12% non-GO). ה-payoff אמיתי, רק לא מכויל לתיק.
+
+### 19. distill.py: פילוח verdict×mode + נרמול severity
+
+**מטפל ב:** דיוק הזיקוק.
+
+**הבעיה:** אי-אפשר לענות "האם ה-blockers נתפסו ב-heavy או ברגיל" — אין פילוח. וה-severity
+מגיע כ-`HIGH`/`MED` לצד `blocker`/`minor` → ספירה כפולה ורעש.
+
+**הפתרון:** הוסף ל-`distill.py` פילוח verdict×mode לכלב; נרמל severity/category (lower-case
++ פיצול מחרוזות מרובות-קטגוריה).
+
+### 20. ארכוב-בריפים + cleanup כריטואל-merge נאכף (slice A)
+
+**מטפל ב:** הצטברות בריפים ו-worktrees.
+
+**הבעיה:** `docs/plans/` מלא בבריפים-שיושמו שלא אורכבו; worktrees מצטברים. הארכוב לא קשור
+לטקס ה-merge → נשכח.
+
+**הפתרון:** **merge = פעולה אטומית** שכוללת `archive (brief → docs/plans/archive/)` +
+worktree cleanup, ע"י הסוכן הממזג, **מיד אחרי אישור-ה-merge**. לא צעד נפרד שנשכח.
+
+### 21. live-preview gate ל-web לפני merge (slice B)
+
+**מטפל ב:** merge מושכל בפרויקטי web.
+
+**הבעיה:** runtime-gate = כלב GO. אבל כלב הוא **סוכן** שמריץ טסטים — המשתמש לא ראה את
+התוצאה בעיניו. calev-heavy עושה "visual review" אבל זה שיפוט שלו, לא העיניים של המשתמש.
+
+**הפתרון:** לפרויקטי web — אחרי כלב GO ולפני merge — מרדכי מעלה **preview חי** (dev server/URL)
+ומציג למשתמש לאישור-עיניים. שתי שכבות: אימות-מכונה (כלב) → אימות-אדם-חי (משתמש). זה מה
+שהופך את "merge רק באישור מפורש" ל**מושכל**.
+
+### 22. יישור דוקטרינת docs ל-docs-repo
+
+**מטפל ב:** דוקטרינה מול מציאות + פרטיות.
+
+**הבעיה:** הדוקטרינה אומרת "decisions/walkthrough בריפו הפרויקט, ליד הקוד". בפועל כבר קיים
+`docs-repo` נפרד (private) עם decisions/plans/reports פר-פרויקט — כי תוכן אישי דלף למסמכים
+ועדיף שלא יתפרסם. הדוקטרינה מפגרת אחרי מה שכבר נעשה.
+
+**הפתרון:** לעדכן `mordechai`/`eliezer`/`SKILL`: decisions+walkthrough → docs-repo פרטי,
+לא ריפו-הפרויקט הציבורי. reports כבר ב-repo פרטי ייעודי (`brief-driven-slices-reports`).
