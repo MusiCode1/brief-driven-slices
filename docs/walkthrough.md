@@ -5,6 +5,26 @@
 
 ---
 
+## 2026-07-19 — slice-path-neutral-agent-configs: Commit 0 — placeholders במקור-האמת
+
+הוחלפו כל 14 הנתיבים-המוקשחים ב-`agent-definitions/prompts/{avigail,calev,calev-heavy,yetro}.md`
+ב-4 placeholders, לפי טבלת §0 בבריף:
+
+| נתיב מוקשח (הוסר) | placeholder | מופעים | קבצים |
+|-------------------|-------------|--------|-------|
+| `~/projects/brief-driven-slices/main/reports` | `{{BDS_REPORTS}}` | 4 | avigail.md (2), calev.md, calev-heavy.md |
+| `~/projects/brief-driven-slices/main/scripts` | `{{BDS_SCRIPTS}}` | 3 | yetro.md |
+| `~/projects/my-skills/lessons-learned/lessons-index` | `{{BDS_LESSONS}}` | 6 | avigail.md, calev.md, calev-heavy.md (2 כ״א) |
+| `~/projects/orchestration/` | `{{BDS_ORCH}}/` | 1 | yetro.md |
+
+**אימות**:
+- `grep -rn "~/projects\|/home/user" agent-definitions/prompts/` → ריק ✅
+- `grep -roh "{{BDS_[A-Z]*}}" agent-definitions/prompts/ | sort | uniq -c` → 4/3/6/1 (תואם לטבלה) ✅
+
+**חריגות**: אין.
+
+---
+
 ## 2026-06-08 15:04 — סימון בריפים מול תוכניות טרום-בריף
 
 נוספה הגנה מתודולוגית שמבהירה לסוכנים האם מסמך הוא בריף dispatchable או תוכנית טרום-בריף.
