@@ -56,14 +56,26 @@ resolve_paths() {
     "${BDS_ORCH:?BDS_ORCH not set — ראה cli-configs/paths.env.example}"
 }
 
+# _sed_escape value — בורח \, & (backreference-כל-ההתאמה) ו-| (ה-delimiter של
+# substitute_into) כדי שערכי BDS_* עם תווים כאלה לא ישברו את ה-sed / יחדירו
+# בחזרה placeholder (calev finding, Commit 1 phase-review).
+_sed_escape() {
+  printf '%s' "$1" | sed -e 's/[\&|]/\\&/g'
+}
+
 # substitute_into src dst — מחליף את 4 ה-placeholders ({{BDS_*}}) וכותב ל-dst.
 # שכבת-הגנה: אם נשאר {{BDS_ ב-dst אחרי ההחלפה (placeholder לא-מוכר/לא-מוחלף) → exit 1.
 substitute_into() {
   local src="$1" dst="$2"
-  sed -e "s|{{BDS_REPORTS}}|$BDS_REPORTS|g" \
-      -e "s|{{BDS_SCRIPTS}}|$BDS_SCRIPTS|g" \
-      -e "s|{{BDS_LESSONS}}|$BDS_LESSONS|g" \
-      -e "s|{{BDS_ORCH}}|$BDS_ORCH|g" \
+  local reports scripts lessons orch
+  reports="$(_sed_escape "$BDS_REPORTS")"
+  scripts="$(_sed_escape "$BDS_SCRIPTS")"
+  lessons="$(_sed_escape "$BDS_LESSONS")"
+  orch="$(_sed_escape "$BDS_ORCH")"
+  sed -e "s|{{BDS_REPORTS}}|$reports|g" \
+      -e "s|{{BDS_SCRIPTS}}|$scripts|g" \
+      -e "s|{{BDS_LESSONS}}|$lessons|g" \
+      -e "s|{{BDS_ORCH}}|$orch|g" \
       "$src" > "$dst"
   if grep -q "{{BDS_" "$dst"; then
     echo "error: placeholder לא-מוחלף ב-$dst" >&2

@@ -65,6 +65,19 @@ placeholders + placeholder לא-מוכר → exit≠0), resolve_paths (כל המ
 **חריגות**: regenerate של cli-configs/agents (ראה לעיל) — לא היה ברשימת "קבצים
 שמשתנים" המקורית של Commit 1 בבריף, אבל נחוץ למימוש נכון של DoD#5/#7 (ראו §5 בבריף).
 
+### תיקון אחרי calev (verifier-phase, verdict GO, 2 findings minor)
+
+כלב מצא 2 בעיות-קצה ב-`substitute_into`: (1) ערך BDS_* המכיל `&` מתפרש ע"י sed
+כ-backreference ("כל ההתאמה") ומחדיר בחזרה `{{BDS_...}}` לתוך התוכן, מה שמפעיל
+את שכבת-ההגנה בטעות (הודעה לא-מדויקת); (2) ערך המכיל `|` (ה-delimiter שנבחר ל-sed)
+שובר את הפקודה בשגיאת syntax גולמית. שתי הבעיות "minor" (נתיבי-מכונה אמיתיים כמעט
+לעולם לא מכילים תווים אלה) אבל תוקנו באותו phase לפי הפרוטוקול (1-2 findings → תיקון).
+
+**תיקון**: נוספה `_sed_escape()` — בורחת `\`, `&`, `|` בערך לפני הזרקתו ל-`sed`
+replacement. 2 טסטים חדשים (RED מאומת לפני התיקון, GREEN אחרי) ב-
+`tests/test_path_substitution.py`: `test_replacement_value_containing_ampersand`,
+`test_replacement_value_containing_pipe`. סה"כ 9/9 טסטים ירוקים.
+
 ---
 
 ## 2026-06-08 15:04 — סימון בריפים מול תוכניות טרום-בריף

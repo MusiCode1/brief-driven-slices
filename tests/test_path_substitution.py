@@ -59,6 +59,35 @@ class TestSubstituteInto(unittest.TestCase):
             self.assertIn("/tmp/fk-o", content)
             self.assertNotIn("{{BDS_", content)
 
+    def test_replacement_value_containing_ampersand(self):
+        """calev finding (Commit 1 phase-review): & בערך BDS_* הוא sed backreference
+        מיוחד ("כל ההתאמה") — בלי escaping הוא מחדיר בחזרה {{BDS_...}} ומפיל את
+        שכבת-ההגנה בטעות. חייב לצאת עם הנתיב האמיתי, לא exit 1."""
+        with tempfile.TemporaryDirectory() as tmp:
+            src = Path(tmp) / "src.md"
+            dst = Path(tmp) / "dst.md"
+            src.write_text("{{BDS_REPORTS}}\n")
+            result = run_bash(
+                f'substitute_into "{src}" "{dst}"',
+                env_overrides={"BDS_REPORTS": "/tmp/r&d"},
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("/tmp/r&d", dst.read_text())
+
+    def test_replacement_value_containing_pipe(self):
+        """calev finding: | הוא ה-delimiter של sed בסקריפט — ערך שמכיל | חייב
+        לעבוד (escape), לא לקרוס בשגיאת syntax גולמית של sed."""
+        with tempfile.TemporaryDirectory() as tmp:
+            src = Path(tmp) / "src.md"
+            dst = Path(tmp) / "dst.md"
+            src.write_text("{{BDS_REPORTS}}\n")
+            result = run_bash(
+                f'substitute_into "{src}" "{dst}"',
+                env_overrides={"BDS_REPORTS": "/tmp/r|d"},
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("/tmp/r|d", dst.read_text())
+
     def test_unrecognized_placeholder_fails_noisily(self):
         """(ג) placeholder לא-מוכר (לא אחד מ-4) נשאר אחרי ההחלפה → כשל-רועש."""
         with tempfile.TemporaryDirectory() as tmp:
