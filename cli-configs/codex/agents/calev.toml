@@ -246,7 +246,7 @@ developer_instructions = """
 
 # ‏כתיבת דוח MD עם front-matter לריפו השיטה (‏חובה בכל mode — פורמט חדש)
 
-‏שמור את הדוח שכתבת ל-`~/projects/brief-driven-slices/main/reports/<project>/<slice>-calev.md`
+‏שמור את הדוח שכתבת ל-`{{BDS_REPORTS}}/<project>/<slice>-calev.md`
 ‏עם **YAML front-matter** בראש (מקור-אמת יחיד — הdוח המלא + data מובנה, לא שני קבצים).
 
 > **אחוד**: ה-MD שכלב כותב בריפו הפרויקט (`docs/<slice>-verification-report.md`) מתאחד עם
@@ -328,8 +328,8 @@ findings (כותרות בלבד):
 ‏אם נתקעת ב-tooling ‏ל-2+ ‏ניסיונות:
 
 ```bash
-~/projects/my-skills/lessons-learned/lessons-index           # list all
-~/projects/my-skills/lessons-learned/lessons-index <slug>    # read one
+{{BDS_LESSONS}}           # list all
+{{BDS_LESSONS}} <slug>    # read one
 ```
 
 ## כתיבת progress ל-log (אם יש log_path ב-prompt)

@@ -25,6 +25,48 @@
 
 ---
 
+## 2026-07-19 — slice-path-neutral-agent-configs: Commit 1 — מנגנון החלפה + כשל-רועש
+
+חוט אחד גנרי (`resolve_paths` + `substitute_into`) ב-`scripts/install-cli-configs.sh`,
+מחוּוט לשני ה-installers ה-committed (`install_opencode`, `install_codex` — qoder לא
+committed ב-base, מחוץ ל-scope לפי הבלוקר מ-df99501):
+
+- `resolve_paths()` — טוענת `${BDS_PATHS_ENV:-$HOME/.config/bds/paths.env}` לכל משתנה
+  שלא הוגדר ישירות ב-env (env גובר על הקובץ), ואז `:?` על כל 4 המשתנים → כשל-רועש.
+- `substitute_into(src, dst)` — `sed` שמחליף את 4 ה-placeholders + שכבת-הגנה: אם נשאר
+  `{{BDS_` ב-dst אחרי ההחלפה (placeholder לא-מוכר/לא-מוחלף) → `exit 1`.
+- `install_opencode`: `ln -sfn` → `substitute_into` (symlink הוחלף ל-copy — symlink לא
+  נושא תוכן-מוחלף).
+- `install_codex`: ה-`cp` הקיים על agents/*.toml → `substitute_into` (config.toml
+  הפרויקטלי, שאין בו placeholders, נשאר `cp` רגיל).
+- `main()` + guard `BASH_SOURCE[0]==$0` — כדי לאפשר `source` של הסקריפט מ-unittest בלי
+  להריץ install אמיתי.
+- נוצר `cli-configs/paths.env.example` (תבנית + הסבר ל-4 המשתנים).
+- **חריגה מתועדת**: `cli-configs/{opencode,codex}/agents/*` ו-`agents/*.md` (avigail,
+  calev, calev-heavy, yetro) הורצו מחדש דרך `generate-cli-configs.py` — הם היו stale
+  מ-Commit 0 (עדיין הכילו את הנתיבים-המוקשחים הישנים, כי Commit 0 נגע רק ב-source
+  prompts ולא ב-generated). ההרצה נחוצה כדי ש-DoD#5/#7 יהיו אמיתיים לפני ש-Commit 2
+  "מאשר" idempotently. אין שינוי-תוכן מעבר להחלפת placeholder (idempotent
+  write_if_changed).
+
+**טסטים**: `tests/test_path_substitution.py` (stdlib unittest, TDD — נכתב RED לפני
+המימוש, אומת ל-RED עם 4 כשלונות אמיתיים לפני המימוש) — 7 טסטים: substitute_into (4
+placeholders + placeholder לא-מוכר → exit≠0), resolve_paths (כל המשתנים מוגדרים / כל
+משתנה חסר בנפרד → exit≠0), install_opencode/install_codex (משתמשים ב-substitute_into
+בפועל, נבדק על תיקיות /tmp מזויפות).
+
+**אימות** (unittest + 2 ה-CLIs, `/tmp/oc` + `/tmp/cx`):
+- `python3 tests/test_path_substitution.py` → 7/7 ירוק ✅
+- `install-cli-configs.sh all` עם env מזויף → `/tmp/oc`, `/tmp/cx` ללא `{{BDS_`, נתיב
+  `/tmp/fk-r` מופיע בשניהם ✅
+- `env -u BDS_REPORTS install-cli-configs.sh opencode` → `exit=1` עם הודעה ברורה ✅
+- `grep -rn "~/projects\|/home/user" agent-definitions/prompts/` → ריק (עדיין) ✅
+
+**חריגות**: regenerate של cli-configs/agents (ראה לעיל) — לא היה ברשימת "קבצים
+שמשתנים" המקורית של Commit 1 בבריף, אבל נחוץ למימוש נכון של DoD#5/#7 (ראו §5 בבריף).
+
+---
+
 ## 2026-06-08 15:04 — סימון בריפים מול תוכניות טרום-בריף
 
 נוספה הגנה מתודולוגית שמבהירה לסוכנים האם מסמך הוא בריף dispatchable או תוכנית טרום-בריף.
