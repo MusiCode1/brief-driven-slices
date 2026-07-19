@@ -30,6 +30,14 @@
           "task": true,
           "todowrite": true
         }
+      },
+      "qoder": {
+        "name": "mordechai",
+        "model": "ultimate",
+        "permissionMode": "default",
+        "effort": "high",
+        "tools": ["Read", "Glob", "Grep", "Write", "Edit", "Bash", "WebFetch", "Agent", "TodoWrite"],
+        "disallowedTools": []
       }
     },
     "yetro": {
@@ -62,6 +70,14 @@
           "task": true,
           "todowrite": true
         }
+      },
+      "qoder": {
+        "name": "yetro",
+        "model": "performance",
+        "permissionMode": "default",
+        "effort": "medium",
+        "tools": ["Read", "Glob", "Grep", "Write", "Edit", "Bash", "WebFetch", "Agent", "TodoWrite"],
+        "disallowedTools": []
       }
     },
     "eliezer": {
@@ -94,6 +110,15 @@
           "task": true,
           "todowrite": true
         }
+      },
+      "qoder": {
+        "name": "eliezer",
+        "model": "performance",
+        "permissionMode": "default",
+        "effort": "medium",
+        "isolation": "worktree",
+        "tools": ["Read", "Glob", "Grep", "Write", "Edit", "Bash", "WebFetch", "Agent", "TodoWrite"],
+        "disallowedTools": []
       }
     },
     "avigail": {
@@ -124,6 +149,14 @@
           "webfetch": true,
           "todowrite": true
         }
+      },
+      "qoder": {
+        "name": "avigail",
+        "model": "ultimate",
+        "permissionMode": "default",
+        "effort": "high",
+        "tools": ["Read", "Glob", "Grep", "Write", "Bash", "WebFetch", "TodoWrite"],
+        "disallowedTools": ["Edit"]
       }
     },
     "calev": {
@@ -154,6 +187,14 @@
           "webfetch": true,
           "todowrite": true
         }
+      },
+      "qoder": {
+        "name": "calev",
+        "model": "performance",
+        "permissionMode": "default",
+        "effort": "medium",
+        "tools": ["Read", "Glob", "Grep", "Write", "Bash", "WebFetch", "TodoWrite"],
+        "disallowedTools": ["Edit"]
       }
     },
     "calev-heavy": {
@@ -184,6 +225,14 @@
           "webfetch": true,
           "todowrite": true
         }
+      },
+      "qoder": {
+        "name": "calev-heavy",
+        "model": "ultimate",
+        "permissionMode": "default",
+        "effort": "high",
+        "tools": ["Read", "Glob", "Grep", "Write", "Bash", "WebFetch", "TodoWrite"],
+        "disallowedTools": ["Edit"]
       }
     }
   }

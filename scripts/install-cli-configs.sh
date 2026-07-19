@@ -117,6 +117,17 @@ install_codex() {
   echo "codex project config written: $project_config"
 }
 
+install_qoder() {
+  local src="$ROOT/cli-configs/qoder/agents"
+  local dst="${QODER_AGENTS_DIR:-$HOME/.qoder/agents}"
+
+  mkdir -p "$dst"
+  for agent in mordechai yetro eliezer avigail calev calev-heavy; do
+    substitute_into "$src/$agent.md" "$dst/$agent.md"
+    echo "qoder installed: $agent"
+  done
+}
+
 main() {
   generate_configs
   resolve_paths
@@ -125,6 +136,7 @@ main() {
     all)
       install_opencode
       install_codex
+      install_qoder
       ;;
     opencode)
       install_opencode
@@ -132,8 +144,11 @@ main() {
     codex)
       install_codex
       ;;
+    qoder)
+      install_qoder
+      ;;
     *)
-      echo "usage: $0 [all|opencode|codex]" >&2
+      echo "usage: $0 [all|opencode|codex|qoder]" >&2
       exit 2
       ;;
   esac

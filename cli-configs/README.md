@@ -10,6 +10,7 @@ or `agent-definitions/prompts/*.md`, then regenerate.
 |-----|--------|--------------|
 | OpenCode | `cli-configs/opencode/agents/*.md` | `~/.config/opencode/agents/` |
 | Codex | `cli-configs/codex/agents/*.toml` | `~/.codex/agents/` |
+| Qoder | `cli-configs/qoder/agents/*.md` | `~/.qoder/agents/` |
 
 Install all supported adapters:
 
@@ -22,6 +23,7 @@ Install one adapter:
 ```bash
 bash scripts/install-cli-configs.sh opencode
 bash scripts/install-cli-configs.sh codex
+bash scripts/install-cli-configs.sh qoder
 ```
 
 The installer copies Codex TOML files and symlinks OpenCode Markdown files.

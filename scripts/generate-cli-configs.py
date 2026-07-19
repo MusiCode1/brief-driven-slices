@@ -80,6 +80,33 @@ def render_opencode_agent(agent: dict[str, Any], prompt: str) -> str:
     return "\n".join(lines)
 
 
+def render_yaml_list(name: str, items: list[str]) -> list[str]:
+    lines = [f"{name}:"]
+    for item in items:
+        lines.append(f"  - {item}")
+    return lines
+
+
+def render_qoder_agent(agent: dict[str, Any], prompt: str) -> str:
+    qoder = agent["qoder"]
+    lines = [
+        "---",
+        f"name: {qoder['name']}",
+        "description: >",
+        f"  {agent['description']}",
+        f"model: {qoder['model']}",
+        f"permissionMode: {qoder['permissionMode']}",
+        f"effort: {qoder['effort']}",
+    ]
+    lines.extend(render_yaml_list("tools", qoder["tools"]))
+    if qoder.get("disallowedTools"):
+        lines.extend(render_yaml_list("disallowedTools", qoder["disallowedTools"]))
+    if qoder.get("isolation"):
+        lines.append(f"isolation: {qoder['isolation']}")
+    lines.extend(["---", "", prompt.rstrip(), ""])
+    return "\n".join(lines)
+
+
 def load_definitions() -> dict[str, Any]:
     with DEFINITIONS.open("r", encoding="utf-8") as handle:
         return json.load(handle)
@@ -116,12 +143,18 @@ def generate(target: str) -> list[Path]:
                 if write_if_changed(output, content):
                     changed.append(output)
 
+        if target in ("all", "qoder"):
+            content = render_qoder_agent(agent, prompt)
+            output = ROOT / "cli-configs" / "qoder" / "agents" / f"{agent_id}.md"
+            if write_if_changed(output, content):
+                changed.append(output)
+
     return changed
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("target", nargs="?", choices=("all", "codex", "opencode"), default="all")
+    parser.add_argument("target", nargs="?", choices=("all", "codex", "opencode", "qoder"), default="all")
     args = parser.parse_args()
 
     changed = generate(args.target)
