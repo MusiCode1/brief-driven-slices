@@ -5,6 +5,23 @@
 
 ---
 
+## 2026-07-19 — slice-qoder-path-neutral: Commit 1 — install_qoder מחווט ל-substitute_into
+
+הוסף `install_qoder()` ל-`scripts/install-cli-configs.sh` — **כמו** `install_codex` (loop על
+6 הסוכנים, dst=`${QODER_AGENTS_DIR:-$HOME/.qoder/agents}`) **אבל** קורא ל-`substitute_into`
+(ולא `cp` גולמי, בניגוד ל-WIP המקורי בסטאש — זה בדיוק ה-fix ש-Commit 1 נדרש לתקן).
+qoder נוסף ל-`case` הראשי (`all` + `qoder`) ול-usage string. `resolve_paths`/`substitute_into`
+כבר קיימים (path-neutral, main) — install_qoder רק צורך אותם.
+
+**אימות** (install מזויף עם 4 המשתנים + `QODER_AGENTS_DIR=/tmp/qo`):
+`bash scripts/install-cli-configs.sh qoder` → 6 קבצים הותקנו; `grep -rl "{{BDS_" /tmp/qo` ריק
+(placeholder הוחלף) ✅; `grep -rq "/tmp/fk-r" /tmp/qo` נמצא (נתיב מוזרק) ✅.
+`tests/test_path_substitution.py` (9/9) + `tests/test_distill.py` (38/38) ירוקים (regression).
+
+**חריגות**: אין. [verifier-phase לפי הבריף — calev הורץ אחרי הקומיט הזה, ראה entry הבא]
+
+---
+
 ## 2026-07-19 — slice-qoder-path-neutral: Commit 0 — scaffolding + generator
 
 שוחזר ה-scaffolding של qoder (מ-`git stash@{0}`, WIP קדם-path-neutral) — **בלי** קבצי
