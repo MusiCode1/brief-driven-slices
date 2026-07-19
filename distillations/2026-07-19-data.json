@@ -1,0 +1,386 @@
+{
+  "date": "2026-07-19T18:07:27.430804",
+  "report_ids": [
+    "be-diag-harness/be-diag-harness-calev.md",
+    "drive-coding/be-lifecycle-hardening-avigail.md",
+    "drive-coding/be-lifecycle-hardening-calev.md",
+    "drive-coding/localhost-bind-hotfix-avigail-r2.md",
+    "drive-coding/localhost-bind-hotfix-avigail.md",
+    "drive-coding/localhost-bind-hotfix-calev.md",
+    "drive-coding/session-budget-meter-calev.md",
+    "drive-coding/slash-menu-native-fix-calev.md",
+    "drive-coding/slice-acp-stack-upgrade-avigail.md",
+    "drive-coding/slice-acp-stack-upgrade-calev.md",
+    "drive-coding/slice-acp-stack-upgrade-commit1-calev.md",
+    "drive-coding/slice-acp-stack-upgrade-commit3-calev.md",
+    "drive-coding/slice-acp-stack-upgrade-commit4-calev.md",
+    "drive-coding/slice-acp-stack-upgrade-commit5-calev.md",
+    "drive-coding/slice-be-crash-hardening-calev.md",
+    "drive-coding/slice-options-trim-avigail.md",
+    "drive-coding/slice-options-trim-calev.md",
+    "obsidian-web/cf-mobile-seed-calev.md",
+    "obsidian-web/cf-mobile-serve-calev.md",
+    "obsidian-web/cf-preinstall-livesync-calev.md",
+    "obsidian-web/cf-worker-proxy-calev.md",
+    "obsidian-web/extract-runtime-server-avigail.md",
+    "obsidian-web/folder-vault-blob-uri-avigail.md",
+    "obsidian-web/mobile-native-polish-calev.md",
+    "obsidian-web/opfs-ux-calev.md",
+    "obsidian-web/relocate-registry-calev.md",
+    "obsidian-web/service-worker-offline-calev.md",
+    "obsidian-web/vault-switcher-fix-calev.md"
+  ],
+  "avigail": {
+    "counts": {
+      "by_severity": {
+        "confusion": 6,
+        "minor": 5,
+        "regression": 2
+      },
+      "by_category": {
+        "naming-inconsistency": 2,
+        "missing-symbol": 2,
+        "outdated-risk": 2,
+        "dropped-branch": 1,
+        "unique": 5,
+        "wrong-path": 1
+      },
+      "total_findings": 13,
+      "total_reports": 7
+    },
+    "hitrate": {
+      "reports": 7,
+      "reports_with_findings": 4,
+      "avg_findings": 1.86,
+      "verdicts": {
+        "READY": 4,
+        "USABLE-AFTER-FIX": 3
+      }
+    },
+    "trace": {
+      "naming-inconsistency": [
+        "drive-coding/be-lifecycle-hardening",
+        "obsidian-web/extract-runtime-server"
+      ],
+      "missing-symbol": [
+        "drive-coding/be-lifecycle-hardening"
+      ],
+      "outdated-risk": [
+        "drive-coding/be-lifecycle-hardening",
+        "obsidian-web/extract-runtime-server"
+      ],
+      "dropped-branch": [
+        "drive-coding/localhost-bind-hotfix"
+      ],
+      "unique": [
+        "drive-coding/localhost-bind-hotfix",
+        "obsidian-web/folder-vault-blob-uri"
+      ],
+      "wrong-path": [
+        "obsidian-web/extract-runtime-server"
+      ]
+    },
+    "noncanonical": {
+      "unique": [
+        "drive-coding/localhost-bind-hotfix",
+        "obsidian-web/folder-vault-blob-uri"
+      ]
+    },
+    "delta": {
+      "by_category": {
+        "missing-symbol": {
+          "now": 2,
+          "prev": 20,
+          "trend": "down"
+        },
+        "unique": {
+          "now": 5,
+          "prev": 17,
+          "trend": "down"
+        },
+        "wrong-path": {
+          "now": 1,
+          "prev": 25,
+          "trend": "down"
+        },
+        "algorithm-gap": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "logic-inconsistency": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "type-error": {
+          "now": 0,
+          "prev": 20,
+          "trend": "gone"
+        },
+        "missing-dependency": {
+          "now": 0,
+          "prev": 15,
+          "trend": "gone"
+        },
+        "dropped-branch": {
+          "now": 1,
+          "prev": 31,
+          "trend": "down"
+        },
+        "confusion": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "typecheck-risk": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "wrong-line-number": {
+          "now": 0,
+          "prev": 63,
+          "trend": "gone"
+        },
+        "wrong-symbol": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "spec-gap": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "outdated-risk": {
+          "now": 2,
+          "prev": 44,
+          "trend": "down"
+        },
+        "stale-state": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "style-inconsistency": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "error-isolation": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "type-mismatch": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "cross-verification": {
+          "now": 0,
+          "prev": 8,
+          "trend": "gone"
+        },
+        "naming-inconsistency": {
+          "now": 2,
+          "prev": 32,
+          "trend": "down"
+        },
+        "fix-verification": {
+          "now": 0,
+          "prev": 5,
+          "trend": "gone"
+        }
+      }
+    }
+  },
+  "calev": {
+    "counts": {
+      "by_severity": {
+        "minor": 18,
+        "info": 1
+      },
+      "by_category": {
+        "unique": 13,
+        "library-compat": 1,
+        "spec-drift": 4,
+        "reload-reconnect": 1
+      },
+      "total_findings": 19,
+      "total_reports": 21
+    },
+    "hitrate": {
+      "reports": 21,
+      "reports_with_findings": 10,
+      "avg_findings": 0.9,
+      "verdicts": {
+        "GO": 20,
+        "PARTIAL": 1
+      }
+    },
+    "trace": {
+      "unique": [
+        "drive-coding/be-lifecycle-hardening",
+        "drive-coding/slash-menu-native-fix",
+        "obsidian-web/cf-mobile-seed",
+        "obsidian-web/cf-mobile-serve",
+        "obsidian-web/cf-preinstall-livesync",
+        "obsidian-web/cf-worker-proxy",
+        "obsidian-web/opfs-ux",
+        "obsidian-web/relocate-registry",
+        "obsidian-web/service-worker-offline"
+      ],
+      "library-compat": [
+        "drive-coding/slice-acp-stack-upgrade-commit3"
+      ],
+      "spec-drift": [
+        "obsidian-web/cf-mobile-seed",
+        "obsidian-web/cf-mobile-serve",
+        "obsidian-web/cf-worker-proxy",
+        "obsidian-web/opfs-ux"
+      ],
+      "reload-reconnect": [
+        "obsidian-web/service-worker-offline"
+      ]
+    },
+    "noncanonical": {
+      "unique": [
+        "drive-coding/be-lifecycle-hardening",
+        "drive-coding/slash-menu-native-fix",
+        "obsidian-web/cf-mobile-seed",
+        "obsidian-web/cf-mobile-serve",
+        "obsidian-web/cf-preinstall-livesync",
+        "obsidian-web/cf-worker-proxy",
+        "obsidian-web/opfs-ux",
+        "obsidian-web/relocate-registry",
+        "obsidian-web/service-worker-offline"
+      ]
+    },
+    "delta": {
+      "by_category": {
+        "unique": {
+          "now": 13,
+          "prev": 17,
+          "trend": "down"
+        },
+        "wrong-path": {
+          "now": 0,
+          "prev": 25,
+          "trend": "gone"
+        },
+        "algorithm-gap": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "missing-symbol": {
+          "now": 0,
+          "prev": 20,
+          "trend": "gone"
+        },
+        "logic-inconsistency": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "type-error": {
+          "now": 0,
+          "prev": 20,
+          "trend": "gone"
+        },
+        "spec-drift": {
+          "now": 4,
+          "prev": 0,
+          "trend": "new"
+        },
+        "missing-dependency": {
+          "now": 0,
+          "prev": 15,
+          "trend": "gone"
+        },
+        "library-compat": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        },
+        "dropped-branch": {
+          "now": 0,
+          "prev": 31,
+          "trend": "gone"
+        },
+        "confusion": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "typecheck-risk": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "wrong-line-number": {
+          "now": 0,
+          "prev": 63,
+          "trend": "gone"
+        },
+        "wrong-symbol": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "spec-gap": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "outdated-risk": {
+          "now": 0,
+          "prev": 44,
+          "trend": "gone"
+        },
+        "stale-state": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "style-inconsistency": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "error-isolation": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "fix-verification": {
+          "now": 0,
+          "prev": 5,
+          "trend": "gone"
+        },
+        "type-mismatch": {
+          "now": 0,
+          "prev": 1,
+          "trend": "gone"
+        },
+        "cross-verification": {
+          "now": 0,
+          "prev": 8,
+          "trend": "gone"
+        },
+        "naming-inconsistency": {
+          "now": 0,
+          "prev": 32,
+          "trend": "gone"
+        },
+        "reload-reconnect": {
+          "now": 1,
+          "prev": 0,
+          "trend": "new"
+        }
+      }
+    }
+  }
+}
