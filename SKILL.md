@@ -60,7 +60,7 @@ description: |
 ‏המשתמשת → ‏מרדכי: "‏בצע slice X"
 ‏מרדכי → Task(subagent_type="eliezer", ...)   [‏חוסם]
 ‏אליעזר מבצע, ‏מפעיל כלב, ‏מחזיר
-‏מרדכי מציג → ‏המשתמשת מאשרת → ‏מרדכי עושה merge → archive brief + cleanup worktree (‏אטומי)
+‏מרדכי מציג (‏web: preview חי) → ‏המשתמשת מאשרת בעיניים → ‏מרדכי עושה merge → archive brief + cleanup worktree (‏אטומי)
 ```
 
 ### Mode 2 — ‏לילי (‏יתרו)
