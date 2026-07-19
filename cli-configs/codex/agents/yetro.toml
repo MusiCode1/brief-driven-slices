@@ -14,14 +14,14 @@ developer_instructions = """
 ## ‏הלולאה המלאה
 
 ```
-‏יתרו מתחיל (session עם agent=yetro, cwd=~/projects/orchestration/)
+‏יתרו מתחיל (session עם agent=yetro, cwd={{BDS_ORCH}}/)
    │
    ▼ [‏נעילה]
    flock על yetro.lock פר-פרויקט. ‏אם נעול → ‏עצור ("יתרו אחר רץ")
    │
    ▼ [‏ניקוי תחילי — פר פרויקט]
    ‏קרא projects.json → ‏לכל פרויקט פעיל:
-      python3 ~/projects/brief-driven-slices/main/scripts/cleanup_state.py <project>
+      python3 {{BDS_SCRIPTS}}/cleanup_state.py <project>
    │
    ▼ [‏לכל פרויקט ב-queue, סדרתית]
    ‏קרא state.json
@@ -45,11 +45,11 @@ developer_instructions = """
    git worktree add <repo>/.worktrees/<name> -b slice/<name> <base>   # branch: slice/<name> | dir: .worktrees/<name>
    ‏כתוב prompt → $STATE/dispatches/<name>.prompt
    ‏עדכן state.json: status=in-progress, branch=slice/<name>, worktree=<path>, started=<ts>
-    bash ~/projects/brief-driven-slices/main/scripts/dispatch-executor.sh \
+    bash {{BDS_SCRIPTS}}/dispatch-executor.sh \
      <project> <slice> <worktree>
    │
    ▼ [‏המתנה]
-    exit_code=$(bash ~/projects/brief-driven-slices/main/scripts/wait-for-slice.sh \
+    exit_code=$(bash {{BDS_SCRIPTS}}/wait-for-slice.sh \
      <project> <slice> 120)
    │
     ▼ [‏טיפול בתוצאה — סדר חשוב]

@@ -36,14 +36,61 @@ generate_configs() {
   exit 1
 }
 
+# resolve_paths — קוראת ${BDS_PATHS_ENV:-$HOME/.config/bds/paths.env} עבור כל משתנה
+# שלא הוגדר ישירות ב-env (env גובר על הקובץ), ואז כשל-רועש (:?) על כל 4 המשתנים.
+resolve_paths() {
+  local paths_env="${BDS_PATHS_ENV:-$HOME/.config/bds/paths.env}"
+  if [[ -f "$paths_env" ]]; then
+    local var val
+    for var in BDS_REPORTS BDS_SCRIPTS BDS_LESSONS BDS_ORCH; do
+      if [[ -z "${!var:-}" ]]; then
+        val="$(grep -E "^${var}=" "$paths_env" | tail -n1 | cut -d= -f2-)"
+        [[ -n "$val" ]] && export "$var=$val"
+      fi
+    done
+  fi
+
+  : "${BDS_REPORTS:?BDS_REPORTS not set — ראה cli-configs/paths.env.example}" \
+    "${BDS_SCRIPTS:?BDS_SCRIPTS not set — ראה cli-configs/paths.env.example}" \
+    "${BDS_LESSONS:?BDS_LESSONS not set — ראה cli-configs/paths.env.example}" \
+    "${BDS_ORCH:?BDS_ORCH not set — ראה cli-configs/paths.env.example}"
+}
+
+# _sed_escape value — בורח \, & (backreference-כל-ההתאמה) ו-| (ה-delimiter של
+# substitute_into) כדי שערכי BDS_* עם תווים כאלה לא ישברו את ה-sed / יחדירו
+# בחזרה placeholder (calev finding, Commit 1 phase-review).
+_sed_escape() {
+  printf '%s' "$1" | sed -e 's/[\&|]/\\&/g'
+}
+
+# substitute_into src dst — מחליף את 4 ה-placeholders ({{BDS_*}}) וכותב ל-dst.
+# שכבת-הגנה: אם נשאר {{BDS_ ב-dst אחרי ההחלפה (placeholder לא-מוכר/לא-מוחלף) → exit 1.
+substitute_into() {
+  local src="$1" dst="$2"
+  local reports scripts lessons orch
+  reports="$(_sed_escape "$BDS_REPORTS")"
+  scripts="$(_sed_escape "$BDS_SCRIPTS")"
+  lessons="$(_sed_escape "$BDS_LESSONS")"
+  orch="$(_sed_escape "$BDS_ORCH")"
+  sed -e "s|{{BDS_REPORTS}}|$reports|g" \
+      -e "s|{{BDS_SCRIPTS}}|$scripts|g" \
+      -e "s|{{BDS_LESSONS}}|$lessons|g" \
+      -e "s|{{BDS_ORCH}}|$orch|g" \
+      "$src" > "$dst"
+  if grep -q "{{BDS_" "$dst"; then
+    echo "error: placeholder לא-מוחלף ב-$dst" >&2
+    exit 1
+  fi
+}
+
 install_opencode() {
   local src="$ROOT/cli-configs/opencode/agents"
   local dst="${OPENCODE_AGENTS_DIR:-$HOME/.config/opencode/agents}"
 
   mkdir -p "$dst"
   for agent in mordechai yetro eliezer avigail calev calev-heavy; do
-    ln -sfn "$src/$agent.md" "$dst/$agent.md"
-    echo "opencode linked: $agent"
+    substitute_into "$src/$agent.md" "$dst/$agent.md"
+    echo "opencode installed: $agent"
   done
 
   for old in executor plan-verifier verifier-phase verifier-slice-light verifier-slice-heavy; do
@@ -61,8 +108,8 @@ install_codex() {
 
   mkdir -p "$dst"
   for file in "$src"/*.toml; do
-    cp "$file" "$dst/$(basename "$file")"
-    echo "codex copied: $(basename "$file")"
+    substitute_into "$file" "$dst/$(basename "$file")"
+    echo "codex installed: $(basename "$file")"
   done
 
   mkdir -p "$ROOT/.codex"
@@ -70,21 +117,28 @@ install_codex() {
   echo "codex project config written: $project_config"
 }
 
-generate_configs
+main() {
+  generate_configs
+  resolve_paths
 
-case "$TARGET" in
-  all)
-    install_opencode
-    install_codex
-    ;;
-  opencode)
-    install_opencode
-    ;;
-  codex)
-    install_codex
-    ;;
-  *)
-    echo "usage: $0 [all|opencode|codex]" >&2
-    exit 2
-    ;;
-esac
+  case "$TARGET" in
+    all)
+      install_opencode
+      install_codex
+      ;;
+    opencode)
+      install_opencode
+      ;;
+    codex)
+      install_codex
+      ;;
+    *)
+      echo "usage: $0 [all|opencode|codex]" >&2
+      exit 2
+      ;;
+  esac
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  main
+fi

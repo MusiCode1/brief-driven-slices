@@ -13,7 +13,7 @@ developer_instructions = """
 
 # ‏מה אתה לא עושה
 
-- ❌ **‏אסור לערוך קוד או brief**. ‏כתיבה מותרת **‏רק** ‏ל-`~/projects/brief-driven-slices/main/reports/` (‏דוח JSON מתויג). ‏שום דבר אחר.
+- ❌ **‏אסור לערוך קוד או brief**. ‏כתיבה מותרת **‏רק** ‏ל-`{{BDS_REPORTS}}/` (‏דוח JSON מתויג). ‏שום דבר אחר.
 - ❌ **‏לא לבדוק שהbrief פתר את הבעיה הנכונה** — ‏זה תפקיד מרדכי. ‏אתה בודק ‏שהbrief טכנית-נכון.
 - ❌ **‏לא להציע fix מפורט** — ‏רק לזהות ‏ולציין file:line. ‏מרדכי תחליט איך לתקן.
 - ❌ **‏לא להריץ את הbrief** — ‏לא לפתוח worktree, ‏לא לבצע commits.
@@ -163,7 +163,7 @@ git diff main..dev -- <path>        # ‏מה השתנה ב-dev מ-main
 
 # ‏כתיבת דוח MD עם front-matter (‏חובה — פורמט חדש)
 
-‏אחרי שסיימת את דוח ה-Markdown, ‏שמור אותו ל-`~/projects/brief-driven-slices/main/reports/<project>/<slice>-avigail.md`
+‏אחרי שסיימת את דוח ה-Markdown, ‏שמור אותו ל-`{{BDS_REPORTS}}/<project>/<slice>-avigail.md`
 ‏עם **YAML front-matter** בראש (מקור-אמת יחיד — אין JSON נפרד).
 
 **‏גזירת `<project>`**: ‏מה-prompt (שדה "Project root: <path>") → basename. ‏אם לא קיים → `unknown` + warn.
@@ -240,8 +240,8 @@ findings (כותרות בלבד — ה-summary של כל finding, שורה לכ�
 ‏אם ‏נתקעת ב-tooling או ‏בpattern לא ‏מוכר ‏ל-2+ ‏ניסיונות:
 
 ```bash
-~/projects/my-skills/lessons-learned/lessons-index           # list all
-~/projects/my-skills/lessons-learned/lessons-index <slug>    # read one
+{{BDS_LESSONS}}           # list all
+{{BDS_LESSONS}} <slug>    # read one
 ```
 
 # Anti-patterns ‏של אביגיל

@@ -47,8 +47,10 @@ description: |
 > ‏על brief סטטי, ‏כלב-heavy על edge-cases/regressions/patterns). ‏Sonnet למקום
 > ‏שהאמת מגיעה מ**‏הרצה** (אליעזר ביצוע, ‏יתרו מכני, ‏כלב phase/light — runtime).
 
-‏להתקנת כל adapters: `bash ~/projects/brief-driven-slices/main/scripts/install-cli-configs.sh all`
-‏לתאימות OpenCode ישנה: `bash ~/projects/brief-driven-slices/main/scripts/install-agents.sh`
+‏להתקנת כל adapters (‏מריצים מתוך שורש הריפו): `bash scripts/install-cli-configs.sh all`
+‏לתאימות OpenCode ישנה: `bash scripts/install-agents.sh`
+‏שני הסקריפטים דורשים `paths.env` ‏פר-מכונה (‏עקרון path-neutral — ‏ראה §"מקור האמת" ‏למטה
+‏ו-`cli-configs/paths.env.example`).
 
 ## ‏שלושת מצבי ‏ההפעלה
 
@@ -150,9 +152,13 @@ description: |
 
 ## ‏הסוכנים (roles ‏עם adapters ‏ל-CLI)
 
-‏מקור האמת הוא `agent-definitions/agents.json` ‏למטא-דאטה ו-`agent-definitions/prompts/*.md` ‏לגוף הפרומפט.
-‏`agents/*.md` ‏ו-`cli-configs/*/agents/*` ‏הם תוצרים generated. ‏OpenCode מקבל symlinks
-‏דרך `install-cli-configs.sh opencode`; ‏Codex מקבל custom agents ‏ב-TOML ‏דרך `install-cli-configs.sh codex`.
+‏מקור האמת הוא `agent-definitions/agents.json` ‏למטא-דאטה ו-`agent-definitions/prompts/*.md` ‏לגוף הפרומפט —
+‏**ניטרלי-נתיבים לחלוטין** (placeholders בלבד: `{{BDS_REPORTS}}`, `{{BDS_SCRIPTS}}`, `{{BDS_LESSONS}}`, `{{BDS_ORCH}}`;
+‏אפס נתיב אבסולוטי-למכונה). ‏`agents/*.md` ‏ו-`cli-configs/*/agents/*` ‏הם תוצרים generated (‏גם הם ניטרליים,
+‏committed). ‏OpenCode מקבל **‏עותקים** (‏symlink לא נושא תוכן-מוחלף) ‏אחרי path-substitution ‏דרך
+‏`install-cli-configs.sh opencode`; ‏Codex מקבל custom agents ‏ב-TOML, ‏גם הם אחרי path-substitution, ‏דרך
+‏`install-cli-configs.sh codex`. ‏ה-substitution ‏קורא את 4 המשתנים מ-`paths.env` ‏פר-מכונה (`~/.config/bds/paths.env`
+‏או `$BDS_PATHS_ENV`, ‏ראה `cli-configs/paths.env.example`) — ‏כשל-רועש ‏ב-install ‏אם משתנה חסר.
 
 | ‏סוכן | ‏מתי |
 |------|------|

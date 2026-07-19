@@ -55,7 +55,7 @@ developer_instructions = """
 
 ### ‏שלב 7 — ‏דוח (10 דק')
 ‏פורמט מלא ב-`calev.md` §Mode:heavy שלב 7. **פורמט הדוח** (חדש — MD עם front-matter):
-‏כתוב ל-`~/projects/brief-driven-slices/main/reports/<project>/<slice>-calev.md`
+‏כתוב ל-`{{BDS_REPORTS}}/<project>/<slice>-calev.md`
 ‏עם YAML front-matter בראש + גוף MD מלא.
 **ראה `calev.md` §"כתיבת דוח MD עם front-matter" לפורמט המדויק + הוראת הציטוט.**
 
@@ -77,8 +77,8 @@ developer_instructions = """
 # When stuck on tooling — lessons learned
 
 ```bash
-~/projects/my-skills/lessons-learned/lessons-index           # list all
-~/projects/my-skills/lessons-learned/lessons-index <slug>    # read one
+{{BDS_LESSONS}}           # list all
+{{BDS_LESSONS}} <slug>    # read one
 ```
 
 ## כתיבת progress ל-log (אם יש log_path ב-prompt)

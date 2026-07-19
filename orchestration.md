@@ -201,7 +201,7 @@ EOF
 |---------|------|---------|--------|
 | `scripts/dispatch-executor.sh` | bash | ‏יתרו | tmux + env scrub + sentinel |
 | `scripts/wait-for-slice.sh` | bash | ‏יתרו | ‏poll + crash/timeout detection |
-| `scripts/install-agents.sh` | bash | ‏משתמשת | symlinks ל-~/.config/opencode/agents/ |
+| `scripts/install-agents.sh` | bash | ‏משתמשת | עותקים (path-substitution לפי `paths.env`) ל-~/.config/opencode/agents/ |
 | `scripts/cleanup_state.py` | python3 | ‏יתרו | ‏ניקוי תחילת סשן |
 | `scripts/discard_chain.py` | python3 | ‏מרדכי | ‏זריקת שרשרת בטוחה |
 
@@ -209,18 +209,26 @@ EOF
 
 ## §9 — ‏התקנה ראשונה
 
+> **‏עקרון path-neutral**: `<bds>` ‏למטה = שורש ה-checkout ‏שלך ‏של brief-driven-slices
+> (‏כל נתיב-מכונה קונקרטי — ‏כולל BDS_ORCH ‏שאתה בוחר כאן — ‏חי **‏רק** ‏ב-`paths.env`
+> ‏פר-מכונה, ‏לא ‏במקור-האמת. ‏ראה `cli-configs/paths.env.example`).
+
 ```bash
 # ‏צור state dir לפרויקט
 mkdir -p ~/.local/state/brief-driven-slices/<project>
-cp ~/projects/brief-driven-slices/main/briefs/state.template.json \
+cp <bds>/briefs/state.template.json \
    ~/.local/state/brief-driven-slices/<project>/state.json
 # ‏ערוך state.json לפי הפרויקט
 
-# ‏צור פרויקט הבית של יתרו (מ-template)
-cp -r ~/projects/brief-driven-slices/main/orchestration-project/ \
-      ~/projects/orchestration/
+# ‏צור פרויקט הבית של יתרו (מ-template) — ‏זה יהיה ‏ה-BDS_ORCH ‏שלך
+cp -r <bds>/orchestration-project/ \
+      <path-לבחירתך>/orchestration/
 # ‏ערוך projects.json
 
-# ‏התקן symlinks לסוכנים (אחרי בדיקה!)
-bash ~/projects/brief-driven-slices/main/scripts/install-agents.sh
+# ‏הגדר paths.env פר-מכונה (BDS_REPORTS/BDS_SCRIPTS/BDS_LESSONS/BDS_ORCH)
+cp <bds>/cli-configs/paths.env.example ~/.config/bds/paths.env
+# ‏ערוך את 4 הנתיבים ‏ב-paths.env
+
+# ‏התקן את הסוכנים (אחרי בדיקה!) — ‏מחליף {{BDS_*}} ‏לפי paths.env, ‏כשל-רועש ‏אם חסר
+bash <bds>/scripts/install-agents.sh
 ```

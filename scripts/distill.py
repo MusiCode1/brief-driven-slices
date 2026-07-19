@@ -12,6 +12,7 @@ scripts/distill.py — מנוע כמותי דטרמיניסטי לזיקוק ד�
 """
 import argparse
 import json
+import os
 import sys
 import warnings
 from datetime import date as date_type, datetime
@@ -395,8 +396,8 @@ def main() -> int:
         description="distill.py — כמותי בלבד. ספירה, hitrate, דלתא, traceability."
     )
     parser.add_argument(
-        "--reports-dir", default="reports/",
-        help="נתיב לתיקיית הדוחות (ברירת מחדל: reports/)"
+        "--reports-dir", default=os.environ.get("BDS_REPORTS", "reports/"),
+        help="נתיב לתיקיית הדוחות (ברירת מחדל: $BDS_REPORTS אם מוגדר, אחרת reports/)"
     )
     parser.add_argument(
         "--out", default=None,
