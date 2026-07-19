@@ -238,8 +238,8 @@ def main() -> None:
     ap.add_argument("--projects-dir",
                     default=os.path.expanduser("~/.claude/projects"),
                     help="ספריית סשני ה-CLI (ברירת מחדל: ~/.claude/projects)")
-    ap.add_argument("--reports-dir", default="main/reports",
-                    help="ריפו הדוחות — היעד ל-_sessions/")
+    ap.add_argument("--reports-dir", default=os.environ.get("BDS_REPORTS", "main/reports"),
+                    help="ריפו הדוחות — היעד ל-_sessions/ (ברירת מחדל: $BDS_REPORTS אם מוגדר, אחרת main/reports)")
     ap.add_argument("--dry-run", action="store_true",
                     help="הצג בלבד, אל תכתוב")
     args = ap.parse_args()

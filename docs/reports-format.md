@@ -17,6 +17,12 @@
 > ⚠️ **אותו לקח כמו בריפים**: דוח שנכתב ולא נדחף לריפו ה-reports קיים רק על המכונה הזו.
 > מאחר שזה ריפו נפרד, `git commit` בריפו הראשי **לא** תופס אותו. יש לעשות `cd reports && git add … && git commit && git push` בנפרד.
 
+> **עקרון path-neutral**: `<bds>/main/reports/` כאן הוא נתיב **יחסי** בתוך ה-checkout (איך
+> מרדכי/אביגיל/כלב תופסים אותו כשה-cwd הוא שורש הריפו). כשהם רצים דרך adapter (opencode/codex)
+> עם cwd שרירותי, הם מקבלים את אותה תיקייה כנתיב אבסולוטי דרך `{{BDS_REPORTS}}` — placeholder
+> במקור-האמת (`agent-definitions/prompts/*.md`) שמוחלף בזמן ההתקנה לפי `paths.env` פר-מכונה
+> (ראה `cli-configs/paths.env.example`). שני האזכורים מצביעים על אותה תיקייה בפועל.
+
 ---
 
 ## ‏מבנה תיקייה

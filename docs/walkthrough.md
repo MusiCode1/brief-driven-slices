@@ -80,6 +80,44 @@ replacement. 2 טסטים חדשים (RED מאומת לפני התיקון, GREE
 
 ---
 
+## 2026-07-19 — slice-path-neutral-agent-configs: Commit 2 — דוקטרינה + סקריפטים
+
+עדכון "רשימה סגורה" (per §4 בבריף — לא נגעו ב-docs/plans או docs היסטוריים, מחוץ ל-scope):
+
+- **`SKILL.md`**: (1) פקודות ההתקנה (שורות ~50) — הוחלפו נתיבים-מוקשחים ב-נתיב יחסי
+  משורש-הריפו + הפניה ל-`cli-configs/paths.env.example`. (2) §"הסוכנים" (שורות ~154) —
+  תוקן תיאור מיושן ("OpenCode מקבל symlinks") ל-**עותקים** אחרי path-substitution
+  (עקבי עם Commit 1: symlink הוחלף ל-copy כי symlink לא נושא תוכן-מוחלף) + תיאור מפורש
+  של עקרון ה-path-neutral (4 ה-placeholders, כשל-רועש).
+- **`orchestration.md`**: (1) טבלת §8 — תוקן אותו תיאור-symlinks מיושן.
+  (2) §9 "התקנה ראשונה" — כל 3 הנתיבים-המוקשחים (`~/projects/brief-driven-slices/main/...`,
+  `~/projects/orchestration/`) הוחלפו בקונבנציית `<bds>` (כבר קיימת ב-`docs/reports-format.md`)
+  + צעד מפורש ליצירת `paths.env` פר-מכונה.
+- **`orchestration-project/AGENTS.md`**: 2 הנתיבים-המוקשחים (`~/projects/brief-driven-slices/main/...`)
+  הוחלפו ב-`<bds>` + הערה שהנתיב הקונקרטי חי ב-`paths.env`, לא במקור-האמת של ה-template.
+  (זהו template שמשתמש מעתיק פר-מכונה — ה-`{{BDS_*}}` placeholders לא רלוונטיים כאן כי
+  substitute_into לא מחווט אליו; `<bds>` הוא convention תיעודי בלבד.)
+- **`docs/reports-format.md`**: לא נמצאו נתיבים-מוקשחים (כבר משתמש ב-`<bds>/main/reports/`
+  יחסי) — נוספה הערה מקשרת בין הקונבנציה היחסית כאן ל-`{{BDS_REPORTS}}` (אותה תיקייה,
+  שני אזכורים — יחסי ב-checkout מול placeholder בפרומפט של הסוכנים).
+- **`scripts/distill.py`**: `--reports-dir` ברירת-מחדל → `os.environ.get("BDS_REPORTS", "reports/")`
+  (env גובר, אחרת ההתנהגות הקיימת). נוסף `import os`.
+- **`scripts/extract_sessions.py`**: `--reports-dir` ברירת-מחדל →
+  `os.environ.get("BDS_REPORTS", "main/reports")` (`os` כבר מיובא).
+- **לא נגעו**: `mordechai.md`/`eliezer.md` (אביגיל אימתה נקיים — relative בלבד), `docs/plans/`,
+  `walkthrough.md`/`methodology-evolution.md` היסטוריים (מחוץ ל-scope לפי finding אביגיל #3).
+
+**אימות**:
+- `grep -n "~/projects\|/home/user" SKILL.md docs/reports-format.md orchestration.md orchestration-project/AGENTS.md scripts/distill.py scripts/extract_sessions.py` → ריק ✅
+- `python3 scripts/generate-cli-configs.py all` → `generated: no changes` (idempotent, cli-configs נשארו ניטרליים) ✅
+- `grep -rl "{{BDS_" cli-configs/ agents/ | wc -l` → 13 (12 קבצי-סוכנים + `paths.env.example` שמזכיר את השמות בהערת-תיעוד) ✅
+- `python3 tests/test_distill.py` → 38/38 ירוק (regression, לא נשבר ע"י שינוי ברירת-המחדל) ✅
+- `python3 tests/test_path_substitution.py` → 9/9 ירוק ✅
+
+**חריגות**: אין.
+
+---
+
 ## 2026-06-08 15:04 — סימון בריפים מול תוכניות טרום-בריף
 
 נוספה הגנה מתודולוגית שמבהירה לסוכנים האם מסמך הוא בריף dispatchable או תוכנית טרום-בריף.
