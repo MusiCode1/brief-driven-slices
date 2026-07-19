@@ -593,3 +593,16 @@ A/B, וה-qoder blocker) ומאלצות עצירה. כל עצירה = הפרעה
 **הוכחת-הרעיון (הריצה החיה, 2026-07-19):** ה-qoder blocker היה בדיוק תרחיש #2. ‏לו נשאל
 מראש "אם תלות מתגלה כ-WIP — לצמצם או לעצור?", הריצה לא הייתה נעצרת כלל. ה-default (‏לצמצם)
 הוא בדיוק מה שמרדכי עשה בפועל — אז front-loading היה חוסך את העצירה.
+
+### 24-26. אימוץ מ-Spec-Kit (ראה `docs/comparisons/spec-kit.md`)
+
+**מטפל ב:** פערים שהתגלו בהשוואה ל-github/spec-kit (2026-07-20). הכרעה: **ללמוד, לא לעבור.**
+
+- **24. Constitution פר-פרויקט** — לרכז עקרונות-על ל-`<project>/constitution.md` (היום הדוקטרינה
+  מפוזרת בין mordechai/SKILL/AGENTS). מקור: spec-kit Constitution phase.
+- **25. Converge check** — **הפער הגדול ביותר.** שלב מפורש "האם הפרויקט **השלם** תואם את הכוונה,
+  ומה נותר?" — מעבר לאימות slice-slice. מקור: spec-kit Converge phase.
+- **26. commands-UX** — לעטוף הפעלות-סוכן ב-commands discoverable (כמו `/speckit.*`).
+
+> **נדחה במפורש**: מעבר ל-spec-kit. רציונל: אובדן שלושת ה-crown-jewels (אימות-runtime שמריץ
+> קוד, לולאת-זיקוק, merge-gate אנושי) — שכולם הוכחו-אמפירית בסשן 2026-07-19.
