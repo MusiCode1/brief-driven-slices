@@ -1,0 +1,9 @@
+[
+  {
+    "name": "drive-coding",
+    "repo_root": "/home/user/Projects/drive-coding/dev",
+    "active": true,
+    "state_dir": "~/.local/state/brief-driven-slices/drive-coding",
+    "notes": "BE + FE. Bare-repo worktrees under /home/user/Projects/drive-coding/.worktrees. bun-only."
+  }
+]

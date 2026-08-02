@@ -6,6 +6,14 @@
 > **הכרעה בקצרה**: **ללמוד, לא לעבור.** לאמץ 3 רעיונות (Constitution / Converge / commands-UX);
 > לשמר את שלושת ה-crown-jewels של BDS (אימות-runtime, זיקוק, merge-gate אנושי).
 
+> ⚠️ **עודכן אחרי מחקר-עומק מהקוד** (`spec-kit @ 57cc518`) — ראה
+> [`spec-kit-deep-dive.md`](./spec-kit-deep-dive.md). ההכרעה לא השתנתה, אבל 3 תיקונים
+> מהותיים מהמסמך הזה (שנכתב מה-README בלבד):
+> 1. **Converge הוא מבקר-שלמות *סטטי*, לא אימות-runtime** — קורא קוד בלי להריצו, מוסיף
+>    tasks (append-only). **לא חופף לכלב**; ממלא פער *אחר* (שלמות-הפרויקט-כולו).
+> 2. **ל-spec-kit *יש* gates אנושיים** — אבל ברמת-מסמך (`review-spec`/`review-plan`), לא merge/runtime.
+> 3. **/analyze משלים ולא מחליף את אביגיל** — /analyze = עקביות בין-מסמכים; אביגיל = עובדתיות מול-קוד.
+
 ---
 
 ## 1. מה זה Spec-Kit
@@ -36,13 +44,13 @@ Toolkit רשמי של GitHub ל-**Spec-Driven Development**: מפרט מפורט
 |-----|----------|-----|
 | יחידת-עבודה | Spec → Plan → Tasks | Brief (slice) |
 | ממשק | slash-commands | הפעלת-סוכנים (Task/Agent) |
-| אימות | `/clarify` (בהירות) + `/analyze` (עקביות מסמכים) | **אביגיל** (plan) + **כלב** (runtime — מריץ קוד) |
+| אימות | `/clarify` (בהירות) + `/analyze` (עקביות בין-מסמכים) + `/converge` (שלמות סטטית) | **אביגיל** (עובדתיות מול-קוד) + **כלב** (runtime — מריץ קוד) |
 | סוכנים | 30+ גנריים | 5 תפקידים ייעודיים (מודל/prompt פר-תפקיד) |
-| בידוד | לא מודגש | worktrees + שרשור slices |
-| gate אנושי | agent-driven | **merge אנושי-בלבד** + live-preview ל-web |
+| בידוד | תיקיית-ארטיפקטים בלבד (`specs/NNN/`; ללא checkout/worktree) | worktrees + שרשור slices |
+| gate אנושי | **doc-level** (`review-spec`/`review-plan`); אין merge-gate/runtime-gate | **merge אנושי-בלבד** + live-preview ל-web |
 | לולאת-שיפור | — | **זיקוק** (patterns/pitfalls מ-reports) |
 | אורקסטרציה | אינטראקטיבי | יתרו (queue לילי) |
-| בשלות/גיבוי | רשמי GitHub, CLI מלוטש, docs, presets | bespoke, single-user, 307 דוחות אמפיריים |
+| בשלות/גיבוי | **harness** בשל (3150 טסטים — כולם על ה-CLI/plumbing; **efficacy השיטה לא-נמדדת**) | bespoke, single-user, **307 דוחות efficacy** אמפיריים |
 
 ---
 
@@ -50,8 +58,11 @@ Toolkit רשמי של GitHub ל-**Spec-Driven Development**: מפרט מפורט
 
 1. **Constitution phase** — עקרונות-על מוגדרים **פעם אחת פר-פרויקט**. ב-BDS הדוקטרינה
    מפוזרת בין mordechai/SKILL/AGENTS. `<project>/constitution.md` היה מרכז את "החוקה".
-2. **Converge phase** — **הפער הגדול ביותר שלנו.** BDS מאמת slice-slice, אבל אין בדיקה
+2. **Converge phase** — **פער אמיתי שלנו.** BDS מאמת slice-slice, אבל אין בדיקה
    "האם הפרויקט **השלם** תואם את הכוונה, ומה נותר?". spec-kit הופך את זה לשלב מפורש.
+   ⚠️ **דיוק מהקוד**: זה **מבקר-שלמות סטטי** (קורא קוד בלי להריצו, מוסיף tasks append-only) —
+   **לא** אימות-runtime ו**לא** חופף לכלב. גירסת-BDS צריכה לזווג אותו עם מעבר-runtime של כלב
+   (ראה skeleton ב-`spec-kit-deep-dive.md §6`).
 3. **UX של slash-commands** — discoverable, שקוף. הפעלת-הסוכנים שלנו פחות נגישה למשתמש חדש.
 4. **breadth של סוכנים (30+)** — spec-kit agent-agnostic; BDS תומך ב-3 CLIs. פורטביליות.
 5. **CLI רשמי + presets/bundles** — onboarding ותחזוקה טובים מ-`generate/install` שלנו.
@@ -60,9 +71,12 @@ Toolkit רשמי של GitHub ל-**Spec-Driven Development**: מפרט מפורט
 
 ## 4. איפה BDS חזק יותר (למה לא לעבור)
 
-1. **אימות דו-שכבתי עם סוכן שמריץ קוד.** `/analyze` בודק *עקביות-מסמכים*; **כלב מריץ את
-   הקוד בסביבה אמיתית** ותופס באגי-runtime. הוכחה חיה: כלב תפס 11 blockers ב-155 ריצות;
-   באג ה-symlink של ה-install נתפס **רק** בהרצה אמיתית, לא בבדיקת-מסמכים.
+1. **אימות דו-שכבתי עם סוכן שמריץ קוד.** `/analyze` בודק *עקביות בין-מסמכים* ו-`/converge`
+   בודק *שלמות סטטית* — **שניהם לא מריצים קוד**. ב-spec-kit הדבר היחיד ש"מריץ" הוא סוכן-ה-implement
+   שבודק את *עצמו* (implement.md שלב 9). **כלב הוא סוכן-אימות עצמאי שמריץ את הקוד בסביבה נקייה**
+   ותופס באגי-runtime — מנגנון שפשוט לא קיים ב-spec-kit. הוכחה חיה: כלב תפס 11 blockers ב-155
+   ריצות; באג ה-symlink של ה-install נתפס **רק** בהרצה אמיתית, לא בבדיקת-מסמכים.
+   ועוד: **אביגיל** תופסת briefs ששגויים *עובדתית מול הקוד* — מחלקה ש-/analyze לא יכול מבנית.
 2. **לולאת-הזיקוק.** BDS מזקק את דוחות-האימות שלו כדי לשפר את **השיטה עצמה** — כלל ה-anchor
    הוריד את `wrong-line-number` מ-63→0. ל-spec-kit אין feedback-loop כזה. זה ה-crown-jewel.
 3. **merge קדוש + worktree isolation.** spec-kit נוטה "לרוץ עד הסוף"; BDS עוצר ב-gate אנושי,
@@ -84,8 +98,18 @@ Toolkit רשמי של GitHub ל-**Spec-Driven Development**: מפרט מפורט
 
 ## 6. פעולות-המשך (backlog)
 
-- **24. Constitution פר-פרויקט** — לרכז עקרונות-על ל-`<project>/constitution.md`.
-- **25. Converge check** — שלב "האם הפרויקט השלם תואם את הכוונה + מה נותר" (הפער הגדול).
-- **26. commands-UX** — עטיפת הפעלות-הסוכן ב-commands discoverable.
+> ה-backlog המפורט והמעודכן ב-[`spec-kit-deep-dive.md §8`](./spec-kit-deep-dive.md).
 
-> נדחה במפורש: מעבר ל-spec-kit. הרציונל: אובדן אימות-runtime + זיקוק + merge-gate.
+- **24. Constitution פר-פרויקט** — `<project>/constitution.md`; אביגיל+כלב קוראים כאילוץ-על.
+  **עדיפות: גבוהה.**
+- **25. project-converge slice** — מסלול A (שלמות סטטית, סגנון spec-kit) + מסלול B (כלב E2E —
+  התוספת שלנו), בבעלות מרדכי, מפיק briefs, gated. skeleton ב-deep-dive §6. **עדיפות: גבוהה.**
+- **26. commands-UX / hooks / checklist** — הכי חשוב מהשלושה: מנגנון **hooks** (`before_`/`after_`)
+  שהופך אביגיל/כלב ל-pluggable; אחריו checklist-gate; ה-slash-UX עצמו הכי פחות דחוף.
+- **27. /clarify-loop — שלב-חובה לפני חתימת-brief** (חדש; **הועלה בעדיפות → בינונית-גבוהה**).
+  מרדכי שואל את המשתמשת עד 5 שאלות רב-ברירה high-impact להסרת עמימות, וכותב תשובות בחזרה
+  ל-brief. **הרציונל**: תוקף ישירות את ה-41%-briefs-דורשים-תיקון (הנחות-לא-מבוררות). פירוט
+  ב-`spec-kit-deep-dive.md §8`.
+
+> נדחה במפורש: מעבר ל-spec-kit. הרציונל (מאושר ברמת-הקוד): אובדן אימות-runtime עצמאי (כלב),
+> זיקוק, ו-merge-gate+worktree — אף אחד מהשלושה לא קיים ב-spec-kit.
