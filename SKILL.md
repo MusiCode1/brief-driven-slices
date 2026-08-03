@@ -135,8 +135,9 @@ description: |
 | [`workflow.md`](workflow.md) | ‏לפני התחלת slice ‏חדש — ‏הפרוטוקול המלא |
 | [`worktrees.md`](worktrees.md) | ‏כשמכינים worktree, ‏או שני executors במקביל |
 | [`agent-definitions/`](agent-definitions/) | ‏מקור האמת לסוכנים: `agents.json` + `prompts/*.md` |
-| [`patterns.md`](patterns.md) | 5 ‏קטגוריות הכשל שזוהו ב-Slice 9 — ‏רקע לwhy |
-| [`recommendations.md`](recommendations.md) | 10 ‏סעיפים ל-template ‏וההגנות |
+| [`patterns.md`](patterns.md) | ‏קטלוג כלב — 7 ‏קטגוריות כשל-ריצה + 2 ‏מטא-תופעות |
+| [`plan-pitfalls.md`](plan-pitfalls.md) | ‏קטלוג אביגיל — 10 ‏קטגוריות טעויות-תכנון |
+| [`recommendations.md`](recommendations.md) | 38 ‏סעיפים ל-template ‏וההגנות (‏אחרון: ‏עלות האימות, 2026-08) |
 | [`briefs/BRIEF_TEMPLATE.md`](briefs/BRIEF_TEMPLATE.md) | ‏Skeleton ‏ל-brief ‏חדש |
 | [`briefs/EXECUTOR_DISPATCH.md`](briefs/EXECUTOR_DISPATCH.md) | פרוטוקול executor **גנרי** (לא מועתק פר-פרויקט — ראה דוקטרינה למטה) |
 | [`briefs/state.template.json`](briefs/state.template.json) | ‏Template ‏ל-state.json ‏פר-פרויקט |

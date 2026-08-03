@@ -5,6 +5,51 @@
 
 ---
 
+## 2026-08-03 — זיקוק: איכותני (‏case-studies של אוגוסט) + כמותי (‏581 ‏דוחות)
+
+**‏זיקוק איכותני** — שלושת המסמכים החדשים (`RAW-2026-08-verification-cost.md` §1–§25,
+`2026-07-obsidian-web-r0-nine-rounds.md`, `2026-08-eq-checker-slice5-self-feeding-loop.md`)
+זוקקו לדוקטרינה לפי `SKILL.md` §"אם case study חדש מוסיף תובנה":
+
+| ‏קובץ | ‏מה נוסף |
+|------|---------|
+| `recommendations.md` | ‏פריטים **28–38** — ‏בלוק "‏שיפורים מסשן 2026-08-01/02 (‏עלות האימות)" |
+| `plan-pitfalls.md` | ‏קטגוריות **8–10**: `unrun-claim`, `intermediate-state-unverified`, `gate-cannot-fail` |
+| `patterns.md` | ‏מטא-תופעה 2 (‏המתקן מייצר את הממצא הבא) + ‏קטגוריה 7 `stale-user-visible-string` + traceability |
+| `docs/methodology-evolution.md` | ‏ערך 2026-08-02 + ‏עקרונות 6–7 |
+| `SKILL.md` | ‏מפת הקבצים — ‏ספירות מעודכנות + ‏שורת `plan-pitfalls.md` ‏שחסרה |
+
+**‏זיקוק כמותי** — `distill.py --reports-dir main/reports` על 581 ‏דוחות (‏334 ‏אביגיל,
+‏247 ‏כלב; ‏285 ‏חדשים מאז snapshot 2026-07-19). ‏תוצרים:
+`distillations/2026-08-03-{data.json,report.md}`.
+
+**‏באג שנמצא בהרצה** — `scripts/distill.py:99` ‏השתמש ב-`text.split("---", 2)`, ‏מפריד
+לא-מעוגן לתחילת שורה. ‏כל `---` **‏בתוך מחרוזת** ‏ב-front-matter קטע את הבלוק, ‏ה-YAML
+נשבר, ‏והדוח נשמט מכל זיקוק **‏בשקט**. ‏נפגע בפועל:
+`obsidian-eq-checker/slice-5-page-split-calev-phase1.md` (`verdict: PARTIAL`, 1 blocker
++ 4 minor) — ‏החוסם שם הוא "‏שער הזהב אינו נופל על שתי מוטציות עצמאיות", ‏כלומר **‏המקור
+של `recommendations.md` ‏פריט 33**, ‏שמעולם לא נספר.
+
+**‏אימות**: regex ‏מעוגן `^---\n(.*?)\n---`; ‏טסט רגרסיה
+`test_md_triple_dash_inside_front_matter_string` **‏הוכח כנופל על הקוד הישן**
+(`git stash` ‏על `distill.py` → `AssertionError: unexpectedly None`).
+`tests/test_distill.py` 39/39 + `tests/test_path_substitution.py` 10/10 ‏ירוקים.
+‏אחרי התיקון: ‏245→**247** ‏דוחות כלב נקראים; ‏5 ‏אזהרות שנותרו הן דוחות בפורמט ישן בלי
+front-matter כלל.
+
+**‏תיקון נלווה בסאב-ריפו הפרטי** (`main/reports/`, ‏לא בקומיט הזה):
+`pi-acp/pi-acp-bash-output-fix-calev.md` ‏היה חסר `---` ‏סוגר — ‏הפרת `docs/reports-format.md`.
+
+**‏הממצא המרכזי של ההרצה** — ‏התפלגות סבבים פר-brief (‏נגזר מ-`report_ids`):
+‏224 ‏בריפים · ‏חציון **1** · **‏81% ‏נסגרים בסבב אחד** · ‏אבל **19 ‏בריפים (8%) ‏צרכו
+100 ‏דוחות = 30% ‏ממאמץ האימות**, ‏ושניים הגיעו ל-10 ‏סבבים.
+
+**‏חריגות**: ‏זיקוק ידני ולא דרך ה-systemd timer (‏שמעולם לא הותקן — ‏ראה
+`methodology-evolution.md` 2026-06-27). ‏נכתב ישירות על `main` ‏ולא ל-branch ייעודי,
+‏בריצה מונחית-משתמש.
+
+---
+
 ## 2026-07-19 — slice-qoder-path-neutral: Commit 1 — install_qoder מחווט ל-substitute_into
 
 הוסף `install_qoder()` ל-`scripts/install-cli-configs.sh` — **כמו** `install_codex` (loop על
