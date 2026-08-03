@@ -13,6 +13,7 @@ scripts/distill.py — מנוע כמותי דטרמיניסטי לזיקוק ד�
 import argparse
 import json
 import os
+import re
 import sys
 import warnings
 from datetime import date as date_type, datetime
@@ -92,15 +93,17 @@ def parse_report_file(path: Path) -> "Report | None":
     elif suffix == ".md":
         try:
             text = path.read_text(encoding="utf-8")
-            # Extract front-matter between the first pair of '---' lines
+            # Extract front-matter between the first pair of '---' *lines*.
+            # חייב להיות מעוגן לתחילת שורה: split גולמי על "---" קוטע את ה-front-matter
+            # באמצע מחרוזת שמכילה "---" (למשל summary עם "ב---distinct") ומאבד את הדוח.
             if not text.startswith("---"):
                 print(f"[distill warn] {path}: no YAML front-matter", file=sys.stderr)
                 return None
-            parts = text.split("---", 2)
-            if len(parts) < 3:
+            m = re.match(r"^---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|$)", text, re.S)
+            if not m:
                 print(f"[distill warn] {path}: malformed front-matter (missing closing ---)", file=sys.stderr)
                 return None
-            front_matter_text = parts[1].strip()
+            front_matter_text = m.group(1).strip()
             if not front_matter_text:
                 print(f"[distill warn] {path}: empty front-matter", file=sys.stderr)
                 return None

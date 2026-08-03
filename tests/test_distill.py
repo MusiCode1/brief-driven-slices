@@ -70,6 +70,34 @@ class TestParseReportFile(unittest.TestCase):
         # summary with "passes string|boolean: fails" should not break YAML
         self.assertIn("passes", r.get("summary", ""))
 
+    def test_md_triple_dash_inside_front_matter_string(self):
+        """A '---' *inside* a front-matter string must not truncate the block.
+
+        רגרסיה: split("---", 2) גולמי חתך את ה-front-matter באמצע מחרוזת
+        (`ב---distinct`) והדוח כולו נשמט מהזיקוק בשקט — כולל blocker.
+        המפריד חייב להיות מעוגן לתחילת שורה.
+        """
+        with tempfile.NamedTemporaryFile(suffix=".md", mode="w", delete=False) as f:
+            f.write(
+                "---\n"
+                'project: "p"\n'
+                'verifier: "calev"\n'
+                'verdict: "PARTIAL"\n'
+                "findings:\n"
+                "  - id: 1\n"
+                '    severity: "blocker"\n'
+                '    summary: "key fails on ב---distinct with a --- inside"\n'
+                "---\n\n"
+                "# body\n"
+            )
+            fpath = Path(f.name)
+        r = distill.parse_report_file(fpath)
+        self.assertIsNotNone(r)
+        self.assertEqual(r["verdict"], "PARTIAL")
+        self.assertEqual(len(r["findings"]), 1)
+        self.assertEqual(r["findings"][0]["severity"], "blocker")
+        fpath.unlink()
+
     def test_json_old_format_loads(self):
         """.json old format still loads (backward-compat)."""
         p = FIXTURES / "projA" / "slice-3-calev.json"
