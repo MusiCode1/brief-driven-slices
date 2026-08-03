@@ -224,9 +224,18 @@ findings:
 **‏ערכי `severity`**: `blocker` | `regression` | `confusion` | `type-error` | `outdated` | `minor`
 
 **‏ערכי `category` (‏אביגיל — plan)**:
-`missing-symbol` | `dropped-branch` | `type-error` | `wrong-line-number` | `naming-inconsistency` | `wrong-path` | `outdated-risk` | `missing-dependency`
+`missing-symbol` | `dropped-branch` | `type-error` | `wrong-line-number` | `naming-inconsistency` | `wrong-path` | `outdated-risk` | `missing-dependency` | `unrun-claim` | `intermediate-state-unverified` | `gate-cannot-fail`
 
 ‏אם לא בטוח — השתמש ב-`unique`. ‏הזיקוק יזקק.
+
+> **‏שלוש הקטגוריות מזיקוק 2026-08-03** (‏פירוט מלא: `plan-pitfalls.md` ‏קטגוריות 8–10):
+> - `unrun-claim` — ‏ה-brief טוען טענה עובדתית על הקוד שנכתבה מהזיכרון ולא מהרצה.
+>   **‏השתמש בזה כשהממצא היה נתפס ע"י הכותב בפקודה אחת** (grep/‏הרצת הפקודה עצמה).
+>   ‏היחס הזה הוא מדד "‏יעילות המאמת" — ‏גבוה = ‏הזהירות במעלה הזרם צנחה.
+> - `intermediate-state-unverified` — Verification ‏של commit נמדד במצב הסופי במקום
+>   ‏במצב שאותו commit משאיר.
+> - `gate-cannot-fail` — ‏שער שעובר ירוק בלי קשר, ‏או כבר אדום/ירוק על הבסיס, ‏או
+>   ‏שהפקודה מבנית לא יכולה למצוא (`grep` ‏על בינארי, ‏`grep -c` ‏שיוצא 1 ‏על אפס).
 
 ## ‏backward-compat
 

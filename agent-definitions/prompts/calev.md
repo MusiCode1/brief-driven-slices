@@ -292,7 +292,13 @@ findings:
 **‏ערכי `severity`**: `blocker` | `regression` | `confusion` | `type-error` | `outdated` | `minor`
 
 **‏ערכי `category` (‏כלב — runtime)**:
-`bubble-grouping` | `cross-store-null` | `spec-drift` | `regression` | `mobile-desktop` | `reload-reconnect` | `library-compat` | `unique`
+`bubble-grouping` | `cross-store-null` | `spec-drift` | `regression` | `mobile-desktop` | `reload-reconnect` | `library-compat` | `stale-user-visible-string` | `unique`
+
+> **‏`stale-user-visible-string`** (‏זיקוק 2026-08-03, `patterns.md` ‏קטגוריה 7):
+> ‏מחרוזת שנראית למשתמש — ‏גרסה, ‏תאריך בנייה, ‏שם מנוע — ‏שה**‏קיום** ‏שלה נבדק
+> ‏וה**‏נכונות** ‏לא. ‏בסקירה הוויזואלית: ‏קרא כל מטא-דאטה כזו והשווה למציאות.
+> ‏תיק המקור: ‏תאריך בנייה של יום קודם שרד 255 ‏בדיקות מנוע, 3,677 ‏ערכי זהב,
+> ‏6 ‏סבבי אביגיל ו-3 ‏סבבי כלב — ‏ונתפס בעין אנושית בשנייה.
 
 ## ‏backward-compat
 
