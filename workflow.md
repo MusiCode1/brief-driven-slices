@@ -61,7 +61,7 @@ Symbols שה-brief טוען שקיימים: <list>`
 })
 ```
 
-‏אביגיל מריצה 8 בדיקות (פירוט מלא ב-[`agents/avigail.md`](agents/avigail.md)), ביניהן:
+‏אביגיל מריצה 9 בדיקות (פירוט מלא ב-[`agents/avigail.md`](agents/avigail.md)), ביניהן:
 symbols/APIs מול **dev tip** (לא main), pseudo-code שלא מחסיר branches, **anchors קיימים
 (לא מספרי-שורות — ראה `plan-pitfalls.md` קט' 1)**, type errors צפויים, naming-inconsistency,
 file paths + gitignore-trap, risks מיושנים, ו-`depends_on`.

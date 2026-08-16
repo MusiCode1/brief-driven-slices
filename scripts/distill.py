@@ -53,6 +53,8 @@ CANONICAL_CATEGORIES = {
         "naming-inconsistency", "wrong-path", "outdated-risk", "missing-dependency",
         # זיקוק 2026-08-03 — plan-pitfalls.md קטגוריות 8-10
         "unrun-claim", "intermediate-state-unverified", "gate-cannot-fail",
+        # זיקוק 2026-08-04 — plan-pitfalls.md קטגוריה 11 (מופע מדוד אחד; לאשש/להסיר בזיקוק הבא)
+        "faithful-but-inadequate",
     },
     "calev": {
         "bubble-grouping", "cross-store-null", "spec-drift", "regression",
