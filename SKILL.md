@@ -132,12 +132,13 @@ description: |
 | ‏קובץ | ‏מתי לקרוא |
 |------|------------|
 | [`orchestration.md`](orchestration.md) | ‏Mode 2 — ‏יתרו, state machine, ‏שרשור, BLOCKED |
+| [`BACKLOG.md`](BACKLOG.md) | **‏עבודה פתוחה — ‏מקור האמת היחיד.** ‏אין עמודת סטטוס; `bash scripts/backlog-status.sh` ‏גוזר אותו |
 | [`workflow.md`](workflow.md) | ‏לפני התחלת slice ‏חדש — ‏הפרוטוקול המלא |
 | [`worktrees.md`](worktrees.md) | ‏כשמכינים worktree, ‏או שני executors במקביל |
 | [`agent-definitions/`](agent-definitions/) | ‏מקור האמת לסוכנים: `agents.json` + `prompts/*.md` |
 | [`patterns.md`](patterns.md) | ‏קטלוג כלב — 7 ‏קטגוריות כשל-ריצה + 2 ‏מטא-תופעות |
-| [`plan-pitfalls.md`](plan-pitfalls.md) | ‏קטלוג אביגיל — 10 ‏קטגוריות טעויות-תכנון |
-| [`recommendations.md`](recommendations.md) | 38 ‏סעיפים ל-template ‏וההגנות (‏אחרון: ‏עלות האימות, 2026-08) |
+| [`plan-pitfalls.md`](plan-pitfalls.md) | ‏קטלוג אביגיל — 12 ‏קטגוריות טעויות-תכנון |
+| [`recommendations.md`](recommendations.md) | 40 ‏סעיפים ל-template ‏וההגנות (‏אחרון: ‏עלות האימות, 2026-08) |
 | [`briefs/BRIEF_TEMPLATE.md`](briefs/BRIEF_TEMPLATE.md) | ‏Skeleton ‏ל-brief ‏חדש |
 | [`briefs/EXECUTOR_DISPATCH.md`](briefs/EXECUTOR_DISPATCH.md) | פרוטוקול executor **גנרי** (לא מועתק פר-פרויקט — ראה דוקטרינה למטה) |
 | [`briefs/state.template.json`](briefs/state.template.json) | ‏Template ‏ל-state.json ‏פר-פרויקט |
