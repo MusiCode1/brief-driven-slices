@@ -31,7 +31,7 @@
 | 10 | ‏בריף `slice-4-brief-commit-lifecycle` — READY ‏מ-03/06, ‏לא בוצע | `docs/plans/` | `test -f docs/plans/archive/slice-4-brief-commit-lifecycle.md` | `file` |
 | 11 | ‏ערכי walkthrough ‏לקומיטים ‏3df40ec ‏ו-5cbace3 | `docs/walkthrough.md` | `grep -c "3df40ec" docs/walkthrough.md` | `>0` |
 | 12 | **‏`install-cli-configs.sh` ‏אינו מתקין סקילים** — ‏רק agents. ‏`autorun`/`bug` ‏קושרו **ידנית** ‏לחמישה CLI (‏20/08), ‏ובמכונה חדשה לא יותקנו | ‏סשן 20/08 | `grep -ci "skill" scripts/install-cli-configs.sh` | `>0` |
-| 13 | ‏**לא אומת שכל CLI באמת טוען סקילים** ‏בפורמט `SKILL.md` — ‏התיקיות מאוכלסות, ‏הטעינה לא נבדקה | ‏סשן 20/08 | `test -f docs/skills-per-cli.md && echo 1 \| tr -d " "` | `=1` |
+| 13 | ‏**לא אומת שכל CLI באמת טוען סקילים** ‏בפורמט `SKILL.md` — ‏התיקיות מאוכלסות, ‏הטעינה לא נבדקה | ‏סשן 20/08 | `ls docs/skills-per-cli.md 2>/dev/null` | `file` |
 
 ## ‏מה שנסגר — ‏לתיעוד בלבד
 

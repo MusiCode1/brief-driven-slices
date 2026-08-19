@@ -16,7 +16,7 @@ while IFS= read -r line; do
   num="${num//[[:space:]]/}"
   [[ $num =~ ^[0-9]+$ ]] || continue
   item="$(echo "${item//$SEP/|}" | sed 's/^ *//; s/ *$//')"
-  check="$(echo "${check//$SEP/\\|}" | sed 's/^ *`//; s/` *$//')"
+  check="$(echo "${check//$SEP/|}" | sed 's/^ *`//; s/` *$//')"
   expect="$(echo "$expect" | sed 's/^ *`//; s/` *$//')"
 
   state=bad
