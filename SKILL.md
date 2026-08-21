@@ -38,14 +38,42 @@ description: |
 |-----|-------|-------|------|--------|
 | **‏מרדכי** | planner | primary | Opus 4.8 | ✅ ‏אחרי אישור |
 | **‏יתרו** | orchestrator | primary | Sonnet 4.6 | ❌ ‏לעולם לא |
-| **‏אליעזר** | executor | all | Sonnet 4.6 | ❌ ‏לעולם לא |
+| **‏אליעזר** | executor | all | **‏Cursor Composer 2.5** | ❌ ‏לעולם לא |
 | **‏אביגיל** | plan-verifier | subagent | Opus 4.8 | ❌ |
-| **‏כלב** | runtime-verifier (phase/light) | subagent | Sonnet 4.6 | ❌ |
+| **‏כלב** | runtime-verifier (phase/light) | subagent | **‏Cursor Composer 2.5** | ❌ |
 | **‏כלב-heavy** | runtime-verifier (heavy, complexity 8+) | subagent | Opus 4.8 | ❌ |
 
 > **‏עיקרון המודלים**: ‏Opus למקום שהאמת מגיעה מ**‏הסקה** (מרדכי תכנון, ‏אביגיל
-> ‏על brief סטטי, ‏כלב-heavy על edge-cases/regressions/patterns). ‏Sonnet למקום
+> ‏על brief סטטי, ‏כלב-heavy על edge-cases/regressions/patterns). ‏המבצעים למקום
 > ‏שהאמת מגיעה מ**‏הרצה** (אליעזר ביצוע, ‏יתרו מכני, ‏כלב phase/light — runtime).
+
+## 🔴 ‏אליעזר וכלב רצים על Cursor Composer 2.5 — ‏לא כתת-סוכני Claude
+
+**‏הנחיית המשתמש, 2026-08-20.** ‏נוהל, לא המלצה.
+
+‏מרדכי ואביגיל נשארים **Claude** (‏תת-סוכנים ב-process). ‏אליעזר וכלב משוגרים
+**החוצה**, דרך `dispatch-agent`:
+
+```bash
+dispatch-agent <שם-סשן> cursor composer-2.5 <cwd> <קובץ-פרומפט>
+```
+
+- ‏**‏`cursor` הוא סוכן רשום ב-acpx** (‏`acpx cursor`) — ‏אין צורך ב-`omp`
+  ‏ואין צורך ב-`--agent`. ‏אומת מקצה-לקצה 20/08.
+- ‏**שם-המודל בלי קידומת**: ‏`composer-2.5`, ‏לא `cursor/composer-2.5`.
+  ‏(‏הקידומת שייכת למסלול ה-`"omp acp"` הישן, שגם הוא עובד — אבל מיותר.)
+- ‏רץ ב-tmux, שורד ניתוק, וכותב סנטינל `<log>.done` עם קוד-היציאה.
+- **‏להמתין לסנטינל**, לא לתהליך: `until [ -f /tmp/agent-dispatch/<שם>.done ]; do sleep 30; done`
+- ‏`cursor-agent models` ‏מציג את הרשימה; ‏`composer-2.5` ‏הוא הנוכחי.
+- ‏`cursor-agent` **אינו** מדבר ACP בעצמו (‏אין לו תת-פקודת `acp`) — ‏הגשר הוא `acpx`.
+
+> **‏`~/.claude/agents/eliezer.md` ו-`calev.md` נשארים** עם `model: sonnet` —
+> הם **מסלול-הנפילה** לתת-סוכן ב-process. אין דרך להצהיר שם על מודל של קורסור,
+> ולכן **הצהרת המודל האמיתית היא כאן.**
+
+**‏מדוע**: ‏נבחן על 3 סלייסים רצופים ב-drive-coding (‏20/08) — ‏playback-lifecycle,
+‏playlist-invariants, ‏control-dock. ‏הביצוע היה נאמן-לבריף, וכשההוראה אמרה
+"‏אל תתקן — ‏תעד ותמשיך", ‏זה מה שקרה (‏באג #46 ‏נמצא, ‏תועד, ‏ולא תוקן).
 
 ‏להתקנת כל adapters (‏מריצים מתוך שורש הריפו): `bash scripts/install-cli-configs.sh all`
 ‏לתאימות OpenCode ישנה: `bash scripts/install-agents.sh`
