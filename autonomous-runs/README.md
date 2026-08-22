@@ -74,6 +74,7 @@ runs/<date>-<שם>.md      — דוח פר-ריצה
 | 2 | 2026-08-19 | `ttl-ownership` (drive-coding) | 1 / **0** | **0** | 3 |
 | 4 | 2026-08-20 | `d1-migration-dedup` (**InboxSMS**) | 0 / 3 | 1 | 3 (2 ⬜ פתוחים) |
 | 5 | 2026-08-21 | `m2m-api-on-d1` (InboxSMS) | 1 / 1 | 1 | 2 (1 ⬜ פתוח) |
+| 6 | 2026-08-22 | `dedup-by-provider` (InboxSMS) | 1 / 1 | **0** | 3 |
 
 ---
 
