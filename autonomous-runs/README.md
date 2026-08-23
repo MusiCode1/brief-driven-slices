@@ -76,6 +76,7 @@ runs/<date>-<שם>.md      — דוח פר-ריצה
 | 5 | 2026-08-21 | `m2m-api-on-d1` (InboxSMS) | 1 / 1 | 1 | 2 (1 ⬜ פתוח) |
 | 6 | 2026-08-22 | `dedup-by-provider` (InboxSMS) | 1 / 1 | **0** | 3 |
 | 7 | 2026-08-23 | `utc-timestamps` (InboxSMS) | 0 / 2 | **0** | 3 (1 ⬜ פתוח) |
+| 8 | 2026-08-23 | `ingest-worker` (InboxSMS) | 1 / 1 | **0** | 2 |
 | 7 | 2026-08-23 | `control-roles` (drive-coding) | 1 / 6 | **0** | 4 |
 
 ---
