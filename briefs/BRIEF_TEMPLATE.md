@@ -4,7 +4,9 @@
 > **‏סוג מסמך**: ‏בריף ביצועי לסלייס — ‏לא תוכנית טרום-בריף
 > **‏סטטוס**: ‏טיוטה / ‏מאושר / ‏בעבודה / ‏הושלם
 > **‏אימות אביגיל**: ‏לא מאומת / READY (‏דוח: `reports/<project>/<slice>-avigail.md`)
-> **Dispatch**: ‏מותר לאליעזר רק אם `אימות אביגיל = READY`; אחרת זה בריף לא-גמור.
+> **Dispatch**: ‏אחרי **סבב אביגיל אחד** + ‏תיקון-במקום של ממצאיו (‏מאומת כשאילתות).
+> ‏READY אינו תנאי-סף — ‏לולאת "עד READY" ‏אינה מתכנסת (‏ריפו-השיטה `docs/bugs/#1`).
+> **lint**: `python3 $BDS_SCRIPTS/lint-brief.py <קובץ זה>` — ‏אפס 🔴 ‏לפני שיגור לאביגיל.
 > **Complexity**: X/10 (verifier: light/heavy)
 > **‏תלויות (`depends_on`)**: [] ‏— ‏או [slice-K, slice-L] (‏חובה לציין, ‏גם אם ריק)
 > **‏Base**: dev ‏— ‏או branch ‏של תלות אם לא ב-dev עדיין
@@ -34,7 +36,7 @@
 
 ```bash
 cd <project-root>
-git worktree add .worktrees/N-name -b slice/N-name dev   # branch: slice/<name> | dir: .worktrees/<name> (בלי קידומת)
+git worktree add .worktrees/N-name -b slice/N-name <dev-tip-hash>   # מה-hash שבכותרת, לא משם-ענף — הבסיס קפוא לאורך הריצה
 cd .worktrees/N-name
 pnpm install && pnpm hooks:install
 ```
@@ -134,6 +136,10 @@ class NewThing {
 ```
 
 (‏לא רק שמות — ‏החתימה המדויקת. ‏executor אסור לשנות.)
+
+> ⚠️ **‏חתימות בלבד — ‏לא גופי-פונקציות.** ‏קוד מרשמי שלא הורץ צובר באגים בקצב של
+> ‏קוד (case-study slice-5: ‏שלוש גרסאות של אותו תיקון בפרוזה, ‏שתיים שגויות, ‏וההבדל
+> ‏נראה רק בהרצה). ‏גוף שחשוב לקבע — ‏נכתב כקובץ/probe בריפו **‏שהורץ**, ‏והבריף מפנה אליו.
 
 **DELETE block** (‏אם רלוונטי):
 > DELETE: `path/to/file.svelte` — block של `<form class="text-form">` (grep anchor: `class="text-form"`)

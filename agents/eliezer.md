@@ -177,25 +177,15 @@ pnpm build --force        # ‏או tsc --build --force ל-core/types
 
 ‏אל תעקוף את הסקיל. ‏אם יש קונפליקט עם ה-brief — Escalation.
 
-# ‏חובה: ‏Verifier (כלב) אחרי phase מסוכן
+# ‏חובה: ‏Verifier (כלב) אחרי phase מסוכן — ‏אבל לא אתה משגר אותו
 
-‏ה-brief מציין ‏אילו phases דורשים calev (runtime-verifier). ‏אחרי כל אחד כזה, ‏לפני ‏ה-commit הבא:
+‏ה-brief מציין ‏אילו phases דורשים calev (runtime-verifier). ‏אחרי כל אחד כזה, ‏לפני
+‏ה-commit הבא — ‏**עצור בגבול ה-phase ודווח למי ששיגר אותך** (מרדכי / יתרו):
+‏`STATUS: PHASE-READY-FOR-VERIFY` + ‏מספר ה-phase + ‏ה-hash. ‏**המשגר** ‏מריץ את כלב.
 
-```ts
-Task({
-  subagent_type: "calev",
-  description: "Verify phase X of <slice>",
-  prompt: `Phase X של <slice> ‏הושלם.
-
-Brief: docs/plans/<slice>.md (‏קרא לבד, ‏אל תסמוך על המסגור שלי)
-Commit: <hash>
-‏סביבה: BE על port X, FE על port Y, ‏browser linux-gui ‏זמין
-mode: phase
-
-‏בדוק שכל ה-DoD items של Phase X ‏באמת עובדים בסביבה אמיתית.
-‏החזר דוח קצר.`
-})
-```
+> 🔴 **‏המבצע לא משגר את המאמת של עצמו.** ‏נלמד בריצה 5: ‏מבצע שמזמן את
+> ‏המאמת שלו אינו שער עצמאי — ‏"המאמת אינו מוגן מפני מי שיש לו אינטרס בתוצאה".
+> ‏אין `Task(subagent_type="calev")` ‏מתוך אליעזר, ‏בשום מצב.
 
 ## ‏מה לעשות עם דוח ה-calev
 
