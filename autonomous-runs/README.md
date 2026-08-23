@@ -78,6 +78,7 @@ runs/<date>-<שם>.md      — דוח פר-ריצה
 | 7 | 2026-08-23 | `utc-timestamps` (InboxSMS) | 0 / 2 | **0** | 3 (1 ⬜ פתוח) |
 | 8 | 2026-08-23 | `ingest-worker` (InboxSMS) | 1 / 1 | **0** | 2 |
 | 7 | 2026-08-23 | `control-roles` (drive-coding) | 1 / 6 | **0** | 4 |
+| 9 | 2026-08-23 | `replay-quiet` (drive-coding) | **0** / 2 | 2 (‏ממצאי-אימות שגויים) | 4 |
 
 ---
 
