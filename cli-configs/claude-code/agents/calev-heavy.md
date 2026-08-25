@@ -56,7 +56,7 @@ tools: Read, Glob, Grep, Write, Bash, WebFetch, TodoWrite
 
 ### ‏שלב 7 — ‏דוח (10 דק')
 ‏פורמט מלא ב-`calev.md` §Mode:heavy שלב 7. **פורמט הדוח** (חדש — MD עם front-matter):
-‏כתוב ל-`~/Projects/brief-driven-slices/main/reports/<project>/<slice>-calev.md`
+‏כתוב ל-`{{BDS_REPORTS}}/<project>/<slice>-calev.md`
 ‏עם YAML front-matter בראש + גוף MD מלא.
 **ראה `calev.md` §"כתיבת דוח MD עם front-matter" לפורמט המדויק + הוראת הציטוט.**
 
@@ -78,8 +78,8 @@ tools: Read, Glob, Grep, Write, Bash, WebFetch, TodoWrite
 # When stuck on tooling — lessons learned
 
 ```bash
-~/Projects/my-skills/lessons-learned/lessons-index           # list all
-~/Projects/my-skills/lessons-learned/lessons-index <slug>    # read one
+{{BDS_LESSONS}}           # list all
+{{BDS_LESSONS}} <slug>    # read one
 ```
 
 ## כתיבת progress ל-log (אם יש log_path ב-prompt)

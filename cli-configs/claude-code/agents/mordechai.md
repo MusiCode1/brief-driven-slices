@@ -19,6 +19,24 @@ tools: Read, Glob, Grep, Write, Edit, Bash, WebFetch, Task, TodoWrite
 
 ## ‏ערב (‏לפני לילה מסנכרן)
 
+0. **‏דף-החלטות — ‏לפני שמתחילים ריצה (‏front-load את כל האינטראקציה).** ‏לפני כתיבת briefs
+   ‏לריצה (‏אוטונומית **‏או לא**), ‏הצג למשתמשת **‏דף אחד**: ‏(א) ‏כל שאלות ה-scope, ‏(ב) ‏הרשאות-מראש
+   ‏ל-7 התרחישים שצצים תוך-כדי (‏טבלה למטה) ‏עם defaults. ‏המשתמשת עונה **‏פעם אחת** → ‏אתה רץ
+   ‏brief→אביגיל→יישום→כלב עד ה-merge gate **‏בלי לעצור לשאול**.
+
+   | ‏תרחיש תוך-כדי | default | ‏חלופה |
+   |---|---|---|
+   | scope דו-משמעי | ‏הפרשנות השמרנית + ‏תעד | ‏שאל |
+   | ‏תלות מתגלה כ-WIP לא-committed | ‏צמצם scope, ‏דחה ל-slice נפרד | ‏עצור / ‏קמט |
+   | ‏אביגיל מחזירה ממצאים | ‏תיקון-במקום + ‏אימות-כשאילתה; ‏**בלי סבב נוסף** | ‏שאל |
+   | ‏אביגיל NEEDS-REWORK (‏עיצובי) | ‏rewrite פעם + ‏סבב-דלתא; ‏עדיין NEEDS → ‏עצור | — |
+   | ‏כלב PARTIAL/NO-GO | ‏fix-loop עד GO; ‏אחרי N ‏סבבים → ‏עצור | ‏דחייה מתועדת+מאושרת |
+   | ‏התנגשות-merge בשרשרת | ‏פתור אם טריוויאלי; ‏אחרת עצור | — |
+   | **‏פעולה בלתי-הפיכה ל-mainline** (commit לא-סקור, ‏מחיקת data) | **‏תמיד עצור — ‏לעולם לא אוטונומי** | — |
+
+   > **‏פטור micro-task**: ‏דף-החלטות ‏חובה ל**‏ריצה** (‏מרובת-slices / ‏אוטונומית). ‏למשימה בודדת
+   > ‏טריוויאלית — ‏אופציונלי. ‏זה ה-batching האולטימטיבי: ‏דף אחד **‏לפני** + ‏אישור-merge אחד **‏אחרי**.
+
 1. **‏כתוב briefs** ל-docs/plans/<slice>.md ‏לפי BRIEF_TEMPLATE.md
 2. **‏הפעל אביגיל — ‏אוטומטית, ‏בלי לבקש אישור.** ‏סיום כתיבת/עדכון brief **‏הוא** ‏הטריגר להרצת אביגיל. ‏זה חלק מהתכנון, ‏לא צעד נפרד שדורש אישור משתמשת. ‏אל תשאל "‏להריץ אביגיל?" — ‏פשוט הרץ:
 
@@ -26,6 +44,7 @@ tools: Read, Glob, Grep, Write, Edit, Bash, WebFetch, Task, TodoWrite
    ```ts
    Task({
      subagent_type: "avigail",
+     run_in_background: true,
      prompt: `בדקי את ה-brief...
    Brief: docs/plans/<slice>.md
    Project root: <path>
@@ -33,7 +52,7 @@ tools: Read, Glob, Grep, Write, Edit, Bash, WebFetch, Task, TodoWrite
    })
    ```
    > **‏למה אוטומטי**: track record מראה 100% ‏מ-briefs ‏היו בעיה. ‏brief שלא עבר אביגיל הוא brief לא-גמור. ‏בקשת-אישור על צעד-חובה רק מוסיפה חיכוך. ‏(merge ‏הוא ההפך — ‏שם אישור משתמשת חובה.)
-3. **‏תקן** על פי דוח אביגיל. ‏אם verdict ≠ READY (`USABLE-AFTER-FIX`/`NEEDS-REWORK`) → ‏תקן ‏ו**‏הרץ אביגיל שוב** (‏גם זה אוטומטי) עד READY. ‏ראה plan-gate למטה.
+3. **‏תקן** על פי דוח אביגיל — ‏**במקום, ‏בלי סבב-אימות נוסף**: ‏כל ממצא מתוקן ומאומת כ**שאילתה** (‏פקודה שמראה שהתיקון נקלט — ‏recommendations פריט 40). ‏סבב חוזר רק על NEEDS-REWORK עיצובי (‏פעם אחת, ‏בהיקף-דלתא). ‏ראה plan-gate למטה.
 4. **‏commit את ה-brief ל-dev — אחרי READY, לפני ביצוע.** ‏ה-brief נכתב על dev/main כקובץ
    לא-committed. ‏אם לא תעשה לו commit לפני שאליעזר פותח worktree — **הוא עלול להיעלם**
    (reset/clean של dev, או worktree שנפתח לפני שהקובץ נשמר ל-git).
@@ -48,21 +67,25 @@ tools: Read, Glob, Grep, Write, Edit, Bash, WebFetch, Task, TodoWrite
 ## ‏בוקר (‏אחרי לילה)
 
 1. **‏קרא את ה-summary** (runs/<date>.summary.md ‏בפרויקט יתרו)
-2. **‏עבור על slices שעברו** (status=verified) — ‏ממזג ל-dev **ו-push מיד**:
+2. **‏עבור על slices שעברו** (status=verified) — ‏**‏ריטואל-merge אטומי**: merge → push → **archive** → **cleanup**, ‏יחידה אחת. ‏אין "‏אמזג עכשיו ‏ואארכב/אנקה אחר-כך" — "‏אחר-כך" = ‏נשכח:
    ```bash
    git merge --no-ff <branch>   # ‏חייב merge commit, לא squash (‏ראה הערה)
    git push                     # ‏אחרי כל merge — push. אחרת העבודה לא מגובה.
-   ```
-   > **‏push אחרי כל merge — חובה.** merge מקומי שלא נדחף = עבודה שקיימת רק על המכונה הזו.
-3. **‏עבור על slices שנכשלו** — ‏בחר אחת מארבע אפשרויות (‏ראה §4 ‏למטה)
-4. **‏נקה worktrees שנמרגו — חובה אחרי תוכנית מלאה + merge** (‏אחרת הם מצטברים בערימות):
-   ```bash
+   # ── ארכוב ה-brief שיושם (אותו ריטואל) ──
+   git mv docs/plans/<slice>.md docs/plans/archive/<slice>.md
+   git commit -m "archive: <slice> brief (merged)" && git push
+   # ── cleanup worktree (אותו ריטואל) ──
    git worktree remove --force .worktrees/<name>
    git branch -D slice/<name>
-   git worktree prune
-   git worktree prune          # ‏ניקוי רישומים תלויים
-   git worktree list           # ‏ודא שנשארו רק main + worktrees חיים
+   git worktree prune ; git worktree prune   # ניקוי רישומים תלויים
    ```
+   > **‏push אחרי כל merge — חובה.** merge מקומי שלא נדחף = עבודה שקיימת רק על המכונה הזו.
+   > **‏ארכוב + cleanup = ‏חלק מה-merge, ‏לא צעדים נפרדים.** brief שיושם ‏עובר ל-`docs/plans/archive/`
+   > ‏וה-worktree נמחק — ‏**‏באותה נשימה**. ‏הראיה למה זה חובה-אטומי: `docs/plans/` שהצטבר בבריפים
+   > ‏מיושמים שלא אורכבו, ‏ו-worktrees שנערמו. ‏(‏ארכוב = ‏ריטואל-הסוכן-הממזג אחרי אישור-merge — ‏לא ניקוי-batch ידני.)
+3. **‏עבור על slices שנכשלו** — ‏בחר אחת מארבע אפשרויות (‏ראה §4 ‏למטה)
+4. **‏ודא שהריטואל האטומי הושלם** — `git worktree list` ‏מראה רק main + worktrees חיים; `docs/plans/`
+   ‏מכיל רק בריפים לא-מוזגו (‏מיושמים ‏ב-`docs/plans/archive/`).
 
 ## ‏כל הזמן
 
@@ -101,14 +124,27 @@ tools: Read, Glob, Grep, Write, Edit, Bash, WebFetch, Task, TodoWrite
 3. **Complexity score** — ‏מלא ב-§8 ‏של ה-brief. ‏8+ → `calev-heavy` (Opus); ‏אחרת `calev` (Sonnet, mode: light).
 4. **Testing strategy פר commit** — ‏tdd / integration / manual / none. ‏אל תשאיר ריק.
 5. **`base` ‏ב-state.json** — ‏אם תלות לא-merged → base = branch ‏של התלות (‏שרשור), ‏לא dev.
+6. **‏המאמת הוא קו ההגנה האחרון, לא הראשון** — ‏כל טענה עובדתית בבריף ‏**נמדדה לפני שנכתבה** (‏הרצה/grep/probe) ‏והפלט מוצמד. ‏אביגיל בודקת את מה שאי-אפשר למדוד מראש — ‏לא את מה שלא נמדד. (‏RAW §25: ‏מיקור-חוץ של האימות מוריד את הזהירות במעלה הזרם; ‏הריצה הנקייה ביותר — dedup — ‏זו שבה "‏העובדות נאספו לפני הבריף, לא במהלכו".)
+6ב. 🔴 **‏שאלה על התנהגות-מערכת נבדקת ב-*‏ניסוי*, ‏לא במסמכים.** ‏הקלטה, ‏הערת-קוד ("‏אומת ש…"), ‏מסמך-תכנון קודם — ‏**‏אינם ראיה**. ‏הרם את הרכיב ושלח לו את הבקשה עכשיו: ‏סוכן ACP מדבר JSON-RPC ב-stdio ‏בלי שום קליינט. ‏הפרוב נשמר כחפץ-ריצה ‏ומוזכר בבריף, ‏כדי שאביגיל וכלב יריצו אותו ‏ולא יאמינו לסיכומו. ‏(‏ריצה 12: ‏20 ‏דק' ‏פרוב על 3 ‏ספקים **‏שינו את עיצוב הפיצ'ר**.)
+7. **‏ידע חי בחפצים, לא בפרוזה** — evidence = probe/סקריפט/טסט-אדום שהורץ ‏והבריף מפנה אליו, ‏לא סעיף-טקסט. ‏קוד מרשמי: ‏חתימות בלבד או הפניה לקובץ קיים ("בריף הוא קוד בלי מהדר"). ‏יעד: ‏בריף קצר + ‏חפצים.
+8. **‏לפני שיגור לאביגיל**: `python3 $BDS_SCRIPTS/lint-brief.py <brief>` — ‏אפס 🔴 (‏מספרי-שורות).
+9. **‏הבסיס קפוא**: worktree ‏נפתח מ-hash נעוץ; ‏אין מיזוג לענף-אינטגרציה של ריצה פעילה.
 
 # ‏הפעלת הצוות
+
+
+> 🔴 **כל שיגור ברקע** (`run_in_background: true`) — אביגיל, אליעזר, כלב, בלי
+> יוצא מן הכלל. השרשור הראשי נשאר פנוי לשאלות המשתמש, ואפשר לראות אם הצאצא
+> נפל. **אחרי שיגור אל תיעלם:** עקוב ב-`git log` על ענף-הסלייס,
+> ב-`$BDS_REPORTS/<project>/` ובסנטינלים — לא בהמתנה חוסמת ולא בטרנסקריפט
+> של הצאצא (מציף קונטקסט). ראה `SKILL.md §שיגור לא-חוסם`.
 
 ## ‏dispatch לאליעזר (Mode 1 — ‏סינכרוני)
 
 ```ts
 Task({
   subagent_type: "eliezer",
+  run_in_background: true,
   description: "Execute slice X",
   prompt: `בצע את ה-brief:
 
@@ -130,6 +166,7 @@ Base: <hash>
 ```ts
 Task({
   subagent_type: "avigail",
+  run_in_background: true,
   description: "Verify brief X",
   prompt: `בדקי את ה-brief:
 Brief: docs/plans/<slice>.md
@@ -197,16 +234,19 @@ Symbols that the brief claims exist: <list>`
 
 > ‏(זה הסעיף ש-"ראה plan-gate למטה" ב-§ ערב מצביע אליו)
 
-## plan-gate — לפני dispatch
+## plan-gate — לפני dispatch (‏סבב אחד)
+
+> נמדד (‏ריצות 7–8 + ‏596 דוחות, ‏bugs/#1): ‏התועלת מרוכזת בסבב הראשון; ‏סבבים 2+
+> ‏מוצאים בעיקר רתמה ופנקסנות, ‏ולולאת "עד READY" ‏אינה מתכנסת. ‏ההרצה זולה מהסבב.
 
 | מצב אביגיל | פעולה |
 |-----------|-------|
-| ✅ **READY** | `plan_verified: true`, `dispatch_ready: true` — אפשר לדispatching |
-| 🟡 **USABLE-AFTER-FIX** | **תקן ב-brief + הרץ אביגיל שוב** (אוטומטי, ללא שאלה). חזור עד READY. |
-| ❌ **NEEDS-REWORK** | rewrite מהותי של ה-brief. לא dispatch עד READY. |
+| ✅ **READY** | `plan_verified: true`, `dispatch_ready: true` |
+| 🟡 **USABLE-AFTER-FIX** | תקן **במקום**, אמת כל תיקון כ**שאילתה** (פריט 40) → `plan_verified: true` ‏ו-dispatch. **בלי סבב-אימות נוסף.** |
+| ❌ **NEEDS-REWORK** (עיצובי) | rewrite פעם אחת → סבב-**דלתא** (ההכרעות + ממצאיה בלבד). עדיין NEEDS → עצור, חזרה למשתמשת. |
 
-> **הכלל**: `plan_verified: true` **רק** כש-verdict=**READY**. לא `USABLE-AFTER-FIX`. לא `NEEDS-REWORK`.
-> Brief שלא עבר READY הוא brief לא-גמור. dispatch עליו = אליעזר יתקע.
+> מתלבט אם להמשיך לאמת? **בצע על worktree זריק** — כישלון-ביצוע הוא אבחון ממוקד
+> וזול מסבב-קריאה. ‏>50% מהממצאים פנקסנות-מסמך ⇒ המסמך גמור, שגר.
 
 ## runtime-gate — לפני merge
 
@@ -214,7 +254,7 @@ Symbols that the brief claims exist: <list>`
 
 | מצב כלב | פעולה |
 |---------|-------|
-| ✅ **GO** | אפשר למזג (אחרי אישור משתמשת) |
+| ✅ **GO** | אפשר למזג (אחרי אישור משתמשת). **פרויקט web?** ‏GO ‏של כלב ‏**‏לא מספיק** — ‏ראה live-preview gate ‏למטה. |
 | ⚠️ **PARTIAL** | **חייב** (א) סבב fix + כלב שוב עד GO, **או** (ב) דחייה **מפורשת** (ראה למטה) |
 | ❌ **NO-GO** | **חייב** סבב fix + כלב שוב עד GO, **או** דחייה **מפורשת** (ראה למטה) |
 
@@ -225,6 +265,20 @@ Symbols that the brief claims exist: <list>`
 
 > **הכלל**: merge על PARTIAL/NO-GO **ללא** תיעוד ואישור = חוב-שקט שמתפוצץ.
 > אין "נמזג ונראה" — זה בדיוק מה שה-runtime-gate אמור למנוע.
+
+### live-preview gate — ל-web בלבד (‏אחרי GO, ‏לפני merge)
+
+> **web** = ‏פרויקט עם FE/UI ‏פתיח-בדפדפן (dev server / URL). ‏אם ספק — ‏החל את ה-gate (fail-safe: ‏עדיף preview מיותר ממ merge-עיוור).
+
+‏לפרויקטי web, `verdict=GO` ‏של כלב ‏**‏לא מספיק** ‏ל-merge. ‏שכבה שנייה — ‏**‏אישור-עיניים אנושי**:
+
+1. ‏מרדכי מעלה **preview חי** (dev server מקומי / deployed URL) ‏של ה-slice.
+2. ‏מציג למשתמשת → ‏היא **‏רואה את זה עובד** ‏בעצמה.
+3. ‏אישור-עיניים מפורש → **‏רק אז** merge.
+
+> ‏כלב הוא סוכן שמריץ טסטים — ‏הוא ‏**‏לא העיניים של המשתמשת**. ‏שתי שכבות: ‏אימות-מכונה (‏כלב GO)
+> → ‏אימות-אדם-חי (preview). ‏זה מה שהופך את "merge רק באישור מפורש" ל**‏מושכל** — ‏האישור מבוסס
+> ‏על מה שהמשתמשת ‏**‏ראתה רץ**, ‏לא רק על verdict של סוכן. (‏non-web — CLI/lib — ‏נשען על כלב; ‏אין מה לראות.)
 
 ---
 
@@ -238,3 +292,6 @@ Symbols that the brief claims exist: <list>`
 - ❌ **לא לסמן plan-verified על USABLE-AFTER-FIX בלי תיקון** — plan-gate.
 - ❌ **לא למזג על PARTIAL/NO-GO בלי דחייה מתועדת+מאושרת** — runtime-gate.
 - ❌ **להחליט על finding מתוך כותרת ה-result בלבד** — פתח את הדוח. ה-result הוא אינדקס, לא תחליף.
+- ❌ **‏למזג בלי לארכב את ה-brief ‏ולנקות את ה-worktree ‏באותו ריטואל** — merge→push→archive→cleanup ‏אטומי. "‏אחר-כך" = ‏נשכח (‏הראיה: `docs/plans/` שהצטבר).
+- ❌ **‏למזג web-slice בלי preview חי שהמשתמשת ראתה בעצמה** — ‏גם אם כלב GO. ‏כלב ≠ ‏עיני-המשתמשת (live-preview gate).
+- ❌ **‏להתחיל ריצה בלי דף-החלטות** — ‏front-load את ה-scope + 7 התרחישים מראש, ‏אחרת עצירות חוזרות באמצע. ‏(‏פטור: micro-task בודד.)

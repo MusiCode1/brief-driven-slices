@@ -5,6 +5,44 @@
 
 ---
 
+## 2026-08-25 — שיגור לא-חוסם + סבב-הסגירה של ריצות 11–13
+
+**הנחיית המשתמש:** *"שלא יריצו אף פעם סוכנים במצב חוסם, כדי שהשרשור הראשי
+יישאר פנוי למשתמש לשאול שאלות."* הכלל נכנס כסעיף ב-`SKILL.md` והופץ לכל
+נקודת-שיגור.
+
+| קובץ | מה |
+|------|------|
+| `SKILL.md` | §שיגור לא-חוסם — הכלל, הנימוק, ומה מחליף את ההמתנה (ראיות-עץ) |
+| `agent-definitions/prompts/{mordechai,eliezer,yetro}.md` | `run_in_background: true` בכל בלוק `Task({...})` + כלל מפורש בראש "הפעלת הצוות" |
+| `autonomous-runs/prompts/kickoff-mordechai.md` | שורת-השיגור הופכה; אזהרה 1 **נמשכה** בגוף המסמך עם הראיה ששללה |
+| `autonomous-runs/skills/autorun/SKILL.md` §6 | אזהרה 1 הופכה |
+| `orchestration.md` · `SKILL.md` Mode 1 | `[חוסם]` → `[רקע]` + הבהרה ש"סינכרוני" = סדר, לא תור חסום |
+
+**תיקון-drift שנחשף תוך כדי:** `generate-cli-configs.py` כותב גם ל-`agents/`,
+ועריכות 23/08 (היפוך ה-plan-gate) נכתבו ישירות לשם ולא ל-`agent-definitions/prompts/`
+⇒ **כל הרצה של הגנרטור החזירה אותן לאחור.** התגלה בהרצה חיה. `prompts/` סונכרן
+מ-`agents/`, אומת round-trip (הגנרטור משחזר את `agents/` בית-בית), ואז הכלל החדש
+הוחל על `prompts/` והופץ לכל ה-adapters. נרשם כפריט 14 ב-`BACKLOG.md` — חסר **שער**
+שיתפוס drift כזה.
+
+**‏`~/.claude/agents/` עודכן ידנית** (frontmatter של claude-code + הצבת `{{BDS_*}}`),
+כי אין יעד `claude-code` בגנרטור — פריט 15 ב-BACKLOG.
+
+**סבב-הסגירה של הניסוי:**
+
+| קובץ | מה |
+|------|------|
+| `autonomous-runs/README.md` | סעיף-מצב מעודכן (נעצר בריצה 6) — 3 ריצות רצופות עם 0 צנרת; תנאי-היציאה **לא** התקיים כי 12 ו-13 נשאו כשל-מסירה אחד כל אחת; שורת `replay-quiet` היתומה הוחזרה לטבלה כ-`9*` |
+| `RUN_REPORT_TEMPLATE.md` | `plan_rounds` + `brief_to_dispatch` כשדות-חובה + §שעון ה-plan-gate — תנאי-הסגירה השלישי של באג #1, שאף דוח לא מדד |
+| `MISSION_TEMPLATE.md` §8ב | **פיקסצ'ר ≠ חוט** — תיקון-קבע 1 מריצה 13 |
+| `kickoff-mordechai.md` | אזהרה 5: משתני-סביבה גנריים דולפים בעץ-התהליכים — תיקון-קבע 2 מריצה 13 |
+
+**אימות:** 49/49 טסטים (`tests/test_path_substitution.py` 10, `tests/test_distill.py` 39),
+`git diff agents/` ריק אחרי round-trip של הגנרטור.
+
+---
+
 ## 2026-08-23 — ‏היפוך ה-plan-gate: ‏סבב אחד, ‏ההרצה זולה מהסבב (‏באג ‎#1)
 
 ‏בעקבות חקירת "‏כל משימה קטנה נמשכת שעות" (‏`docs/investigations/2026-08-23-slow-mechanism-diagnosis.md`):

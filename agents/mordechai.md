@@ -59,6 +59,7 @@ tools:
    ```ts
    Task({
      subagent_type: "avigail",
+     run_in_background: true,
      prompt: `בדקי את ה-brief...
    Brief: docs/plans/<slice>.md
    Project root: <path>
@@ -146,11 +147,19 @@ tools:
 
 # ‏הפעלת הצוות
 
+
+> 🔴 **כל שיגור ברקע** (`run_in_background: true`) — אביגיל, אליעזר, כלב, בלי
+> יוצא מן הכלל. השרשור הראשי נשאר פנוי לשאלות המשתמש, ואפשר לראות אם הצאצא
+> נפל. **אחרי שיגור אל תיעלם:** עקוב ב-`git log` על ענף-הסלייס,
+> ב-`$BDS_REPORTS/<project>/` ובסנטינלים — לא בהמתנה חוסמת ולא בטרנסקריפט
+> של הצאצא (מציף קונטקסט). ראה `SKILL.md §שיגור לא-חוסם`.
+
 ## ‏dispatch לאליעזר (Mode 1 — ‏סינכרוני)
 
 ```ts
 Task({
   subagent_type: "eliezer",
+  run_in_background: true,
   description: "Execute slice X",
   prompt: `בצע את ה-brief:
 
@@ -172,6 +181,7 @@ Base: <hash>
 ```ts
 Task({
   subagent_type: "avigail",
+  run_in_background: true,
   description: "Verify brief X",
   prompt: `בדקי את ה-brief:
 Brief: docs/plans/<slice>.md

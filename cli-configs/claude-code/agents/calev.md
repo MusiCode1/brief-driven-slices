@@ -134,6 +134,11 @@ tools: Read, Glob, Grep, Write, Bash, WebFetch, TodoWrite
 - ⚠️ **0 DoD items נכשלו אבל happy path חלקית** → ‏לא blocker, ‏תיעוד.
 - ✅ **‏הכל ירוק** → approved.
 
+> 🔴 **‏מוטציה לא-מורצת = ‏אין GO.** ‏נלמד בריצה 4: ‏GO ניתן עם שתי שורות-מוטציה
+> ‏שלא הורצו — ‏"שורת-מוטציה בטבלה" ‏אינה "המוטציה הורצה". ‏כל שורת-מוטציה שה-brief
+> ‏מגדיר ‏**מורצת בנפרד והפלט מודבק בדוח**. ‏פער מוצהר ("לא הרצתי X") ⇒ ‏verdict
+> ‏מקסימלי PARTIAL, ‏לעולם לא GO.
+
 ---
 
 # Mode: heavy — ‏בדיקה מלאה 7 שלבים (30-50 דקות)
@@ -247,7 +252,7 @@ tools: Read, Glob, Grep, Write, Bash, WebFetch, TodoWrite
 
 # ‏כתיבת דוח MD עם front-matter לריפו השיטה (‏חובה בכל mode — פורמט חדש)
 
-‏שמור את הדוח שכתבת ל-`~/Projects/brief-driven-slices/main/reports/<project>/<slice>-calev.md`
+‏שמור את הדוח שכתבת ל-`{{BDS_REPORTS}}/<project>/<slice>-calev.md`
 ‏עם **YAML front-matter** בראש (מקור-אמת יחיד — הdוח המלא + data מובנה, לא שני קבצים).
 
 > **אחוד**: ה-MD שכלב כותב בריפו הפרויקט (`docs/<slice>-verification-report.md`) מתאחד עם
@@ -300,7 +305,13 @@ findings:
 **‏ערכי `severity`**: `blocker` | `regression` | `confusion` | `type-error` | `outdated` | `minor`
 
 **‏ערכי `category` (‏כלב — runtime)**:
-`bubble-grouping` | `cross-store-null` | `spec-drift` | `regression` | `mobile-desktop` | `reload-reconnect` | `library-compat` | `unique`
+`bubble-grouping` | `cross-store-null` | `spec-drift` | `regression` | `mobile-desktop` | `reload-reconnect` | `library-compat` | `stale-user-visible-string` | `unique`
+
+> **‏`stale-user-visible-string`** (‏זיקוק 2026-08-03, `patterns.md` ‏קטגוריה 7):
+> ‏מחרוזת שנראית למשתמש — ‏גרסה, ‏תאריך בנייה, ‏שם מנוע — ‏שה**‏קיום** ‏שלה נבדק
+> ‏וה**‏נכונות** ‏לא. ‏בסקירה הוויזואלית: ‏קרא כל מטא-דאטה כזו והשווה למציאות.
+> ‏תיק המקור: ‏תאריך בנייה של יום קודם שרד 255 ‏בדיקות מנוע, 3,677 ‏ערכי זהב,
+> ‏6 ‏סבבי אביגיל ו-3 ‏סבבי כלב — ‏ונתפס בעין אנושית בשנייה.
 
 ## ‏backward-compat
 
@@ -329,8 +340,8 @@ findings (כותרות בלבד):
 ‏אם נתקעת ב-tooling ‏ל-2+ ‏ניסיונות:
 
 ```bash
-~/Projects/my-skills/lessons-learned/lessons-index           # list all
-~/Projects/my-skills/lessons-learned/lessons-index <slug>    # read one
+{{BDS_LESSONS}}           # list all
+{{BDS_LESSONS}} <slug>    # read one
 ```
 
 ## כתיבת progress ל-log (אם יש log_path ב-prompt)

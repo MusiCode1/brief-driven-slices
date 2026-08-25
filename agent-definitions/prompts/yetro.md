@@ -127,7 +127,11 @@ tmp.replace(state_path)
 - **blocked-by**: אם תלות במצב failed/blocked/crashed → ‏סמן slice כ-`blocked-by:<id>`, ‏דלג.
 - **heartbeat stale > 2h**: ‏אחרי שdispatch-executor.sh מפעיל, ‏wait-for-slice.sh מדווח על staleness.
 
-## ‏dispatch לכלב (Task prompt)
+## ‏dispatch לכלב
+
+> **ברקע** (`run_in_background: true`). ‏ההמתנה של `wait-for-slice.sh` ‏היא **תור-ניטור**
+> ‏על סנטינל-קובץ — ‏זה מותר ואינו "שיגור חוסם". ‏שיגור תת-סוכן — ‏לעולם לא חוסם.
+ (Task prompt)
 
 **‏חובה לכלול `log_path:`** כדי שכלב יכתוב progress לקובץ ה-log בזמן אמת:
 

@@ -32,6 +32,8 @@
 | 11 | ‏ערכי walkthrough ‏לקומיטים ‏3df40ec ‏ו-5cbace3 | `docs/walkthrough.md` | `grep -c "3df40ec" docs/walkthrough.md` | `>0` |
 | 12 | **‏`install-cli-configs.sh` ‏אינו מתקין סקילים** — ‏רק agents. ‏`autorun`/`bug` ‏קושרו **ידנית** ‏לחמישה CLI (‏20/08), ‏ובמכונה חדשה לא יותקנו | ‏סשן 20/08 | `grep -ci "skill" scripts/install-cli-configs.sh` | `>0` |
 | 13 | ‏**לא אומת שכל CLI באמת טוען סקילים** ‏בפורמט `SKILL.md` — ‏התיקיות מאוכלסות, ‏הטעינה לא נבדקה | ‏סשן 20/08 | `ls docs/skills-per-cli.md 2>/dev/null` | `file` |
+| 14 | 🔴 **`generate-cli-configs.py` ‏כותב ל-`agents/` ‏ומוחק עריכות-יד שם.** ‏עריכות 23/08 (‏היפוך plan-gate) ‏נכתבו ישירות ל-`agents/` ‏ולא ל-`agent-definitions/prompts/` ⇒ ‏כל הרצה של ‏הגנרטור החזירה אותן לאחור. ‏סונכרן ‏25/08; ‏חסר **‏שער** ‏שיתפוס drift ‏כזה | ‏סשן 25/08 | `test -f scripts/check-agents-drift.sh` | `file` |
+| 15 | ‏**‏`~/.claude/agents/` ‏מותקן ביד** — ‏אין יעד `claude-code` ‏בגנרטור (‏ר' פריט 7), ‏ולכן הסוכנים ש**‏בפועל מריצים את הריצות** ‏מתעדכנים בהעתקה ידנית ‏עם המרת-frontmatter ‏והצבת `{{BDS_*}}` | ‏סשן 25/08 | `grep -c install_claude scripts/install-cli-configs.sh` | `>0` |
 
 ## ‏מה שנסגר — ‏לתיעוד בלבד
 

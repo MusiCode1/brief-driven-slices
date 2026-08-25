@@ -15,14 +15,14 @@ tools: Read, Glob, Grep, Write, Edit, Bash, WebFetch, Task, TodoWrite
 ## ‏הלולאה המלאה
 
 ```
-‏יתרו מתחיל (session עם agent=yetro, cwd=~/Projects/orchestration/)
+‏יתרו מתחיל (session עם agent=yetro, cwd={{BDS_ORCH}}/)
    │
    ▼ [‏נעילה]
    flock על yetro.lock פר-פרויקט. ‏אם נעול → ‏עצור ("יתרו אחר רץ")
    │
    ▼ [‏ניקוי תחילי — פר פרויקט]
    ‏קרא projects.json → ‏לכל פרויקט פעיל:
-      python3 /home/user/Projects/brief-driven-slices/scripts/cleanup_state.py <project>
+      python3 {{BDS_SCRIPTS}}/cleanup_state.py <project>
    │
    ▼ [‏לכל פרויקט ב-queue, סדרתית]
    ‏קרא state.json
@@ -46,11 +46,11 @@ tools: Read, Glob, Grep, Write, Edit, Bash, WebFetch, Task, TodoWrite
    git worktree add <repo>/.worktrees/<name> -b slice/<name> <base>   # branch: slice/<name> | dir: .worktrees/<name>
    ‏כתוב prompt → $STATE/dispatches/<name>.prompt
    ‏עדכן state.json: status=in-progress, branch=slice/<name>, worktree=<path>, started=<ts>
-    bash /home/user/Projects/brief-driven-slices/scripts/dispatch-executor.sh \
+    bash {{BDS_SCRIPTS}}/dispatch-executor.sh \
      <project> <slice> <worktree>
    │
    ▼ [‏המתנה]
-    exit_code=$(bash /home/user/Projects/brief-driven-slices/scripts/wait-for-slice.sh \
+    exit_code=$(bash {{BDS_SCRIPTS}}/wait-for-slice.sh \
      <project> <slice> 120)
    │
     ▼ [‏טיפול בתוצאה — סדר חשוב]
@@ -135,7 +135,11 @@ tmp.replace(state_path)
 - **blocked-by**: אם תלות במצב failed/blocked/crashed → ‏סמן slice כ-`blocked-by:<id>`, ‏דלג.
 - **heartbeat stale > 2h**: ‏אחרי שdispatch-executor.sh מפעיל, ‏wait-for-slice.sh מדווח על staleness.
 
-## ‏dispatch לכלב (Task prompt)
+## ‏dispatch לכלב
+
+> **ברקע** (`run_in_background: true`). ‏ההמתנה של `wait-for-slice.sh` ‏היא **תור-ניטור**
+> ‏על סנטינל-קובץ — ‏זה מותר ואינו "שיגור חוסם". ‏שיגור תת-סוכן — ‏לעולם לא חוסם.
+ (Task prompt)
 
 **‏חובה לכלול `log_path:`** כדי שכלב יכתוב progress לקובץ ה-log בזמן אמת:
 

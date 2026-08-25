@@ -27,7 +27,7 @@ tools:
 
 ## Mode 1 — ‏סינכרוני (‏Task מ-מרדכי)
 
-‏כשמרדכי קורא לך דרך `Task(subagent_type="eliezer")`, ‏אתה מחזיר תשובה ל-Task. ‏במקרה של BLOCKED — ‏החזר STATUS: BLOCKED ‏(ראה פורמט למטה).
+‏כשמרדכי קורא לך דרך `Task(subagent_type="eliezer", run_in_background=true)`, ‏אתה מחזיר תשובה ל-Task. ‏במקרה של BLOCKED — ‏החזר STATUS: BLOCKED ‏(ראה פורמט למטה).
 
 ## Mode 2 — ‏אסינכרוני (‏יתרו ב-tmux)
 
@@ -149,7 +149,7 @@ pnpm build --force        # ‏או tsc --build --force ל-core/types
 
 ## ‏Sub-agent delegation
 
-‏אם אתה אליעזר ‏וקיבלת "‏בצע docs/plans/X" — ‏אתה ה-executor. ‏אל תקרא ל-`Task(subagent_type="eliezer")`.
+‏אם אתה אליעזר ‏וקיבלת "‏בצע docs/plans/X" — ‏אתה ה-executor. ‏אל תקרא ל-`Task(subagent_type="eliezer", run_in_background=true)`.
 
 # DoD לפני commit
 
@@ -185,7 +185,7 @@ pnpm build --force        # ‏או tsc --build --force ל-core/types
 
 > 🔴 **‏המבצע לא משגר את המאמת של עצמו.** ‏נלמד בריצה 5: ‏מבצע שמזמן את
 > ‏המאמת שלו אינו שער עצמאי — ‏"המאמת אינו מוגן מפני מי שיש לו אינטרס בתוצאה".
-> ‏אין `Task(subagent_type="calev")` ‏מתוך אליעזר, ‏בשום מצב.
+> ‏אין `Task(subagent_type="calev", run_in_background=true)` ‏מתוך אליעזר, ‏בשום מצב.
 
 ## ‏מה לעשות עם דוח ה-calev
 
@@ -269,9 +269,12 @@ NEED: <decision? new spec? skip?>
 - [ ] **‏הרץ verifier-slice** — ‏חובה, ‏גם אם הרצת phase verifier על כל phase:
   - tier `light` (default) → `Task(subagent_type="calev", prompt="... mode: light")`
   - tier `heavy` (complexity 8+) → `Task(subagent_type="calev-heavy", prompt="...")` ‏(Opus; ‏אין צורך ב-`mode:` — ‏זה סוכן ה-heavy)
+> **שיגור כלב — ברקע** (`run_in_background: true`). לא חוסמים את השרשור.
+
 ```ts
 Task({
   subagent_type: "calev",        // ‏או "calev-heavy" אם ה-brief מציין heavy
+  run_in_background: true,
   prompt: `Slice <slice> ‏הושלם. ... mode: light  # ‏ל-light בלבד; calev-heavy לא צריך mode`
 })
 ```
@@ -308,6 +311,7 @@ Task({
 ```ts
 Task({
   subagent_type: "calev",        // ‏ל-heavy: "calev-heavy"
+  run_in_background: true,
   description: "Final verification of <slice>",
   prompt: `Slice <slice> ‏הושלם. ‏אליעזר סיים את כל ה-phases וcommit.
 
