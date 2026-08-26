@@ -97,11 +97,17 @@
 > ‏טאב חדש נפל ל-WS ‏— ‏**‏והבדיקה לא בדקה את הסלייс כלל.**
 
 ```bash
-ssh -i ~/.ssh/pico -o ExitOnForwardFailure=yes -o ServerAliveInterval=15 \
+AUTOSSH_GATETIME=0 autossh -M 0 -i ~/.ssh/pico \
+    -o ExitOnForwardFailure=yes -o ServerAliveInterval=15 -o ServerAliveCountMax=3 \
     -R <שם>:80:localhost:<פורט> tuns.sh http
 # ⇒ https://musicode-<שם>.nue.tuns.sh/
 curl -s -o /dev/null -w "%{http_code}\n" https://musicode-<שם>.nue.tuns.sh/   # ← ‏חובה
 ```
+
+🔴 **‏`autossh`, ‏לא `ssh`.** ‏`ServerAliveInterval` ‏**‏מזהה** ‏ניתוק ‏ומאיץ את
+**‏היציאה**; ‏הוא אינו מחבר מחדש. ‏**‏נמדד 26/08**: ‏שלוש מנהרות `ssh` ‏מתו כולן
+‏בבת-אחת אחרי ~10 ‏שעות, ‏בעוד שלושת שרתי-היעד חיים עם אותם PIDs. ‏המשתמש חזר
+‏לפריוויו שאישרתי לו ‏וראה 404. **‏פריוויו של ריצה שרד לילה = ‏דרישה, ‏לא בונוס.**
 
 - **‏לאמת מבחוץ ב-`curl`**, ‏לא ב-`ss`/`ps`. ‏מנהרה מתה משאירה תהליך חי.
 - **‏לצרף `?sessionTransport=http`** ‏לכל כתובת שנמסרת — ‏ה-`sessionStorage` ‏ריק
