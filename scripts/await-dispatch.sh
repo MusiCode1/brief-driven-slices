@@ -19,7 +19,7 @@
 set -uo pipefail
 
 NAME="${1:?usage: await-dispatch <name> --repo P --branch B --base R --expect-commits N}"; shift
-REPO="" BRANCH="" BASE="" EXPECT="" TIMEOUT=570
+REPO="" BRANCH="" BASE="" EXPECT="" TIMEOUT=570 WORKTREE=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --repo) REPO="$2"; shift 2 ;;
@@ -27,12 +27,16 @@ while [ $# -gt 0 ]; do
     --base) BASE="$2"; shift 2 ;;
     --expect-commits) EXPECT="$2"; shift 2 ;;
     --timeout) TIMEOUT="$2"; shift 2 ;;
+    --worktree) WORKTREE="$2"; shift 2 ;;
     *) echo "await-dispatch: unknown arg $1" >&2; exit 4 ;;
   esac
 done
 [ -n "$REPO" ] && [ -n "$BRANCH" ] && [ -n "$BASE" ] && [ -n "$EXPECT" ] || {
   echo "await-dispatch: --repo/--branch/--base/--expect-commits ‏חובה" >&2; exit 4; }
 
+# ‏🔴 ‏העץ שנבדק הוא זה שהמבצע עובד בו. ‏בלי --worktree ‏הבדיקה ריקה כשהוא ב-worktree
+# ‏(‏נתפס ע"י grok ‏בריצה 20 — ‏הפגם היה בגרסה הראשונה של הסקריפט).
+TREE="${WORKTREE:-$REPO}"
 DIR="${AGENT_DISPATCH_DIR:-/tmp/agent-dispatch}"
 DONE="$DIR/$NAME.done"
 LOG="$DIR/$NAME.log"
@@ -41,8 +45,8 @@ START=$(date +%s)
 artifact_report() {
   local n dirty
   n="$(git -C "$REPO" rev-list --count "$BASE..$BRANCH" 2>/dev/null || echo ERR)"
-  dirty="$(git -C "$REPO" status --short 2>/dev/null | head -20)"
-  echo "commits: $n (‏מצופה $EXPECT)"
+  dirty="$(git -C "$TREE" status --short 2>/dev/null | head -20)"
+  echo "commits: $n (‏מצופה $EXPECT) · ‏עץ שנבדק: $TREE"
   git -C "$REPO" log --oneline "$BASE..$BRANCH" 2>/dev/null | head -10
   if [ -n "$dirty" ]; then echo "tree: ‏מלוכלך"; echo "$dirty"; else echo "tree: ‏נקי"; fi
   [ "$n" = "$EXPECT" ] && [ -z "$dirty" ]
