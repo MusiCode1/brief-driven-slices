@@ -8,10 +8,14 @@
 //   ⇒ ‏פותחים · ‏**‏קוראים מה יש** · ‏מגדירים מהרשימה · ‏ואז שולחים.
 //
 //   open  --cli cursor --cwd <dir> [--env K=V] [--permission allow_once] [--json]
+//         [--parent <agentId>]  → ‏מזריק DC_PARENT+DC_BASE ‏לסביבת הילד
 //         → ‏מדפיס agentId · sessionId · ‏קישור · modes · configOptions (‏מודלים!)
 //
+//   notify --agent <id> (--text <s> | --text-file <f>)
+//         → ‏דוחף prompt ‏לסשן חי של סוכן אחר. ‏זו דרך הילד לדווח להורה.
+//
 //   close --agent <id> [--force]
-//         → ‏מוחק את הסוכן. ‏מסרב אם `busy` (‏turn ‏רץ) ‏אלא אם `--force`.
+//         → ‏מוחק את הסוכן. ‏מסרב אם `turnState != idle` ‏אלא אם `--force`.
 //
 //   send  --agent <id> --prompt-file <f> [--set model=<‏ערך מהרשימה>]...
 //         [--file <‏דוח>] [--marker <s>] [--timeout 1800] [--idle-timeout 300]
@@ -44,6 +48,8 @@ if (cmd === "open") {
   const cli = get("--cli"), cwd = get("--cwd")
   if (!cli || !cwd) die("open: --cli ‏ו---cwd ‏חובה")
   const env = Object.fromEntries(multi("--env").map((e) => { const i = e.indexOf("="); return [e.slice(0, i), e.slice(i + 1)] }))
+  // ‏כתובת-החזרה: ‏בלי `DC_PARENT` ‏בסביבה, ‏הילד אינו יודע למי לדווח.
+  if (get("--parent")) { env.DC_PARENT = get("--parent"); env.DC_BASE = BASE }
   const created = await post(`${BASE}/api/agents`, { cliKind: cli, cwd,
     ...(Object.keys(env).length ? { env } : {}),
     ...(get("--permission") ? { permissionPolicy: get("--permission") } : {}) })
@@ -71,22 +77,45 @@ if (cmd === "open") {
   process.exit(0)
 }
 
+// ─── notify ──────────────────────────────────────────────────────────────────
+// ‏הודעה מסוכן לסוכן: ‏דחיפת prompt ‏לסשן **‏חי** ‏של סוכן אחר. fire-and-forget.
+// ‏נמדד 27/08 ‏על cursor: ‏ההודעה נקלטת **‏באמצע turn ‏רץ** (‏הסוכן ספר ל-60,
+// ‏נעצר ב-57 ‏והשיב) — ‏בלי end_turn ‏ביניים. ‏זו דחיפה, ‏לא תור-לסוף.
+// ⚠️ ‏פר-ספק: ‏claude ‏דוחף ל-turnQueue ‏מיָדית, ‏pi ‏ממתין לסוף-turn.
+if (cmd === "notify") {
+  const agent = get("--agent"), text = get("--text") ?? (get("--text-file") && readFileSync(get("--text-file"), "utf8"))
+  if (!agent || !text) die("notify: --agent ‏ו-(--text | --text-file) ‏חובה")
+  const st = await j(`${BASE}/api/agents/${agent}/state`)
+  if (!st.sessionId) die(`notify: ‏לסוכן ${agent} ‏אין sessionId ‏חי`)
+  const r = await post(`${BASE}/api/agents/${agent}/rpc`,
+    { method: "session/prompt", params: { sessionId: st.sessionId, content: text } })
+  console.log(`‏✅ ‏נמסר · version=${r.version} · ${agent}`)
+  process.exit(0)
+}
+
 // ─── close ───────────────────────────────────────────────────────────────────
 // ‏חובת-הסוגר: ‏כל סוכן שנפתח כאן נסגר כאן. ‏ר' `agents/mordechai.md §‏סגירת-סשן`.
 if (cmd === "close") {
   const agent = get("--agent")
   if (!agent) die("close: --agent ‏חובה")
-  let busy = null, cwd = null
+  let cwd = null
   try {
     const { agents = [] } = await j(`${BASE}/api/agents`)
     const a = agents.find((x) => x.id === agent)
     if (!a) { console.log(`‏אינו ברשימה — ‏כבר סגור: ${agent}`); process.exit(0) }
-    busy = a.busy; cwd = a.cwd
+    cwd = a.cwd
   } catch (e) { console.error(`‏⚠️ ‏לא הצלחתי לקרוא את הרשימה: ${e.message}`) }
-  if (busy && !has("--force")) {
-    console.error(`‏🔴 ‏הסוכן **‏עסוק** (turn ‏רץ) — ‏לא נסגר. ‏המתן לסיום, ‏או --force.`)
+
+  // 🔴 ‏האות הוא `turnState` ‏מ-/state, **‏לא** `busy` ‏מהרשימה.
+  // ‏נמדד 27/08: `busy` ‏הוא debounce-‏שקט של 1.5ש' (`turn-tracker.ts`) — ‏סוכן
+  // ‏שחושב או מריץ כלי שקט יותר משנייה וחצי מדווח `busy:false` ‏באמצע turn.
+  let turnState = null
+  try { turnState = (await j(`${BASE}/api/agents/${agent}/state`)).turnState } catch {}
+  if (turnState && turnState !== "idle" && !has("--force")) {
+    console.error(`‏🔴 ‏turnState=${turnState} — ‏ה-turn **‏פתוח**. ‏לא נסגר. ‏המתן לסיום, ‏או --force.`)
     process.exit(3)
   }
+  if (turnState === null) console.error(`‏⚠️ ‏אין /state (‏host ‏לא עלה?) — ‏סוגר בלי בדיקת-turn.`)
   const r = await fetch(`${BASE}/api/agents/${agent}`, { method: "DELETE" })
   console.log(`${r.ok ? "‏✅" : "‏🔴"} DELETE ${r.status} · ${agent}${cwd ? ` · ${cwd}` : ""}`)
   process.exit(r.ok ? 0 : 3)
@@ -128,4 +157,4 @@ if (cmd === "send") {
   process.exit(r.code)
 }
 
-die("‏שימוש: dispatch-via-api.mjs open|send|close …")
+die("‏שימוש: dispatch-via-api.mjs open|send|notify|close …")
