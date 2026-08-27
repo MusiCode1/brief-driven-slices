@@ -10,12 +10,17 @@
 //   open  --cli cursor --cwd <dir> [--env K=V] [--permission allow_once] [--json]
 //         → ‏מדפיס agentId · sessionId · ‏קישור · modes · configOptions (‏מודלים!)
 //
+//   close --agent <id> [--force]
+//         → ‏מוחק את הסוכן. ‏מסרב אם `busy` (‏turn ‏רץ) ‏אלא אם `--force`.
+//
 //   send  --agent <id> --prompt-file <f> [--set model=<‏ערך מהרשימה>]...
 //         [--file <‏דוח>] [--marker <s>] [--timeout 1800] [--idle-timeout 300]
 //         [--no-wait] [--keep]
 //
 // ‏קודי-יציאה של send: ‏0 ‏סיום · 2 ‏פג-זמן כולל · 3 ‏הזרם נסגר · 5 ‏שקט (‏תקוע) · 4 ‏שימוש
-// 🔴 ‏סגירת-הסוכן **‏רק בקוד 0**. ‏בכל השאר הוא נשאר חי — ‏אחרת מוחקים את הראיה.
+// 🔴 ‏סגירת-הסוכן האוטומטית היא **‏רק בקוד 0**. ‏בכל השאר הוא נשאר חי — ‏אחרת מוחקים
+//   ‏את הראיה. ‏אבל "‏נשאר חי" ‏אינו "‏נשאר לנצח": ‏מי ששיגר **‏חייב** ‏להריץ `close`
+//   ‏אחרי שאסף את הראיה. ‏נמדד 27/08: ‏שני סוכנים יתומים על :4050 ‏בסוף היום.
 import { readFileSync } from "node:fs"
 import { waitForTurnEnd } from "./lib/session-stream.mjs"
 
@@ -66,6 +71,27 @@ if (cmd === "open") {
   process.exit(0)
 }
 
+// ─── close ───────────────────────────────────────────────────────────────────
+// ‏חובת-הסוגר: ‏כל סוכן שנפתח כאן נסגר כאן. ‏ר' `agents/mordechai.md §‏סגירת-סשן`.
+if (cmd === "close") {
+  const agent = get("--agent")
+  if (!agent) die("close: --agent ‏חובה")
+  let busy = null, cwd = null
+  try {
+    const { agents = [] } = await j(`${BASE}/api/agents`)
+    const a = agents.find((x) => x.id === agent)
+    if (!a) { console.log(`‏אינו ברשימה — ‏כבר סגור: ${agent}`); process.exit(0) }
+    busy = a.busy; cwd = a.cwd
+  } catch (e) { console.error(`‏⚠️ ‏לא הצלחתי לקרוא את הרשימה: ${e.message}`) }
+  if (busy && !has("--force")) {
+    console.error(`‏🔴 ‏הסוכן **‏עסוק** (turn ‏רץ) — ‏לא נסגר. ‏המתן לסיום, ‏או --force.`)
+    process.exit(3)
+  }
+  const r = await fetch(`${BASE}/api/agents/${agent}`, { method: "DELETE" })
+  console.log(`${r.ok ? "‏✅" : "‏🔴"} DELETE ${r.status} · ${agent}${cwd ? ` · ${cwd}` : ""}`)
+  process.exit(r.ok ? 0 : 3)
+}
+
 // ─── send ────────────────────────────────────────────────────────────────────
 if (cmd === "send") {
   const agent = get("--agent"), pf = get("--prompt-file")
@@ -96,8 +122,10 @@ if (cmd === "send") {
   console.log(`${icon} ${r.why}${r.stopReason ? ` · stopReason=${r.stopReason}` : ""} · ‏פריימים=${r.frames} · ‏מצב=${r.lastState}`)
   if (r.code === 0 && !has("--keep")) {
     await fetch(`${BASE}/api/agents/${agent}`, { method: "DELETE" }); console.log("‏הסוכן נסגר.")
-  } else if (r.code !== 0) console.log(`‏הסוכן **‏נשאר חי** ‏לבדיקה.`)
+  } else if (r.code !== 0) console.log(
+    `‏הסוכן **‏נשאר חי** ‏לבדיקה — ‏אחרי שאספת את הראיה, ‏סגור:\n`
+    + `  scripts/dispatch-via-api.mjs close --base ${BASE} --agent ${agent}`)
   process.exit(r.code)
 }
 
-die("‏שימוש: dispatch-via-api.mjs open|send …")
+die("‏שימוש: dispatch-via-api.mjs open|send|close …")
