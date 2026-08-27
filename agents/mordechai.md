@@ -176,6 +176,27 @@ tools:
 > ‏מתוך שלושה ועץ מלוכלך. ‏הסקריפט מכריע לפי **‏ארטיפקט** (`git log`/`status`),
 > ‏ולכן הוא מחזיר `3` ‏בדיוק במצב הזה. ‏**‏אל תסיק סיום מקוד-היציאה של `acpx`.**
 
+> ## ‏שני מסלולי-שיגור — ‏בחר במודע
+>
+> | | `dispatch-agent` (tmux) | `dispatch-via-api.mjs` |
+> |---|---|---|
+> | ‏תעבורה | acpx ‏ב-tmux | ‏ה-API ‏של drive-coding |
+> | ‏נראוּת | ‏חלון tmux ‏על המכונה | ‏**‏ברשימת-הסוכנים, ‏עם URL, ‏מכל מכשיר** |
+> | ‏אות-סיום | ‏סנטינל `.done` (‏**‏משקר** — ‏ר' פער 2) | ‏`state_update`+`stopReason` ‏בזרם |
+> | ‏סגירה | ‏ידנית | ‏אוטומטית **‏בהצלחה בלבד** |
+> | ‏דורש | ‏— | ‏BE ‏חי עם `env`+`permissionPolicy` (‏סלייс 59) |
+>
+> ```bash
+> scripts/dispatch-via-api.mjs --base http://127.0.0.1:4050 \
+>   --cli cursor --model composer-2.5 --cwd <worktree> --prompt-file <file> \
+>   --env BDS_SLICE=<‏סלייס> --permission allow_once \
+>   --public-url https://musicode-dc-edge.nue.tuns.sh --file <‏דוח> --timeout 1800
+> ```
+>
+> ‏מדפיס **‏קישור לצפייה** ‏מיד אחרי היצירה, ‏ממתין, ‏וסוגר את הסוכן **‏רק אם הצליח**.
+> ‏בכישלון הסוכן **‏נשאר חי** ‏והקישור מודפס — ‏כדי לא למחוק את הראיה.
+> ‏אימות חי 27/08: ‏`exit 0` · `stopReason=end_turn` · ‏9 ‏פריימים.
+
 ## ‏dispatch לאליעזר (Mode 1 — ‏סינכרוני)
 
 ```ts
