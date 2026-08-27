@@ -19,7 +19,7 @@
 set -uo pipefail
 
 NAME="${1:?usage: await-dispatch <name> --repo P --branch B --base R --expect-commits N}"; shift
-REPO="" BRANCH="" BASE="" EXPECT="" TIMEOUT=570 WORKTREE=""
+REPO="" BRANCH="" BASE="" EXPECT="" TIMEOUT=60 WORKTREE=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --repo) REPO="$2"; shift 2 ;;
