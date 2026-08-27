@@ -1,79 +1,103 @@
 #!/usr/bin/env node
-// dispatch-via-api — ‏שיגור סוכן דרך ה-API ‏של drive-coding, ‏מקצה-לקצה.
+// dispatch-via-api — ‏שיגור סוכן דרך ה-API ‏של drive-coding, ‏בשני שלבים.
 //
-// ‏המקבילה של `dispatch-agent`, ‏בלי tmux ‏ובלי acpx. ‏מה שהיא נותנת ו-tmux ‏לא:
-// ‏הסוכן **‏מופיע ברשימה**, ‏יש לו **‏URL**, ‏ואפשר **‏לצפות בו רץ מכל מכשיר**.
+// ‏למה שני שלבים ולא אחד (‏הכרעת-משתמש 27/08):
+//   ‏רשימת-המודלים וההגדרות **‏נודעת רק אחרי שהסשן עלה**. ‏מי ששולח `modelOverride`
+//   ‏ביצירה מנחש — ‏ו**‏ניחוש שגוי נבלע בשקט**: ‏נמדד 27/08 ‏ש-`modelOverride:"composer-2.5"`
+//   ‏לא נתפס, ‏והסשן רץ על `grok-4.6[effort=high,fast=true]` ‏בלי שאיש ידע.
+//   ⇒ ‏פותחים · ‏**‏קוראים מה יש** · ‏מגדירים מהרשימה · ‏ואז שולחים.
 //
-//   dispatch-via-api.mjs --base http://127.0.0.1:4050 \
-//     --cli cursor --model composer-2.5 --cwd <dir> --prompt-file <file> \
-//     [--env K=V]... [--permission allow_once] [--public-url https://…] \
-//     [--file <‏דוח-שמסמן-סיום>] [--timeout 1800] [--no-wait] [--keep]
+//   open  --cli cursor --cwd <dir> [--env K=V] [--permission allow_once] [--json]
+//         → ‏מדפיס agentId · sessionId · ‏קישור · modes · configOptions (‏מודלים!)
 //
-// ‏מחזור-החיים: create → ‏טריגר-host → prompt → ‏המתנה → **‏סגירה**.
-// 🔴 ‏סגירה **‏רק בהצלחה**. ‏בכישלון/‏פג-זמן הסוכן **‏נשאר חי** ‏— ‏אחרת מוחקים את
-// ‏הראיה בדיוק כשצריך אותה. `--keep` ‏משאיר תמיד.
+//   send  --agent <id> --prompt-file <f> [--set model=<‏ערך מהרשימה>]...
+//         [--file <‏דוח>] [--marker <s>] [--timeout 1800] [--idle-timeout 300]
+//         [--no-wait] [--keep]
+//
+// ‏קודי-יציאה של send: ‏0 ‏סיום · 2 ‏פג-זמן כולל · 3 ‏הזרם נסגר · 5 ‏שקט (‏תקוע) · 4 ‏שימוש
+// 🔴 ‏סגירת-הסוכן **‏רק בקוד 0**. ‏בכל השאר הוא נשאר חי — ‏אחרת מוחקים את הראיה.
 import { readFileSync } from "node:fs"
 import { waitForTurnEnd } from "./lib/session-stream.mjs"
 
-const a = process.argv.slice(2)
-const get = (k, d) => { const i = a.indexOf(k); return i >= 0 ? a[i + 1] : d }
-const has = (k) => a.includes(k)
-const envs = a.reduce((acc, v, i) => (a[i - 1] === "--env" ? [...acc, v] : acc), [])
-
+const [cmd, ...rest] = process.argv.slice(2)
+const get = (k, d) => { const i = rest.indexOf(k); return i >= 0 ? rest[i + 1] : d }
+const has = (k) => rest.includes(k)
+const multi = (k) => rest.reduce((acc, v, i) => (rest[i - 1] === k ? [...acc, v] : acc), [])
 const BASE = get("--base", "http://127.0.0.1:4050")
-const CLI = get("--cli"), CWD = get("--cwd"), PF = get("--prompt-file")
-if (!CLI || !CWD || !PF) { console.error("dispatch-via-api: --cli ‏--cwd ‏--prompt-file ‏חובה"); process.exit(4) }
-const PUBLIC = (get("--public-url", BASE)).replace(/\/$/, "")
-const TIMEOUT = Number(get("--timeout", "1800")) * 1000
+const PUBLIC = get("--public-url", BASE).replace(/\/$/, "")
 
 const j = async (url, init) => {
-  const r = await fetch(url, init)
-  const t = await r.text()
+  const r = await fetch(url, init); const t = await r.text()
   if (!r.ok) throw new Error(`HTTP ${r.status} ${url} :: ${t.slice(0, 200)}`)
   return t ? JSON.parse(t) : {}
 }
 const post = (u, b) => j(u, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(b) })
+const die = (m) => { console.error(m); process.exit(4) }
 
-// 1 · ‏יצירה
-const env = Object.fromEntries(envs.map((e) => { const i = e.indexOf("="); return [e.slice(0, i), e.slice(i + 1)] }))
-const body = { cliKind: CLI, cwd: CWD, ...(get("--model") ? { modelOverride: get("--model") } : {}),
-  ...(Object.keys(env).length ? { env } : {}),
-  ...(get("--permission") ? { permissionPolicy: get("--permission") } : {}) }
-const created = await post(`${BASE}/api/agents`, body)
-const agent = created.agentId
-console.log(`‏סוכן: ${agent}  (${CLI}${get("--model") ? "/" + get("--model") : ""})`)
+// ─── open ────────────────────────────────────────────────────────────────────
+if (cmd === "open") {
+  const cli = get("--cli"), cwd = get("--cwd")
+  if (!cli || !cwd) die("open: --cli ‏ו---cwd ‏חובה")
+  const env = Object.fromEntries(multi("--env").map((e) => { const i = e.indexOf("="); return [e.slice(0, i), e.slice(i + 1)] }))
+  const created = await post(`${BASE}/api/agents`, { cliKind: cli, cwd,
+    ...(Object.keys(env).length ? { env } : {}),
+    ...(get("--permission") ? { permissionPolicy: get("--permission") } : {}) })
+  const agent = created.agentId
 
-// 2 · ‏טריגר ל-host ‏העצל. ⚠️ ‏בלעדיו /state ‏מחזיר 404 ‏— ‏נמדד, ‏והפיל מבצע שלם.
-const ctrl = new AbortController()
-setTimeout(() => ctrl.abort(), 15_000)
-try { const r = await fetch(`${BASE}/api/agents/${agent}/events`, { signal: ctrl.signal }); await r.body?.cancel() } catch {}
+  // ⚠️ ‏טריגר ל-host ‏העצל. ‏בלעדיו /state ‏מחזיר 404 — ‏נמדד, ‏והפיל מבצע שלם.
+  const c = new AbortController(); setTimeout(() => c.abort(), 15_000)
+  try { const r = await fetch(`${BASE}/api/agents/${agent}/events`, { signal: c.signal }); await r.body?.cancel() } catch {}
 
-let sid = null
-for (let i = 0; i < 20 && !sid; i++) {
-  try { sid = (await j(`${BASE}/api/agents/${agent}/state`)).sessionId } catch {}
-  if (!sid) await new Promise((r) => setTimeout(r, 1500))
+  let st = null
+  for (let i = 0; i < 20 && !st?.sessionId; i++) {
+    try { st = await j(`${BASE}/api/agents/${agent}/state`) } catch {}
+    if (!st?.sessionId) await new Promise((r) => setTimeout(r, 1500))
+  }
+  if (!st?.sessionId) { console.error("‏🔴 ‏הסשן לא עלה תוך 30ש'"); process.exit(3) }
+
+  const url = `${PUBLIC}/chat/${cli}/${st.sessionId}?sessionTransport=http`
+  if (has("--json")) { console.log(JSON.stringify({ agent, sessionId: st.sessionId, url, modes: st.modes, configOptions: st.configOptions }, null, 2)); process.exit(0) }
+  console.log(`‏סוכן:    ${agent}\n‏סשן:     ${st.sessionId}\n‏קישור:   ${url}\n`)
+  console.log(`modes: ${st.modes ? JSON.stringify(st.modes.availableModes?.map((m) => m.id) ?? st.modes) : "null"}`)
+  for (const co of st.configOptions ?? []) {
+    console.log(`\n## ${co.id} — ${co.name} · ‏נוכחי = ${co.currentValue}`)
+    for (const o of co.options ?? []) console.log(`   ${o.value}`)
+  }
+  process.exit(0)
 }
-if (!sid) { console.error("‏🔴 ‏הסשן לא עלה — ‏אין sessionId ‏אחרי 30ש'"); process.exit(3) }
 
-const url = `${PUBLIC}/chat/${CLI}/${sid}?sessionTransport=http`
-console.log(`‏קישור: ${url}`)
+// ─── send ────────────────────────────────────────────────────────────────────
+if (cmd === "send") {
+  const agent = get("--agent"), pf = get("--prompt-file")
+  if (!agent || !pf) die("send: --agent ‏ו---prompt-file ‏חובה")
+  const st0 = await j(`${BASE}/api/agents/${agent}/state`)
+  const sid = st0.sessionId
+  if (!sid) die("send: ‏אין sessionId ‏— ‏הרץ open ‏קודם")
 
-// 3 · ‏המשימה
-await post(`${BASE}/api/agents/${agent}/rpc`,
-  { method: "session/prompt", params: { sessionId: sid, content: readFileSync(PF, "utf8") } })
-console.log("‏המשימה נמסרה (202)")
-if (has("--no-wait")) process.exit(0)
+  // ‏הגדרות **‏לפני** ‏הפרומפט, ‏ועם אימות שנתפסו
+  for (const kv of multi("--set")) {
+    const i = kv.indexOf("="); const id = kv.slice(0, i), value = kv.slice(i + 1)
+    await post(`${BASE}/api/agents/${agent}/rpc`,
+      { method: "session/set_config_option", params: { configId: id, value }, waitMs: 15_000 })
+    const st = await j(`${BASE}/api/agents/${agent}/state`)
+    const now = (st.configOptions ?? []).find((c) => c.id === id)?.currentValue
+    console.log(`${now === value ? "‏✅" : "‏⚠️"} ${id} = ${now}${now === value ? "" : `  (‏ביקשתי ${value} — ‏**‏לא נתפס**)`}`)
+  }
 
-// 4 · ‏המתנה
-const r = await waitForTurnEnd({ base: BASE, agent, file: get("--file"), marker: get("--marker"), timeoutMs: TIMEOUT })
-console.log(`${r.code === 0 ? "‏✅" : r.code === 2 ? "‏⏳" : "‏🔴"} ${r.why}` +
-  `${r.stopReason ? ` · stopReason=${r.stopReason}` : ""} · ‏פריימים=${r.frames} · ‏מצב=${r.lastState}`)
+  await post(`${BASE}/api/agents/${agent}/rpc`,
+    { method: "session/prompt", params: { sessionId: sid, content: readFileSync(pf, "utf8") } })
+  console.log("‏המשימה נמסרה (202)")
+  if (has("--no-wait")) process.exit(0)
 
-// 5 · ‏סגירה — ‏רק בהצלחה
-if (r.code === 0 && !has("--keep")) {
-  await fetch(`${BASE}/api/agents/${agent}`, { method: "DELETE" })
-  console.log("‏הסוכן נסגר.")
-} else if (r.code !== 0) {
-  console.log(`‏הסוכן **‏נשאר חי** ‏לבדיקה: ${url}`)
+  const r = await waitForTurnEnd({ base: BASE, agent, file: get("--file"), marker: get("--marker"),
+    timeoutMs: Number(get("--timeout", "1800")) * 1000,
+    idleTimeoutMs: Number(get("--idle-timeout", "0")) * 1000 })
+  const icon = r.code === 0 ? "‏✅" : r.code === 2 ? "‏⏳" : "‏🔴"
+  console.log(`${icon} ${r.why}${r.stopReason ? ` · stopReason=${r.stopReason}` : ""} · ‏פריימים=${r.frames} · ‏מצב=${r.lastState}`)
+  if (r.code === 0 && !has("--keep")) {
+    await fetch(`${BASE}/api/agents/${agent}`, { method: "DELETE" }); console.log("‏הסוכן נסגר.")
+  } else if (r.code !== 0) console.log(`‏הסוכן **‏נשאר חי** ‏לבדיקה.`)
+  process.exit(r.code)
 }
-process.exit(r.code)
+
+die("‏שימוש: dispatch-via-api.mjs open|send …")

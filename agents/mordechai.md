@@ -182,20 +182,38 @@ tools:
 > |---|---|---|
 > | ‏תעבורה | acpx ‏ב-tmux | ‏ה-API ‏של drive-coding |
 > | ‏נראוּת | ‏חלון tmux ‏על המכונה | ‏**‏ברשימת-הסוכנים, ‏עם URL, ‏מכל מכשיר** |
-> | ‏אות-סיום | ‏סנטינל `.done` (‏**‏משקר** — ‏ר' פער 2) | ‏`state_update`+`stopReason` ‏בזרם |
+> | ‏אות-סיום | ‏סנטינל `.done` (‏**‏משקר** — ‏פער 2) | ‏`state_update`+`stopReason` ‏בזרם |
 > | ‏סגירה | ‏ידנית | ‏אוטומטית **‏בהצלחה בלבד** |
 > | ‏דורש | ‏— | ‏BE ‏חי עם `env`+`permissionPolicy` (‏סלייс 59) |
 >
+> ### ‏🔴 ‏שני שלבים, ‏לא אחד
+>
+> ‏רשימת-המודלים נודעת **‏רק אחרי שהסשן עלה**. ‏מי ששולח `modelOverride` ‏ביצירה מנחש —
+> ‏ו**‏ניחוש שגוי נבלע בשקט**: ‏נמדד 27/08 ‏ש-`modelOverride:"composer-2.5"` ‏לא נתפס,
+> ‏והסשן רץ על `grok-4.6[effort=high,fast=true]` ‏בלי שאיש ידע.
+>
 > ```bash
-> scripts/dispatch-via-api.mjs --base http://127.0.0.1:4050 \
->   --cli cursor --model composer-2.5 --cwd <worktree> --prompt-file <file> \
->   --env BDS_SLICE=<‏סלייס> --permission allow_once \
->   --public-url https://musicode-dc-edge.nue.tuns.sh --file <‏דוח> --timeout 1800
+> # ‏1 · ‏פתח וקרא מה יש (35 ‏מודלים ‏אצל cursor, ‏עם הפרמטרים)
+> scripts/dispatch-via-api.mjs open --base http://127.0.0.1:4050 \
+>   --cli cursor --cwd <worktree> --env BDS_SLICE=<‏סלייס> --permission allow_once \
+>   --public-url https://musicode-dc-edge.nue.tuns.sh [--json]
+>
+> # ‏2 · ‏הגדר **‏מתוך הרשימה**, ‏שלח, ‏המתן, ‏סגור
+> scripts/dispatch-via-api.mjs send --agent <id> --prompt-file <file> \
+>   --set "model=composer-2.5[fast=true]" --file <‏דוח> --timeout 1800 --idle-timeout 300
 > ```
 >
-> ‏מדפיס **‏קישור לצפייה** ‏מיד אחרי היצירה, ‏ממתין, ‏וסוגר את הסוכן **‏רק אם הצליח**.
-> ‏בכישלון הסוכן **‏נשאר חי** ‏והקישור מודפס — ‏כדי לא למחוק את הראיה.
-> ‏אימות חי 27/08: ‏`exit 0` · `stopReason=end_turn` · ‏9 ‏פריימים.
+> ‏אחרי כל `--set` ‏הסקריפט **‏קורא את `/state` ‏ומשווה**; ‏ערך שלא נתפס מסומן ⚠️.
+>
+> | ‏קוד | ‏משמעות |
+> |---|---|
+> | **0** | ‏ה-turn ‏הסתיים · ‏או `--marker` · ‏או `--file` ⇒ ‏**‏הסוכן נסגר** |
+> | **2** | ‏פג-זמן **‏כולל** — ‏אינו כישלון, ‏קרא שוב |
+> | **3** | ‏הזרם נסגר — ‏הסוכן מת |
+> | **5** | ‏**‏שקט**: ‏ה-turn ‏פתוח ואין פריימים ⇒ ‏**‏תקוע** |
+>
+> ‏2 ‏ו-5 ‏**‏מובחנים במכוון** — "‏עדיין רץ" ‏ו"‏נתקע" ‏הם מצבים הפוכים.
+> ‏בכל קוד שאינו 0 ‏הסוכן **‏נשאר חי**, ‏כדי לא למחוק את הראיה.
 
 ## ‏dispatch לאליעזר (Mode 1 — ‏סינכרוני)
 

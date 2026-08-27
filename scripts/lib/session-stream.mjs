@@ -15,19 +15,27 @@ import { existsSync } from "node:fs"
 
 /**
  * @returns {Promise<{code:0|2|3, why:string, stopReason?:string, frames:number, lastState:string}>}
- *   0 = ‏ה-turn ‏הסתיים / ‏סימן / ‏קובץ · 2 = ‏פג-זמן (‏לא כישלון) · 3 = ‏הזרם נסגר
+ *   0 = ‏ה-turn ‏הסתיים / ‏סימן / ‏קובץ · 2 = ‏פג-זמן כולל (‏לא כישלון)
+ *   3 = ‏הזרם נסגר · 5 = ‏**‏שקט**: ‏ה-turn ‏פתוח ואין פריימים (‏תקוע)
  */
-export async function waitForTurnEnd({ base, agent, marker, file, timeoutMs = 600_000 }) {
+export async function waitForTurnEnd({ base, agent, marker, file, timeoutMs = 600_000, idleTimeoutMs = 0 }) {
   const t0 = Date.now()
   let frames = 0, lastState = "?", sawBusy = false
   const out = (code, why, stopReason) => ({ code, why, stopReason, frames, lastState })
+  let lastFrameAt = Date.now()
   if (file && existsSync(file)) return out(0, `‏הקובץ כבר קיים: ${file}`)
 
   const ctrl = new AbortController()
   const timer = setTimeout(() => ctrl.abort("timeout"), timeoutMs)
   let fileTimer
   if (file) fileTimer = setInterval(() => { if (existsSync(file)) ctrl.abort("file") }, 3000)
-  const stop = () => { clearTimeout(timer); if (fileTimer) clearInterval(fileTimer) }
+  // ‏🔴 ‏שקט ≠ ‏פג-זמן. ‏turn ‏פתוח בלי פריימים הוא **‏תקיעה**, ‏ומגיע לו קוד משלו —
+  // ‏אחרת "‏עדיין רץ" ‏ו"‏נתקע" ‏קורסים לאותו סימן, ‏וזו בדיוק הקריסה שהשיטה אוסרת.
+  let idleTimer
+  if (idleTimeoutMs > 0) idleTimer = setInterval(() => {
+    if (sawBusy && Date.now() - lastFrameAt > idleTimeoutMs) ctrl.abort("idle")
+  }, 2000)
+  const stop = () => { clearTimeout(timer); if (fileTimer) clearInterval(fileTimer); if (idleTimer) clearInterval(idleTimer) }
 
   let res
   try {
@@ -48,6 +56,7 @@ export async function waitForTurnEnd({ base, agent, marker, file, timeoutMs = 60
         const line = buf.slice(0, i); buf = buf.slice(i + 1)
         if (!line.startsWith("data:")) continue
         frames++
+        lastFrameAt = Date.now()
         const raw = line.slice(5).trim()
         if (marker && raw.includes(marker)) { stop(); return out(0, `‏הסימן נצפה: "${marker}"`) }
         let d; try { d = JSON.parse(raw) } catch { continue }
@@ -67,7 +76,8 @@ export async function waitForTurnEnd({ base, agent, marker, file, timeoutMs = 60
     stop()
     const why = ctrl.signal.reason
     if (why === "file") return out(0, `‏הקובץ נוצר: ${file}`)
-    if (why === "timeout") return out(2, "‏פג הזמן — ‏קרא שוב")
+    if (why === "timeout") return out(2, "‏פג הזמן הכולל — ‏קרא שוב")
+    if (why === "idle") return out(5, `‏🔴 ‏שקט ${Math.round(idleTimeoutMs/1000)}s ‏— ‏ה-turn ‏פתוח ותקוע`)
     return out(3, `‏הזרם נקטע: ${String(e).slice(0, 80)}`)
   }
 }
