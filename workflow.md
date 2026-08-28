@@ -48,17 +48,16 @@
 - ‏ממוצע **2.74 ממצאים/brief**; **45% מהבריפים** נדרשו תיקון (verdict ≠ READY) לפני dispatch
 - ‏עלות ‏~‏10 ‏דק' פר סבב
 
-**‏איך מפעילים** — דרך הסוכן `avigail` (לא prompt ידני):
+**‏איך מפעילים** — לפי [`docs/dispatch.md`](docs/dispatch.md) (MCP, ו-API לגיבוי).
+אביגיל: `cli: claude` / Opus, ואם לא זמין `cli: cursor` / Grok. `BDS_SLICE` ב-`env`.
 
-```ts
-Task({
-  subagent_type: "avigail",
-  description: "Verify <slice> plan",
-  prompt: `בדקי את ה-brief: docs/plans/<slice>.md
+פרומפט:
+
+```
+בדקי את ה-brief: docs/plans/<slice>.md
 Project root: <path>
 Dev tip: <hash>
-Symbols שה-brief טוען שקיימים: <list>`
-})
+Symbols שה-brief טוען שקיימים: <list>
 ```
 
 ‏אביגיל מריצה 9 בדיקות (פירוט מלא ב-[`agents/avigail.md`](agents/avigail.md)), ביניהן:
@@ -87,22 +86,18 @@ cd .worktrees/<name>
 
 ## ‏שלב 5: Execution — ‏executor ‏מבצע
 
-### ‏אופציה A: ‏Executor ‏כ-sub-agent (‏Opus orchestrator)
+### ‏אופציה A: ‏Executor ‏כילד (‏מרדכי משגר)
 
-‏Tama ‏מ-dispatched:
+‏מרדכי משגר לפי [`docs/dispatch.md`](docs/dispatch.md): `cli: cursor`, Composer 2.5, `noWait`.
 
-```ts
-Task({
-  subagent_type: "executor",
-  description: "Execute <slice>",
-  prompt: `‏בצע docs/plans/<slice>.md.
+```
+בצע docs/plans/<slice>.md.
 env הפרויקט (ports/paths/OneCLI/tunnel): AGENTS.md. פרוטוקול גנרי: הסוכן eliezer.
 Base: <dev tip hash>
-Verifier: light (‏או heavy ‏לפי brief)`
-})
+Verifier: light (או heavy לפי brief)
 ```
 
-‏Tama ‏ממתינה לדוח, ‏אז dispatched verifier.
+‏מרדכי עוקב ב-`session_state` + `git`, אז משגר כלב לפי אותו פרוטוקול.
 
 ### ‏אופציה B: Executor ‏הוא ה-build agent (‏המשתמשת dispatched ‏ישירות)
 
@@ -126,16 +121,8 @@ Verifier: light (‏או heavy ‏לפי brief)`
 
 ### ‏Phase verifier (אופציונלי)
 
-‏אחרי commits high-risk שה-brief סימן — ‏executor ‏מ-dispatched verifier-phase:
-
-```ts
-Task({
-  subagent_type: "verifier-phase",
-  prompt: `Phase X ‏הושלם. Brief: docs/plans/<slice>.md. Commit: <hash>.
-‏סביבה: BE על port X, ‏browser linux-gui ‏או pw-clean.sh.
-‏בדוק רק את Phase X (‏לא ‏phases ‏הבאים).`
-})
-```
+‏אחרי commits high-risk שה-brief סימן — **המשגר** מריץ כלב ב-mode: phase לפי `docs/dispatch.md`.
+אליעזר לא משגר את המאמת של עצמו; הוא מכריז `PHASE-READY-FOR-VERIFY`.
 
 ‏שווה רק לcommits ‏עם:
 - Cross-store data flow חדש
@@ -148,20 +135,18 @@ Task({
 
 **‏חובה. ‏גם אם executor אמר ‏"הכל ירוק".**
 
-‏ה-brief ‏מציין tier:
+‏ה-brief ‏מציין tier. המשגר מריץ לפי [`docs/dispatch.md`](docs/dispatch.md):
+light = `cursor`/Composer; heavy = `claude`/Opus, ואם לא זמין `cursor`/Grok.
 
-```ts
-Task({
-  subagent_type: "verifier-slice-light",  // ‏או heavy
-  description: "Verify <slice>",
-  prompt: `‏Slice <slice> ‏הושלם.
+```
+Slice <slice> הושלם.
 Brief: docs/plans/<slice>.md
 Base commit: <hash>
 Commits: git log <base>..HEAD
-‏סביבה: <ports, browser, fixtures>
+mode: light   # ל-light בלבד
+סביבה: <ports, browser, fixtures>
 
-‏עבור על כל ה-DoD items, ‏רוץ happy path אחד-שניים, ‏כתוב report ‏ב-docs/<slice>-verification-report.md.`
-})
+עבור על כל ה-DoD items, רוץ happy path אחד-שניים, כתוב דוח לפי פורמט כלב.
 ```
 
 ‏Light: ~‏15-25 ‏דק', happy path, DoD walk.
@@ -283,28 +268,26 @@ git worktree list           # ‏ודא שנשארו רק main + worktrees חי�
 
 ### ‏Dispatch לbatch
 
-```ts
-Task({
-  subagent_type: "executor",
-  description: "Execute batch: slices A → B → C",
-  prompt: `‏בצע את ה-slices האלה בסדר:
+‏מרדכי משגר לפי [`docs/dispatch.md`](docs/dispatch.md) (`cli: cursor`, Composer, `noWait`):
+
+```
+בצע את ה-slices האלה בסדר:
 1. docs/plans/slice-A.md
-2. docs/plans/slice-B.md  (‏על גבי slice A)
-3. docs/plans/slice-C.md  (‏על גבי slice B)
+2. docs/plans/slice-B.md  (על גבי slice A)
+3. docs/plans/slice-C.md  (על גבי slice B)
 
 Worktree: .worktrees/<batch-name>/
 Base: <dev tip hash>
-‏סביבה: <ports, browser, OneCLI agent>
+סביבה: <ports, browser, OneCLI agent>
 
-‏לכל slice:
-- ‏בצע commits ‏לפי ה-brief שלו
-- ‏הפעל verifier-slice (tier ‏מהbrief) ‏בסופו
-- ‏אם verifier ‏אישר ✅ — ‏המשך ל-slice ‏הבא
-- ‏אם verifier ‏סירב ❌ — ‏STOP, ‏דווח לTama עם הreport
+לכל slice:
+- בצע commits לפי ה-brief שלו
+- הכרז מוכן לכלב (tier מהbrief) — המשגר מריץ
+- אם כלב אישר ✅ — המשך ל-slice הבא
+- אם כלב סירב ❌ — STOP, דווח עם הדוח
 
-‏אחרי כל ה-slices — ‏דווח: "Batch done. <N> slices. Reports: ...".
-‏Tama תחליט על merge.`
-})
+אחרי כל ה-slices — דווח: "Batch done. <N> slices. Reports: ...".
+מרדכי יחליט על merge.
 ```
 
 ### ‏מה Executor עושה בין slices ‏ב-batch

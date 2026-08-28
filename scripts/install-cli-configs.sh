@@ -131,6 +131,17 @@ install_qoder() {
   done
 }
 
+install_claude() {
+  local src="$ROOT/cli-configs/claude-code/agents"
+  local dst="${CLAUDE_AGENTS_DIR:-$HOME/.claude/agents}"
+
+  mkdir -p "$dst"
+  for agent in mordechai yetro eliezer avigail calev calev-heavy; do
+    substitute_into "$src/$agent.md" "$dst/$agent.md"
+    echo "claude-code installed: $agent"
+  done
+}
+
 main() {
   generate_configs
   resolve_paths
@@ -140,6 +151,7 @@ main() {
       install_opencode
       install_codex
       install_qoder
+      install_claude
       ;;
     opencode)
       install_opencode
@@ -150,8 +162,11 @@ main() {
     qoder)
       install_qoder
       ;;
+    claude-code|claude)
+      install_claude
+      ;;
     *)
-      echo "usage: $0 [all|opencode|codex|qoder]" >&2
+      echo "usage: $0 [all|opencode|codex|qoder|claude-code]" >&2
       exit 2
       ;;
   esac

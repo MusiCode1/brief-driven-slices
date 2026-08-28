@@ -36,44 +36,36 @@ description: |
 
 | ‏שם | ‏תפקיד | ‏Mode | ‏מודל | merge? |
 |-----|-------|-------|------|--------|
-| **‏מרדכי** | planner | primary | Opus 4.8 | ✅ ‏אחרי אישור |
+| **‏מרדכי** | planner | primary | Opus · Grok אם אופוס לא זמין | ✅ ‏אחרי אישור |
 | **‏יתרו** | orchestrator | primary | Sonnet 4.6 | ❌ ‏לעולם לא |
 | **‏אליעזר** | executor | all | **‏Cursor Composer 2.5** | ❌ ‏לעולם לא |
-| **‏אביגיל** | plan-verifier | subagent | Opus 4.8 | ❌ |
+| **‏אביגיל** | plan-verifier | subagent | Opus · Grok אם אופוס לא זמין | ❌ |
 | **‏כלב** | runtime-verifier (phase/light) | subagent | **‏Cursor Composer 2.5** | ❌ |
-| **‏כלב-heavy** | runtime-verifier (heavy, complexity 8+) | subagent | Opus 4.8 | ❌ |
+| **‏כלב-heavy** | runtime-verifier (heavy, complexity 8+) | subagent | Opus · Grok אם אופוס לא זמין | ❌ |
 
 > **‏עיקרון המודלים**: ‏Opus למקום שהאמת מגיעה מ**‏הסקה** (מרדכי תכנון, ‏אביגיל
-> ‏על brief סטטי, ‏כלב-heavy על edge-cases/regressions/patterns). ‏המבצעים למקום
-> ‏שהאמת מגיעה מ**‏הרצה** (אליעזר ביצוע, ‏יתרו מכני, ‏כלב phase/light — runtime).
+> ‏על brief סטטי, ‏כלב-heavy על edge-cases/regressions/patterns). ‏אם אופוס לא
+> ‏זמין — Grok על `cursor` (`docs/dispatch.md`). ‏המבצעים למקום שהאמת מגיעה
+> מ**‏הרצה** (אליעזר ביצוע, ‏יתרו מכני, ‏כלב phase/light — runtime).
 
-## 🔴 ‏אליעזר וכלב רצים על Cursor Composer 2.5 — ‏לא כתת-סוכני Claude
+## 🔴 ‏שיגור — MCP, ו-API לגיבוי
 
-**‏הנחיית המשתמש, 2026-08-20.** ‏נוהל, לא המלצה.
+**‏הנחיית המשתמש, 2026-08-28.** ‏נוהל, לא המלצה.
 
-‏מרדכי ואביגיל נשארים **Claude** (‏תת-סוכנים ב-process). ‏אליעזר וכלב משוגרים
-**החוצה**, דרך `dispatch-agent`:
+‏כל שיגור תפקיד — לפי [`docs/dispatch.md`](docs/dispatch.md). **‏אל תעתיק
+‏משם פקודות** לכאן או לסוכן; זה מקור האמת היחיד.
 
-```bash
-dispatch-agent <שם-סשן> cursor composer-2.5 <cwd> <קובץ-פרומפט>
-```
+- ‏יש `session_open` בארגז-הכלים → MCP של drive-coding, תמיד `noWait: true`.
+- ‏אין → `scripts/dispatch-via-api.mjs`, תמיד `--no-wait`.
+- ‏אליעזר + כלב (phase/light) על `cursor` / Composer 2.5.
+- ‏מרדכי + אביגיל + כלב-heavy על `claude` / Opus; **‏אם אופוס לא זמין** —
+  `cursor` / Grok. המודל נבחר **מהרשימה אחרי `open`**, לא בניחוש בפתיחה.
+- ‏`BDS_SLICE` חובה ב-`env`. בלעדיו אליעזר/כלב מחזירים `WRONG-DISPATCH`.
 
-- ‏**‏`cursor` הוא סוכן רשום ב-acpx** (‏`acpx cursor`) — ‏אין צורך ב-`omp`
-  ‏ואין צורך ב-`--agent`. ‏אומת מקצה-לקצה 20/08.
-- ‏**שם-המודל בלי קידומת**: ‏`composer-2.5`, ‏לא `cursor/composer-2.5`.
-  ‏(‏הקידומת שייכת למסלול ה-`"omp acp"` הישן, שגם הוא עובד — אבל מיותר.)
-- ‏רץ ב-tmux, שורד ניתוק, וכותב סנטינל `<log>.done` עם קוד-היציאה.
-- **‏להמתין לסנטינל**, לא לתהליך: `until [ -f /tmp/agent-dispatch/<שם>.done ]; do sleep 30; done`
-- ‏`cursor-agent models` ‏מציג את הרשימה; ‏`composer-2.5` ‏הוא הנוכחי.
-- ‏`cursor-agent` **אינו** מדבר ACP בעצמו (‏אין לו תת-פקודת `acp`) — ‏הגשר הוא `acpx`.
-
-> **‏`~/.claude/agents/eliezer.md` ו-`calev.md` נשארים** עם `model: sonnet` —
-> הם **מסלול-הנפילה** לתת-סוכן ב-process. אין דרך להצהיר שם על מודל של קורסור,
-> ולכן **הצהרת המודל האמיתית היא כאן.**
-
-**‏מדוע**: ‏נבחן על 3 סלייסים רצופים ב-drive-coding (‏20/08) — ‏playback-lifecycle,
-‏playlist-invariants, ‏control-dock. ‏הביצוע היה נאמן-לבריף, וכשההוראה אמרה
-"‏אל תתקן — ‏תעד ותמשיך", ‏זה מה שקרה (‏באג #46 ‏נמצא, ‏תועד, ‏ולא תוקן).
+**‏מדוע Cursor למבצעים**: ‏נבחן על 3 סלייסים רצופים ב-drive-coding (‏20/08) —
+‏playback-lifecycle, playlist-invariants, control-dock. ‏הביצוע היה נאמן-לבריף,
+וכשההוראה אמרה "‏אל תתקן — ‏תעד ותמשיך", ‏זה מה שקרה (‏באג #46 ‏נמצא, ‏תועד,
+‏ולא תוקן).
 
 ‏להתקנת כל adapters (‏מריצים מתוך שורש הריפו): `bash scripts/install-cli-configs.sh all`
 ‏לתאימות OpenCode ישנה: `bash scripts/install-agents.sh`
@@ -84,8 +76,8 @@ dispatch-agent <שם-סשן> cursor composer-2.5 <cwd> <קובץ-פרומפט>
 
 **הנחיית המשתמש, 25/08. נוהל, לא המלצה.**
 
-כל שיגור של תת-סוכן — **ברקע** (`run_in_background: true`). אין שיגור חוסם
-בשום שכבה: לא משגר→מרדכי, לא מרדכי→אביגיל/אליעזר, ולא אליעזר→כלב.
+כל שיגור של תת-סוכן — **ברקע** (`docs/dispatch.md`: `noWait` / `--no-wait`).
+אין שיגור חוסם בשום שכבה: לא משגר→מרדכי, לא מרדכי→אביגיל/אליעזר, ולא אליעזר→כלב.
 
 **הנימוק:** תור חוסם תופס את השרשור הראשי, והמשתמש לא יכול לשאול דבר עד
 שהצאצא מסיים. בדרך נאבדים גם **ניטור** (אי אפשר לבדוק מה קורה בזמן שהתור
@@ -100,19 +92,18 @@ dispatch-agent <שם-סשן> cursor composer-2.5 <cwd> <קובץ-פרומפט>
 שורד סגירת-תור, והסיום חוזר כהודעה.
 
 ⇒ **ההבחנה שאסור לאבד:** הרקע מותר בדיוק במקום שבו הרנס מחזיק את החוט.
-במקום שבו ההמתנה היא לולאת-קובץ בבש (יתרו → `wait-for-slice.sh`) — היא
-עדיין חייבת לרוץ בתוך תור חי, וזה אינו "שיגור חוסם" אלא **תור-ניטור**.
+מעקב אחרי ילד הוא `session_state` / `notify_parent` / `git` — לא המתנת-זרם
+חוסמת על `session_send`.
 
 ### מה מחליף את ההמתנה החוסמת
 
-אחרי שיגור-רקע **אסור להיעלם**. מתקדמים על ראיות בעץ:
+אחרי שיגור-רקע **אסור להיעלם**. מתקדמים על ראיות בעץ — טבלה מלאה ב-`docs/dispatch.md`.
 
 | מה בודקים | הפקודה |
 |---|---|
 | הסלייס התחיל | `git worktree list` |
 | התקדמות אמיתית | `git log --oneline <base>..<ענף-ההרצה>` |
-| סנטינלים של dispatch | `ls /tmp/agent-dispatch/*.done` |
-| סשני-ביצוע חיים | `tmux ls` |
+| הילד חי / תקוע / סיים | `session_state` / `session_list` — `turnState` |
 | שערים | `ls $BDS_REPORTS/<project>/` |
 
 ❌ **הטרנסקריפט (JSONL) של הצאצא אינו כלי-ניטור** — קריאתו מציפה קונטקסט.
@@ -124,8 +115,8 @@ dispatch-agent <שם-סשן> cursor composer-2.5 <cwd> <קובץ-פרומפט>
 ```
 ‏המשתמשת → ‏מרדכי: "‏בצע slice X"
 ‏מרדכי → ‏דף-החלטות (scope + 7 תרחישים/defaults) → ‏המשתמשת מאשרת פעם-אחת
-‏מרדכי → Task(subagent_type="eliezer", ..., run_in_background: true)   [‏רקע]
-‏אליעזר מבצע, ‏מפעיל כלב, ‏מחזיר
+‏מרדכי → ‏שיגור אליעזר לפי docs/dispatch.md   [‏רקע, noWait]
+‏אליעזר מבצע, ‏המשגר מפעיל כלב, ‏מחזיר
 ‏מרדכי מציג (‏web: preview חי) → ‏המשתמשת מאשרת בעיניים → ‏מרדכי עושה merge → archive brief + cleanup worktree (‏אטומי)
 ```
 
@@ -133,7 +124,7 @@ dispatch-agent <שם-סשן> cursor composer-2.5 <cwd> <קובץ-פרומפט>
 
 ```
 ‏ערב:   ‏מרדכי → ‏דף-החלטות → briefs מאומתים (אביגיל) → state.json
-‏לילה:  ‏יתרו מריץ queue → tmux → אליעזר → כלב → ‏ארכב
+‏לילה:  ‏יתרו מריץ queue → ‏שיגור לפי docs/dispatch.md → אליעזר → כלב → ‏ארכב
 ‏בוקר:  ‏מרדכי קורא summary → ‏מחליט → merge
 ```
 
@@ -155,7 +146,7 @@ dispatch-agent <שם-סשן> cursor composer-2.5 <cwd> <קובץ-פרומפט>
   ↓
 ‏worktree חדש (`.worktrees/<slice>/`) — ‏base: dev ‏או branch תלות
   ↓
-‏אליעזר (executor, Sonnet, all-mode)
+‏אליעזר (executor, Composer 2.5, all-mode)
   ↓ ‏מבצע phase-by-phase לפי testing strategy פר commit
   ↓ ‏heartbeat אחרי כל commit (ב-Mode 2)
   ↓ ‏(אופציונלי) כלב (mode: phase) ‏אחרי commit מסוכן
@@ -196,6 +187,7 @@ dispatch-agent <שם-סשן> cursor composer-2.5 <cwd> <קובץ-פרומפט>
 
 | ‏קובץ | ‏מתי לקרוא |
 |------|------------|
+| [`docs/dispatch.md`](docs/dispatch.md) | **‏איך משגרים** — MCP, ו-API לגיבוי. מקור האמת היחיד לפקודות |
 | [`orchestration.md`](orchestration.md) | ‏Mode 2 — ‏יתרו, state machine, ‏שרשור, BLOCKED |
 | [`BACKLOG.md`](BACKLOG.md) | **‏עבודה פתוחה — ‏מקור האמת היחיד.** ‏אין עמודת סטטוס; `bash scripts/backlog-status.sh` ‏גוזר אותו |
 | [`workflow.md`](workflow.md) | ‏לפני התחלת slice ‏חדש — ‏הפרוטוקול המלא |
@@ -225,14 +217,15 @@ dispatch-agent <שם-סשן> cursor composer-2.5 <cwd> <קובץ-פרומפט>
 ‏אפס נתיב אבסולוטי-למכונה). ‏`agents/*.md` ‏ו-`cli-configs/*/agents/*` ‏הם תוצרים generated (‏גם הם ניטרליים,
 ‏committed). ‏OpenCode מקבל **‏עותקים** (‏symlink לא נושא תוכן-מוחלף) ‏אחרי path-substitution ‏דרך
 ‏`install-cli-configs.sh opencode`; ‏Codex מקבל custom agents ‏ב-TOML, ‏גם הם אחרי path-substitution, ‏דרך
-‏`install-cli-configs.sh codex`. ‏ה-substitution ‏קורא את 4 המשתנים מ-`paths.env` ‏פר-מכונה (`~/.config/bds/paths.env`
+‏`install-cli-configs.sh codex`; ‏Claude Code מקבל Markdown ‏ב-`~/.claude/agents/` ‏דרך
+‏`install-cli-configs.sh claude-code`. ‏ה-substitution ‏קורא את 4 המשתנים מ-`paths.env` ‏פר-מכונה (`~/.config/bds/paths.env`
 ‏או `$BDS_PATHS_ENV`, ‏ראה `cli-configs/paths.env.example`) — ‏כשל-רועש ‏ב-install ‏אם משתנה חסר.
 
 | ‏סוכן | ‏מתי |
 |------|------|
 | [`agents/mordechai.md`](agents/mordechai.md) | ‏session ‏תכנון — ‏כותב briefs, ‏ממזג, ‏מחליט, ‏מריץ זיקוק |
 | [`agents/yetro.md`](agents/yetro.md) | ‏session ‏לילי — ‏מריץ queue אוטומטית |
-| [`agents/eliezer.md`](agents/eliezer.md) | **‏מבצע** (all mode — Task ‏או primary) |
+| [`agents/eliezer.md`](agents/eliezer.md) | **‏מבצע** (all mode — MCP / API) |
 | [`agents/avigail.md`](agents/avigail.md) | **‏חובה לפני handoff** — ‏בודקת brief + depends_on, ‏כותבת דוח MD-front-matter |
 | [`agents/calev.md`](agents/calev.md) | **‏חובה בסוף** — mode: phase/light (Sonnet), ‏כותב דוח MD-front-matter |
 | [`agents/calev-heavy.md`](agents/calev-heavy.md) | heavy tier (complexity 8+, Opus) |

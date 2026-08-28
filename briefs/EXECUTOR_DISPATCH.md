@@ -20,17 +20,8 @@
 
 ‏אם קיבלת prompt מ-מרדכי (planner) ‏שאומר "‏בצע docs/plans/slice-X.md" — **‏אתה אליעזר**.
 
-**‏אל ‏תdelegate ל-sub-agent ‏מסוג `eliezer` ‏עם Task tool.** ‏אתה מבצע ‏ישירות.
-
-‏ה-Task tool ‏עם sub-agents קיים — ‏אבל ‏השימוש היחיד שלך בו:
-
-| Sub-agent | ‏מתי |
-|-----------|------|
-| `calev` + `mode: phase` | ‏אחרי commit שה-brief ‏סימן לphase verifier |
-| `calev` + `mode: light` | ‏בסוף, ‏אם ה-brief ‏מסמן light |
-| `calev-heavy` (Opus) | ‏בסוף, ‏אם ה-brief ‏מסמן heavy (complexity 8+) — ‏סוכן נפרד, ‏בלי `mode:` |
-| `general` | ‏מחקר רוחבי read-only — ‏לא ליישום |
-| `eliezer` | ❌ **‏אל תקרא לו. ‏אתה הוא.** |
+**‏אל ‏תdelegate ל-sub-agent ‏מסוג `eliezer`.** ‏אתה מבצע ‏ישירות.
+**אל תמשגר את כלב** — המשגר מריץ אותו לפי `docs/dispatch.md`.
 
 ‏אם הbrief גדול מאוד ‏ויש פיתוי לdelegate — ‏עצור ושאל את מרדכי לפצל ל-2 slices.
 
@@ -129,9 +120,9 @@ ssh -i ~/.ssh/pico ... -R drive-coding-<slice>:80:localhost:<vite-port> tuns.sh 
 |------|------|
 | `calev` + `mode: phase` | ‏אחרי commit ‏מסוים שה-brief מציין |
 | `calev` + `mode: light` | ‏אחרי commit ‏אחרון, ‏לפני שמודיעים "‏גמרתי". Default. |
-| `calev-heavy` (Opus, ‏בלי `mode:`) | ‏רק אם ה-brief ‏מציין (complexity 8+) |
+| `calev-heavy` (Opus, או Grok אם אופוס לא זמין; בלי `mode:`) | ‏רק אם ה-brief ‏מציין (complexity 8+) |
 
-‏הפעל ‏עם `Task(subagent_type="calev", prompt="... mode: light ...")` ‏ועוקב אחר ה-output.
+‏המשגר מפעיל לפי `docs/dispatch.md`. **אליעזר לא משגר את כלב.**
 
 ## ‏BLOCKED — ‏מה לעשות כשתקוע
 
@@ -146,7 +137,7 @@ TRIED: <מה ניסית>
 NEED: <החלטה? spec חדש? לדלג?>
 ```
 
-### ‏ב-Mode 2 (tmux מ-יתרו, `$BDS_SLICE` מוגדר)
+### ‏ב-Mode 2 (יתרו, `$BDS_SLICE` מוגדר)
 
 ‏כתוב קובץ outcomes וסיים:
 ```bash
@@ -252,7 +243,7 @@ pnpm build --force      # ‏או tsc --build --force
 
 **‏מה אתה כן עושה:**
 - ✅ commit אחרון ‏עם walkthrough + ‏סטטוסים מעודכנים
-- ✅ ‏הפעלת כלב ‏(לפי tier ‏שbrief ‏ציין): `Task(subagent_type="calev", prompt="... mode: light ...")`
+- ✅ ‏הכרז מוכן לכלב (לפי tier שbrief ציין) — המשגר מריץ לפי `docs/dispatch.md`
 - ✅ ‏דיווח למרדכי: "‏הbranch מוכן ב-`.worktrees/<slice>/`. ‏Verification report ‏ב-<path>. ‏הסטיות: ..."
 
 **‏מה אתה לא עושה:**

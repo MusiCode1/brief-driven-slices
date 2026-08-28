@@ -5,6 +5,68 @@
 
 ---
 
+## 2026-08-28 20:49
+
+### Claude Code בגנרטור ובמתקין
+
+`claude-code` נכנס כ-target רשמי: הגנרטור ממיר מ-OpenCode דרך `oc2cc.convert`,
+והמתקין כותב ל-`~/.claude/agents/` עם `substitute_into` (לא `cp` גולמי).
+
+#### מה בוצע?
+
+**1. גנרטור**
+
+- `scripts/generate-cli-configs.py` — יעד `claude-code` (גם דרך `all`)
+- כותב ל-`cli-configs/claude-code/agents/<id>.md`
+
+**2. מתקין**
+
+- `install_claude()` ב-`scripts/install-cli-configs.sh`
+- `CLAUDE_AGENTS_DIR` (ברירת מחדל `~/.claude/agents`)
+- `all` ו-`claude-code` מחווטים; בדיקה `test_install_claude_substitutes`
+
+**3. מסמכים**
+
+- `cli-configs/README.md`, `cli-configs/claude-code/README.md` (במקום `cp`)
+- `README.md`, `AGENTS.md`, `SKILL.md`, `agent-definitions/README.md`
+- BACKLOG פריטים 7 ו-15 נמחקו מהטבלה (הבדיקות עוברות)
+
+#### החלטות ארכיטקטורה
+
+- אין renderer נפרד ל-Claude: ממירים את פלט OpenCode. Avigail/calev-heavy בלי Edit כי `oc2cc` פולט רק כלים ש-`true`.
+
+---
+
+## 2026-08-28 20:30
+
+### שיגור MCP-ראשון, פרוטוקול במסמך אחד
+
+הוחלף מסלול-השיגור המפוזר (Task / tmux / API) בפרוטוקול יחיד: MCP אם יש
+`session_open`, אחרת `dispatch-via-api.mjs`. tmux יצא מהפרוטוקול.
+
+#### מה בוצע?
+
+**1. מקור אמת**
+
+- נוסף `docs/dispatch.md` — הכלל, טבלת CLI/מודל, MCP, גיבוי API, notify, חובת-סוגר
+- `WRONG-DISPATCH` ו-`notify` הוחזרו ל-`agent-definitions/prompts/` (חיו רק ב-`agents/`)
+- `python3 scripts/generate-cli-configs.py all` + סנכרון ידני ל-`cli-configs/claude-code/` ו-`cli-configs/cursor/agents/eliezer.md`
+
+**2. הפניות במקום העתקות**
+
+- `SKILL.md`, `autorun`, `kickoff-mordechai`, `MISSION_TEMPLATE`, `EXECUTOR_DISPATCH`, `orchestration.md`, `workflow.md`, פרומפטי הסוכנים — כולם מצביעים ל-`docs/dispatch.md`
+
+**3. מודלים**
+
+- מבצעים: cursor / Composer 2.5
+- הסקה (מרדכי, אביגיל, כלב-heavy): claude / Opus, ואם לא זמין cursor / Grok
+
+#### החלטות ארכיטקטורה
+
+- רציונל מלא: `docs/decisions/bds.md` רשומת 2026-08-28
+
+---
+
 ## 2026-08-25 — שיגור לא-חוסם + סבב-הסגירה של ריצות 11–13
 
 **הנחיית המשתמש:** *"שלא יריצו אף פעם סוכנים במצב חוסם, כדי שהשרשור הראשי

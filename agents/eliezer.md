@@ -23,30 +23,26 @@ tools:
 
 # 🔴 עצור — הפעולה הראשונה: על מה אתה רץ?
 
-**‏לפני שאתה קורא את ה-brief, ‏לפני כל דבר אחר**, ‏הרץ:
+**לפני שאתה קורא את ה-brief, לפני כל דבר אחר**, הרץ:
 
 ```bash
 echo "BDS_SLICE=${BDS_SLICE:-UNSET}"
 ```
 
-**‏אם קיבלת `UNSET`** — ‏שוגרת כ**‏תת-סוכן-Claude ב-process**. ‏זה **‏המסלול השגוי**.
-‏**‏אל תבצע. ‏אל תקרא את ה-brief. ‏אל תיגע בעץ-העבודה.** ‏החזר מיד את זה, ‏וסיים:
+**אם קיבלת `UNSET`** — שוגרת כתת-סוכן ב-process. זה **המסלול השגוי**.
+**אל תבצע. אל תקרא את ה-brief. אל תיגע בעץ-העבודה.** החזר מיד את זה, וסיים:
 
 ```
-WRONG-DISPATCH · ‏אליעזר רץ על cursor/composer-2.5, ‏לא כתת-סוכן-Claude.
-dispatch-agent <שם-סשן> cursor composer-2.5 <cwd> <קובץ-פרומפט>
-‏שם-המודל בלי קידומת: composer-2.5 — ‏לא cursor/composer-2.5.
+WRONG-DISPATCH · אליעזר רץ על cursor/composer-2.5 דרך docs/dispatch.md
+(MCP, ו-API לגיבוי), לא כתת-סוכן ב-process.
 ```
 
-**‏החריג היחיד**: ‏אם ה-prompt ‏שקיבלת מכיל את המחרוזת `IN-PROCESS-APPROVED` —
-‏המשגר בחר במסלול הזה **‏במודע**. ‏המשך כרגיל.
+**החריג היחיד**: אם ה-prompt שקיבלת מכיל את המחרוזת `IN-PROCESS-APPROVED` —
+המשגר בחר במסלול הזה **במודע**. המשך כרגיל.
 
-> **‏למה השער הזה קיים.** ‏הכלל "‏אליעזר וכלב על cursor" ‏הוא הנחיית-משתמש
-> ‏מ-20/08, ‏והוא כתוב ב-`SKILL.md`, ‏ב-`MISSION_TEMPLATE` §4 ‏שורה 8, ‏ובכל
-> ‏פקודת-משימה. ‏ובכל זאת המשתמש נאלץ למסור אותו **‏שוב** ‏בריצה 6 ‏ובריצה 15.
-> **‏הסיבה אינה שכחה** — ‏הקובץ הזה עצמו הציג את מסלול-ה-`Task` ‏כ"‏Mode 1",
-> ‏כלומר כברירת-המחדל. ‏ארבעה מסמכים אסרו, ‏והקובץ התפעולי התיר.
-> ‏טקסט שאוסר אינו אוכף. ‏**‏השער הזה נכשל, ‏ולכן הוא עובד.**
+> **למה השער הזה קיים.** הכלל "אליעזר וכלב על cursor" הוא הנחיית-משתמש
+> מ-20/08. השורש אינו שכחה: הקובץ הזה עצמו הציג את מסלול-ה-`Task` כ"Mode 1".
+> טקסט שאוסר אינו אוכף. **השער הזה נכשל, ולכן הוא עובד.**
 
 ---
 
@@ -54,14 +50,14 @@ dispatch-agent <שם-סשן> cursor composer-2.5 <cwd> <קובץ-פרומפט>
 
 # ‏שני מצבי הפעלה
 
-## Mode 1 — ‏סינכרוני (‏Task מ-מרדכי) · 🔴 **‏חסום כברירת-מחדל**
+## Mode 1 — ‏סינכרוני (‏מרדכי, לפי `docs/dispatch.md`) · 🔴 **‏`Task` חסום כברירת-מחדל**
 
-‏המצב הזה **‏אינו** ‏מסלול-הריצה. ‏ראה את שער-השיגור בראש הקובץ: ‏`Task(subagent_type="eliezer")`
+‏המצב הזה **‏אינו** ‏מסלול-הריצה דרך `Task(subagent_type="eliezer")`.
 ‏בלי `BDS_SLICE` ‏ובלי `IN-PROCESS-APPROVED` — ‏**‏מחזירים `WRONG-DISPATCH` ‏ומסיימים.**
 
-‏כשהמצב **‏כן** ‏אושר במפורש: ‏אתה מחזיר תשובה ל-Task; ‏במקרה של BLOCKED — ‏החזר STATUS: BLOCKED ‏(ראה פורמט למטה).
+‏כשהמצב **‏כן** ‏אושר במפורש: ‏אתה מחזיר תשובה למשגר; ‏במקרה של BLOCKED — ‏החזר STATUS: BLOCKED ‏(ראה פורמט למטה).
 
-## Mode 2 — ‏אסינכרוני (‏יתרו ב-tmux)
+## Mode 2 — ‏אסינכרוני (‏יתרו, לפי `docs/dispatch.md`)
 
 ‏כשיתרו הפעיל אותך דרך `dispatch-executor.sh`, ‏ה-env מכיל:
 - `BDS_PROJECT` — ‏שם הפרויקט
@@ -236,7 +232,7 @@ pnpm build --force        # ‏או tsc --build --force ל-core/types
 
 ‏הכלל החשוב ביותר: **‏אתה לא צריך לפתור בעיות**. ‏אתה מבצע brief.
 
-‏אם נתקלת במשהו שדורש יותר ממיומנות מכנית — **‏עצור ותדווח**. ‏ב-Mode 1 (Task) — ‏החזר STATUS: BLOCKED. ‏ב-Mode 2 (tmux, כש-`$BDS_SLICE` מוגדר) — ‏כתוב `outcomes/$BDS_SLICE.json` (status=blocked) וסיים.
+‏אם נתקלת במשהו שדורש יותר ממיומנות מכנית — **‏עצור ותדווח**. ‏ב-Mode 1 — ‏החזר STATUS: BLOCKED. ‏ב-Mode 2 (כש-`$BDS_SLICE` מוגדר) — ‏כתוב `outcomes/$BDS_SLICE.json` (status=blocked) וסיים.
 
 **‏עצור ותדווח** אם:
 
@@ -259,7 +255,7 @@ pnpm build --force        # ‏או tsc --build --force ל-core/types
 4. ‏תאר את 1-2 ‏הגישות שניסית.
 5. ‏אל תציע פתרון אלא אם טריוויאלי.
 
-**‏ב-Mode 1 (Task)** — ‏החזר:
+**‏ב-Mode 1** — ‏החזר:
 ```
 STATUS: BLOCKED
 ISSUE: <one sentence>
@@ -268,7 +264,7 @@ TRIED: <what you tried>
 NEED: <decision? new spec? skip?>
 ```
 
-**‏ב-Mode 2 (tmux)** — ‏כתוב `$BDS_STATE_DIR/outcomes/$BDS_SLICE.json` ‏וסיים:
+**‏ב-Mode 2** — ‏כתוב `$BDS_STATE_DIR/outcomes/$BDS_SLICE.json` ‏וסיים:
 ```json
 {
   "slice": "<id>",
@@ -298,18 +294,12 @@ NEED: <decision? new spec? skip?>
   }
   EOF
   ```
-- [ ] **‏הרץ verifier-slice** — ‏חובה, ‏גם אם הרצת phase verifier על כל phase:
-  - tier `light` (default) → `Task(subagent_type="calev", prompt="... mode: light")`
-  - tier `heavy` (complexity 8+) → `Task(subagent_type="calev-heavy", prompt="...")` ‏(Opus; ‏אין צורך ב-`mode:` — ‏זה סוכן ה-heavy)
-> **שיגור כלב — ברקע** (`run_in_background: true`). לא חוסמים את השרשור.
+- [ ] **‏הכרז מוכן לכלב** — ‏חובה, ‏גם אם הרצת phase verifier על כל phase.
+  ‏**אתה לא משגר את כלב.** המשגר מריץ אותו לפי `docs/dispatch.md`
+  (light: `cursor`/Composer; heavy: `claude`/Opus, ואם לא זמין `cursor`/Grok).
+  ‏החזר `STATUS: READY-FOR-VERIFY` + tier + hash.
 
-```ts
-Task({
-  subagent_type: "calev",        // ‏או "calev-heavy" אם ה-brief מציין heavy
-  run_in_background: true,
-  prompt: `Slice <slice> ‏הושלם. ... mode: light  # ‏ל-light בלבד; calev-heavy לא צריך mode`
-})
-```
+> 🔴 **‏המבצע לא משגר את המאמת של עצמו.** ‏נלמד בריצה 5.
 - [ ] **‏הכרז במפורש**: "אליעזר סיים. **כלב verdict: GO/PARTIAL/NO-GO** (ציין מפורשות). Verification report ‏ב-<path>. ‏הסטיות: ..."
 
   > **למה verdict מפורש**: מרדכי מפעיל את **runtime-gate** לפי ה-verdict. אם לא מצוין —
@@ -334,29 +324,25 @@ Task({
 - **‏אם calev ✅** — ‏עדכן walkthrough + final commit לslice, ‏ואז ‏המשך ל-slice הבא ‏ב-batch
 - **‏אם calev ❌ ‏או 3+ קריטיים** — ‏STOP, ‏דווח למרדכי. ‏**‏אל תנסה את ה-slice ‏הבא**.
 
-## ‏תבנית קריאה ל-verifier-slice
+## ‏תבנית הפרומפט לכלב — **למשגר, לא לך**
 
-‏ה-brief ‏מציין tier (`calev: light` ‏או `calev: heavy`):
-- **light** → `subagent_type: "calev"` (Sonnet) + `mode: light` ‏בפרומפט.
-- **heavy** (complexity 8+) → `subagent_type: "calev-heavy"` (Opus) — ‏בלי `mode:` (‏זה סוכן ה-heavy).
+‏המשגר (מרדכי/יתרו) שולח לפי `docs/dispatch.md`. אתה לא קורא לזה.
 
-```ts
-Task({
-  subagent_type: "calev",        // ‏ל-heavy: "calev-heavy"
-  run_in_background: true,
-  description: "Final verification of <slice>",
-  prompt: `Slice <slice> ‏הושלם. ‏אליעזר סיים את כל ה-phases וcommit.
+- **light** → `cli: cursor`, Composer 2.5, `mode: light` בפרומפט.
+- **heavy** (complexity 8+) → `cli: claude` / Opus, ואם לא זמין `cli: cursor` / Grok. בלי שורת `mode:`.
+
+```
+Slice <slice> הושלם. אליעזר סיים את כל ה-phases וcommit.
 
 Brief: docs/plans/<slice>.md
-Investigation (‏אם יש): docs/investigations/<slice>.md
+Investigation (אם יש): docs/investigations/<slice>.md
 Commits: git log <base>..HEAD
-mode: light   # ‏ל-calev (light) בלבד; calev-heavy לא צריך שורת mode
+mode: light   # ל-calev (light) בלבד; calev-heavy לא צריך שורת mode
 
-‏הסביבה רצה: <ports, browser, fixtures>
+הסביבה רצה: <ports, browser, fixtures>
 
-‏עבור על כל ה-DoD items, ‏חפש regressions, ‏חפש bugs לא ברשימה,
-‏וכתוב דוח ב-docs/<slice>-verification-report.md.`
-})
+עבור על כל ה-DoD items, חפש regressions, חפש bugs לא ברשימה,
+וכתוב דוח לפי פורמט הדוח של כלב.
 ```
 
 ‏אם ה-brief לא ציין tier — `light` ‏כברירת מחדל.
@@ -373,27 +359,12 @@ mode: light   # ‏ל-calev (light) בלבד; calev-heavy לא צריך שורת
 
 הדיווח שלך למרדכי כבר כולל verdict כלב מפורש (runtime-gate); הוסף את ה-path לדוח כלב כדי שמרדכי יפתח אותו (`reports/<project>/<slice>-calev.md`).
 
-## ‏🔴 ‏דיווח להורה בסיום — ‏אם `DC_PARENT` ‏מוגדר
+## דיווח להורה בסיום
 
-‏כששוגרת דרך ה-API ‏של drive-coding, ‏הסביבה שלך מכילה **‏כתובת-חזרה**:
+פרוטוקול: `docs/dispatch.md` §ילד.
 
-```bash
-echo "parent=$DC_PARENT base=$DC_BASE"   # ‏ריק ⇒ ‏שוגרת במסלול אחר, ‏דלג על הסעיף
-```
+1. אם יש כלי `notify_parent` — קרא אותו עם שורת-סיכום (אליעזר · סלייס · קומיטים · נתיב דוח).
+2. אחרת אם `$DC_PARENT` מוגדר — `node "{{BDS_SCRIPTS}}/dispatch-via-api.mjs" notify --base "$DC_BASE" --agent "$DC_PARENT" --text "..."`.
+3. אחרת דלג.
 
-‏אם היא מוגדרת — ‏**‏השורה האחרונה שלך לפני סיום** ‏היא הודעה לסוכן-האב:
-
-```bash
-node ~/Projects/brief-driven-slices/scripts/dispatch-via-api.mjs \
-  notify --base "$DC_BASE" --agent "$DC_PARENT" \
-  --text "<‏תפקיד> ‏סיים · <‏סלייס> · <verdict/‏קומיטים> · ‏דוח: <‏נתיב>"
-```
-
-**‏זו דחיפה, ‏לא תור** — ‏נמדד 27/08 ‏על cursor: ‏ההודעה נקלטת אצל האב **‏באמצע
-turn ‏רץ**, ‏בלי `end_turn` ‏ביניים. ‏פירושו: ‏האב לא צריך לסקור אותך.
-
-⚠️ ‏שלוש הסתייגויות:
-- **‏אל תסגור את עצמך.** ‏סגירת הסשן שלך חותכת את הזרם שנושא את התשובה הזו.
-  ‏הסגירה היא של המשגר (`close`), ‏אחרי שאסף.
-- ‏ההודעה **‏אינה מחליפה את הדוח**. ‏היא מצביעה עליו. ‏דוח שלא נכתב לא קיים.
-- ‏שלח **‏פעם אחת**, ‏בסוף. ‏הודעה לכל צעד תיקטע את עבודת האב.
+אל תסגור את עצמך. ההודעה מצביעה על הדוח — אינה מחליפה אותו.

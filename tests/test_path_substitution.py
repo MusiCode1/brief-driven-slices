@@ -169,6 +169,19 @@ class TestInstallersUseSubstituteInto(unittest.TestCase):
             self.assertNotIn("{{BDS_", combined)
             self.assertIn("/tmp/fk-r", combined)
 
+    def test_install_claude_substitutes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            result = run_bash(
+                "install_claude",
+                env_overrides={"CLAUDE_AGENTS_DIR": tmp},
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            found = list(Path(tmp).glob("*.md"))
+            self.assertTrue(found, "no files installed")
+            combined = "\n".join(f.read_text() for f in found)
+            self.assertNotIn("{{BDS_", combined)
+            self.assertIn("/tmp/fk-r", combined)
+
 
 if __name__ == "__main__":
     unittest.main()

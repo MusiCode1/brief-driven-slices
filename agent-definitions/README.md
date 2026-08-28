@@ -9,6 +9,8 @@ Generated outputs:
 
 - `cli-configs/codex/agents/*.toml`
 - `cli-configs/opencode/agents/*.md`
+- `cli-configs/qoder/agents/*.md`
+- `cli-configs/claude-code/agents/*.md`
 - `agents/*.md` for legacy OpenCode compatibility
 
 Regenerate outputs:

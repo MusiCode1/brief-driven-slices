@@ -15,8 +15,8 @@
 
 ```
 ‏המשתמשת → ‏מרדכי: "‏בצע slice X"
-‏מרדכי → Task(subagent_type="eliezer", ..., run_in_background: true)   [‏רקע]
-‏אליעזר מבצע, ‏מפעיל כלב (verifier), ‏מחזיר
+‏מרדכי → ‏שיגור אליעזר לפי docs/dispatch.md   [‏רקע, noWait]
+‏אליעזר מבצע, ‏המשגר מפעיל כלב (verifier), ‏מחזיר
 ‏מרדכי מציג למשתמשת → ‏המשתמשת מאשרת → ‏מרדכי עושה merge
 ```
 
@@ -27,7 +27,7 @@
 ```
 ‏ערב:   ‏המשתמשת + ‏מרדכי כותבים briefs, ‏אביגיל מאמתת, ‏מסמנים dispatch_ready=true ב-state.json
 ‏לילה:  ‏המשתמשת פותחת session יתרו → "‏הרץ את ה-queue"
-         ‏יתרו: ‏ניקוי → ‏מוצא slice dispatch-ready → tmux dispatch אליעזר → poll
+         ‏יתרו: ‏ניקוי → ‏מוצא slice dispatch-ready → שיגור לפי docs/dispatch.md → poll
                → ‏כלב verifier GO → ‏ארכב brief → ‏slice הבא
 ‏בוקר:  ‏המשתמשת פותחת session מרדכי → ‏קורא summary → ‏עושה merges מאושרים
 ```
@@ -86,15 +86,15 @@
 | `planned` | ‏מרדכי | ‏רעיון, ‏אין brief |
 | `brief-ready` | ‏מרדכי | brief ‏נכתב |
 | `plan-verified` | ‏מרדכי | ‏אביגיל אישרה |
-| `in-progress` | ‏יתרו | ‏אליעזר פעיל ב-tmux |
+| `in-progress` | ‏יתרו | ‏אליעזר פעיל (MCP/API) |
 | `verified` | ‏יתרו | ‏כלב אישר (GO) |
 | `merged` | ‏מרדכי | ‏מוזג ל-dev |
 | `needs-revision` | ‏יתרו | ‏כלב סירב |
 | `blocked` | ‏יתרו | ‏אליעזר כתב outcomes/<slice>.json עם status=blocked |
 | `blocked-by:<id>` | ‏יתרו | ‏תלות שלו נכשלה |
 | `timed-out` | ‏יתרו | ‏אין heartbeat > 2h |
-| `crashed` | ‏יתרו | tmux ‏מת ללא sentinel |
-| `failed:infra` | ‏יתרו | exit ≠ 0 (‏קריסת opencode) |
+| `crashed` | ‏יתרו | ‏הסשן נסגר בלי outcomes |
+| `failed:infra` | ‏יתרו | ‏שיגור נכשל (MCP ו-API) |
 | `discarded` | ‏מרדכי | ‏נזרק ידנית |
 
 ---
@@ -202,8 +202,7 @@ EOF
 
 | ‏סקריפט | ‏שפה | ‏מי קורא | ‏תפקיד |
 |---------|------|---------|--------|
-| `scripts/dispatch-executor.sh` | bash | ‏יתרו | tmux + env scrub + sentinel |
-| `scripts/wait-for-slice.sh` | bash | ‏יתרו | ‏poll + crash/timeout detection |
+| `scripts/dispatch-via-api.mjs` | node | משגר | גיבוי API כשאין MCP (`docs/dispatch.md`) |
 | `scripts/install-agents.sh` | bash | ‏משתמשת | עותקים (path-substitution לפי `paths.env`) ל-~/.config/opencode/agents/ |
 | `scripts/cleanup_state.py` | python3 | ‏יתרו | ‏ניקוי תחילת סשן |
 | `scripts/discard_chain.py` | python3 | ‏מרדכי | ‏זריקת שרשרת בטוחה |

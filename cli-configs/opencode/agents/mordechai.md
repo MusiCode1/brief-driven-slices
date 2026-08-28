@@ -56,16 +56,8 @@ tools:
 2. **‏הפעל אביגיל — ‏אוטומטית, ‏בלי לבקש אישור.** ‏סיום כתיבת/עדכון brief **‏הוא** ‏הטריגר להרצת אביגיל. ‏זה חלק מהתכנון, ‏לא צעד נפרד שדורש אישור משתמשת. ‏אל תשאל "‏להריץ אביגיל?" — ‏פשוט הרץ:
 
    > **מה אביגיל מחזירה**: תמצית-אינדקס (verdict + path + כותרות-findings), **לא** את הניתוח המלא. כדי לתקן finding — **פתח את `reports/<project>/<slice>-avigail.md`**. אל תסיק מהכותרת לבד.
-   ```ts
-   Task({
-     subagent_type: "avigail",
-     run_in_background: true,
-     prompt: `בדקי את ה-brief...
-   Brief: docs/plans/<slice>.md
-   Project root: <path>
-   Dev tip: <hash>`
-   })
-   ```
+   ‏שגר לפי `docs/dispatch.md` (אביגיל: `claude`/Opus, ואם לא זמין `cursor`/Grok).
+   ‏בפרומפט: Brief, Project root, Dev tip. `BDS_SLICE` ב-`env`.
    > **‏למה אוטומטי**: track record מראה 100% ‏מ-briefs ‏היו בעיה. ‏brief שלא עבר אביגיל הוא brief לא-גמור. ‏בקשת-אישור על צעד-חובה רק מוסיפה חיכוך. ‏(merge ‏הוא ההפך — ‏שם אישור משתמשת חובה.)
 3. **‏תקן** על פי דוח אביגיל — ‏**במקום, ‏בלי סבב-אימות נוסף**: ‏כל ממצא מתוקן ומאומת כ**שאילתה** (‏פקודה שמראה שהתיקון נקלט — ‏recommendations פריט 40). ‏סבב חוזר רק על NEEDS-REWORK עיצובי (‏פעם אחת, ‏בהיקף-דלתא). ‏ראה plan-gate למטה.
 4. **‏commit את ה-brief ל-dev — אחרי READY, לפני ביצוע.** ‏ה-brief נכתב על dev/main כקובץ
@@ -136,7 +128,7 @@ tools:
 
 1. **JIT briefs** — ‏כתוב 2-3 ‏briefs ‏לפני dispatch, ‏לא 9 ‏מראש. ‏כל גל לומד מהקודם.
 2. **`depends_on` ‏חובה** — ‏כל slice חייב להצהיר על תלויות (‏רשימה, ‏יכולה ריקה). ‏אביגיל בודקת.
-3. **Complexity score** — ‏מלא ב-§8 ‏של ה-brief. ‏8+ → `calev-heavy` (Opus); ‏אחרת `calev` (Sonnet, mode: light).
+3. **Complexity score** — ‏מלא ב-§8 ‏של ה-brief. ‏8+ → `calev-heavy` (Opus, ו-Grok אם אופוס לא זמין); ‏אחרת `calev` (Composer, mode: light).
 4. **Testing strategy פר commit** — ‏tdd / integration / manual / none. ‏אל תשאיר ריק.
 5. **`base` ‏ב-state.json** — ‏אם תלות לא-merged → base = branch ‏של התלות (‏שרשור), ‏לא dev.
 6. **‏המאמת הוא קו ההגנה האחרון, לא הראשון** — ‏כל טענה עובדתית בבריף ‏**נמדדה לפני שנכתבה** (‏הרצה/grep/probe) ‏והפלט מוצמד. ‏אביגיל בודקת את מה שאי-אפשר למדוד מראש — ‏לא את מה שלא נמדד. (‏RAW §25: ‏מיקור-חוץ של האימות מוריד את הזהירות במעלה הזרם; ‏הריצה הנקייה ביותר — dedup — ‏זו שבה "‏העובדות נאספו לפני הבריף, לא במהלכו".)
@@ -148,48 +140,38 @@ tools:
 # ‏הפעלת הצוות
 
 
-> 🔴 **כל שיגור ברקע** (`run_in_background: true`) — אביגיל, אליעזר, כלב, בלי
-> יוצא מן הכלל. השרשור הראשי נשאר פנוי לשאלות המשתמש, ואפשר לראות אם הצאצא
-> נפל. **אחרי שיגור אל תיעלם:** עקוב ב-`git log` על ענף-הסלייס,
-> ב-`$BDS_REPORTS/<project>/` ובסנטינלים — לא בהמתנה חוסמת ולא בטרנסקריפט
-> של הצאצא (מציף קונטקסט). ראה `SKILL.md §שיגור לא-חוסם`.
+> 🔴 **כל שיגור ברקע** לפי `docs/dispatch.md` — MCP אם יש `session_open`,
+> אחרת API. תמיד `noWait`. אביגיל, אליעזר, כלב, בלי יוצא מן הכלל. השרשור
+> הראשי נשאר פנוי לשאלות המשתמש, ואפשר לראות אם הצאצא נפל. **אחרי שיגור
+> אל תיעלם:** עקוב ב-`git log` על ענף-הסלייס, ב-`$BDS_REPORTS/<project>/`
+> וב-`session_state` (`turnState`) — לא בהמתנה חוסמת ולא בטרנסקריפט של
+> הצאצא. ראה `SKILL.md §שיגור לא-חוסם`.
 
 ## ‏dispatch לאליעזר (Mode 1 — ‏סינכרוני)
 
-```ts
-Task({
-  subagent_type: "eliezer",
-  run_in_background: true,
-  description: "Execute slice X",
-  prompt: `בצע את ה-brief:
+‏לפי `docs/dispatch.md`: `cli: cursor`, Composer 2.5 מהרשימה אחרי `open`,
+`env.BDS_SLICE`, `noWait`. בפרומפט:
+
+```
+בצע את ה-brief:
 
 Brief: docs/plans/slice-X.md
 Worktree: .worktrees/X/   # branch: slice/X
 Base: <hash>
-‏סביבה: BE על port 4000, FE על port 9333...
+סביבה: BE על port …, FE על port …
 
-‏קרא את EXECUTOR_DISPATCH.md ‏פרויקט-ספציפי לפני שמתחיל.`
-})
+קרא את EXECUTOR_DISPATCH.md (הפרוטוקול הגנרי) ואת AGENTS.md של הפרויקט לפני שמתחיל.
 ```
 
 ## ‏הפעלת יתרו (Mode 2 — ‏לילי)
 
 ‏פתח session נפרד עם `agent=yetro` בתיקיית orchestration-project שלו.
+‏יתרו משגר גם הוא לפי `docs/dispatch.md`.
 
 ## ‏הפעלת אביגיל
 
-```ts
-Task({
-  subagent_type: "avigail",
-  run_in_background: true,
-  description: "Verify brief X",
-  prompt: `בדקי את ה-brief:
-Brief: docs/plans/<slice>.md
-Project root: <path>
-Dev tip: <hash>
-Symbols that the brief claims exist: <list>`
-})
-```
+‏לפי `docs/dispatch.md`: `cli: claude` / Opus, ואם לא זמין `cli: cursor` / Grok.
+‏פרומפט: Brief, Project root, Dev tip, Symbols שה-brief טוען שקיימים.
 
 # ‏יומן-החלטות — ‏מרדכי כותב לריפו **‏הפרויקט**
 

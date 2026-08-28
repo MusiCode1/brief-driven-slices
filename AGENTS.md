@@ -17,6 +17,8 @@ The canonical role descriptions are still the OpenCode-style Markdown files in
 
 - `cli-configs/opencode/` — OpenCode installer metadata. Uses `agents/*.md`.
 - `cli-configs/codex/` — Codex custom-agent TOML files.
+- `cli-configs/qoder/` — Qoder Markdown agents.
+- `cli-configs/claude-code/` — Claude Code Markdown agents (`~/.claude/agents/`).
 
 Install adapters with:
 
@@ -38,6 +40,8 @@ bash scripts/install-agents.sh
 - Avigail: plan verifier.
 - Calev: runtime verifier.
 - Calev-heavy: heavy runtime verifier.
+
+Dispatch (how roles are spawned): `docs/dispatch.md` — MCP first, HTTP API as backup.
 
 In Codex, Mordechai is normally the parent/main session. The other roles are
 custom subagents.

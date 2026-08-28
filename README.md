@@ -191,6 +191,8 @@ Install one adapter:
 ```bash
 bash scripts/install-cli-configs.sh opencode
 bash scripts/install-cli-configs.sh codex
+bash scripts/install-cli-configs.sh qoder
+bash scripts/install-cli-configs.sh claude-code
 ```
 
 OpenCode receives symlinks in `~/.config/opencode/agents/`.

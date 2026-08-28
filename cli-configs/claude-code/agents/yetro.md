@@ -46,23 +46,22 @@ tools: Read, Glob, Grep, Write, Edit, Bash, WebFetch, Task, TodoWrite
    git worktree add <repo>/.worktrees/<name> -b slice/<name> <base>   # branch: slice/<name> | dir: .worktrees/<name>
    ‏כתוב prompt → $STATE/dispatches/<name>.prompt
    ‏עדכן state.json: status=in-progress, branch=slice/<name>, worktree=<path>, started=<ts>
-    bash {{BDS_SCRIPTS}}/dispatch-executor.sh \
-     <project> <slice> <worktree>
+    ‏שגר אליעזר לפי docs/dispatch.md (cli: cursor, Composer 2.5, env.BDS_SLICE, noWait)
    │
    ▼ [‏המתנה]
-    exit_code=$(bash {{BDS_SCRIPTS}}/wait-for-slice.sh \
-     <project> <slice> 120)
+    ‏עקוב לפי docs/dispatch.md: session_state (turnState) + heartbeats + git log.
+    ‏אל תחסום על session_send. notify_parent מהילד חוסך המתנה, לא אימות.
    │
     ▼ [‏טיפול בתוצאה — סדר חשוב]
     (1) ‏קיים $STATE/outcomes/<slice>.json?   ← ‏הבדיקה הראשונה!
-        ‏לא קיים → status=crashed (אליעזר לא סיים לכתוב — קריסה שקטה) → ‏עצור ענף
+        ‏לא קיים + turnState אינו idle → ‏עדיין רץ; המשך מעקב
+        ‏לא קיים + idle/נסגר → status=crashed (אליעזר לא סיים לכתוב) → ‏עצור ענף
         ‏קיים → ‏קרא status:
            status=="blocked"   → status=blocked → ‏עצור ענף (‏לא מריץ כלב)
-           status=="completed" → ‏המשך לבדיקת exit code:
-    (2) exit_code == 124? → status=timed-out → ‏עצור ענף
-    (3) exit_code == 125? → status=crashed → ‏שמור crash log → ‏עצור ענף
-    (4) exit_code != 0 ‏אחר? → status=failed:infra → ‏עצור ענף
-    (5) exit_code == 0 + status==completed → ‏הפעל כלב:
+           status=="completed" → ‏המשך ל-(2)
+    (2) git log לא תואם את הבריף / עץ מלוכלך → status=needs-revision → ‏עצור ענף
+        (אל תשגר כלב על עבודה חלקית)
+    (3) completed + ארטיפקט תקין → ‏הפעל כלב לפי docs/dispatch.md:
           ‏כלב GO → status=verified → ‏ארכב brief (ב-branch) → ‏slice הבא
           ‏כלב NO → status=needs-revision → ‏עצור ענף (worktree נשאר)
    │
@@ -133,18 +132,15 @@ tmp.replace(state_path)
 
 - **drift check**: אם git rev-parse <base_branch> != dev_tip → ‏עצור ושאל מרדכי.
 - **blocked-by**: אם תלות במצב failed/blocked/crashed → ‏סמן slice כ-`blocked-by:<id>`, ‏דלג.
-- **heartbeat stale > 2h**: ‏אחרי שdispatch-executor.sh מפעיל, ‏wait-for-slice.sh מדווח על staleness.
+- **heartbeat stale > 2h**: אחרי שיגור לפי `docs/dispatch.md`, עקוב אחרי `turnState` ו-heartbeat. שקט ממושך עם תור פתוח = תקוע (לא "עדיין רץ").
 
 ## ‏dispatch לכלב
 
-> **ברקע** (`run_in_background: true`). ‏ההמתנה של `wait-for-slice.sh` ‏היא **תור-ניטור**
-> ‏על סנטינל-קובץ — ‏זה מותר ואינו "שיגור חוסם". ‏שיגור תת-סוכן — ‏לעולם לא חוסם.
- (Task prompt)
+‏לפי `docs/dispatch.md`. light: `cursor`/Composer. heavy: `claude`/Opus, ואם לא זמין `cursor`/Grok. תמיד `noWait`.
 
 **‏חובה לכלול `log_path:`** כדי שכלב יכתוב progress לקובץ ה-log בזמן אמת:
 
 ```
-Task(subagent_type="calev" | "calev-heavy", prompt="""
 brief: <brief_path>
 slice: <slice_name>
 commit: <commit_hash>
@@ -152,10 +148,9 @@ mode: <phase|light|heavy>
 project root: <project_root>
 environment: <environment_notes>
 log_path: <log_file_path>
-""")
 ```
 
-**‏אחרי שה-Task חוזר** — כתוב את ה-result לקובץ ה-log:
+**‏אחרי שהילד מדווח / `turnState=idle`** — כתוב את ה-result לקובץ ה-log:
 
 ```bash
 echo "‏• calev result: <verdict> — <X/Y DoD>, <N> findings" >> "$LOG_FILE"

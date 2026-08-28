@@ -5,12 +5,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
-
 ROOT = Path(__file__).resolve().parents[1]
 DEFINITIONS = ROOT / "agent-definitions" / "agents.json"
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from oc2cc import convert
 
 
 def quote_toml(value: str) -> str:
@@ -134,12 +137,20 @@ def generate(target: str) -> list[Path]:
             if write_if_changed(output, content):
                 changed.append(output)
 
-        if target in ("all", "opencode"):
-            content = render_opencode_agent(agent, prompt)
-            for output in (
-                ROOT / "cli-configs" / "opencode" / "agents" / f"{agent_id}.md",
-                ROOT / "agents" / f"{agent_id}.md",
-            ):
+        if target in ("all", "opencode", "claude-code"):
+            opencode_content = render_opencode_agent(agent, prompt)
+            if target in ("all", "opencode"):
+                for output in (
+                    ROOT / "cli-configs" / "opencode" / "agents" / f"{agent_id}.md",
+                    ROOT / "agents" / f"{agent_id}.md",
+                ):
+                    if write_if_changed(output, opencode_content):
+                        changed.append(output)
+            if target in ("all", "claude-code"):
+                content = convert(opencode_content)
+                output = (
+                    ROOT / "cli-configs" / "claude-code" / "agents" / f"{agent_id}.md"
+                )
                 if write_if_changed(output, content):
                     changed.append(output)
 
@@ -154,7 +165,12 @@ def generate(target: str) -> list[Path]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("target", nargs="?", choices=("all", "codex", "opencode", "qoder"), default="all")
+    parser.add_argument(
+        "target",
+        nargs="?",
+        choices=("all", "codex", "opencode", "qoder", "claude-code"),
+        default="all",
+    )
     args = parser.parse_args()
 
     changed = generate(args.target)

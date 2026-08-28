@@ -4,13 +4,18 @@
 מותקנות ב-`~/.claude/agents/`, שאינה תיקייה מנוהלת ב-git.
 
 התוכן זהה במהות ל-`agents/` (פורמט opencode) — **רק ה-frontmatter שונה**.
-שינוי מהותי בהנחיות צריך להיכנס לשני המקומות.
+הקבצים כאן **נגזרים**: `python3 scripts/generate-cli-configs.py claude-code`
+(דרך `oc2cc.convert` על פלט OpenCode). שינוי מהותי בהנחיות נכנס ל-
+`agent-definitions/prompts/`, לא לכאן.
 
 ## התקנה על מכונה חדשה
 
 ```bash
-cp cli-configs/claude-code/agents/*.md ~/.claude/agents/
+bash scripts/install-cli-configs.sh claude-code
 ```
+
+המתקין ממיר placeholders (`{{BDS_*}}`) לנתיבים של המכונה דרך `substitute_into`.
+אל תעתיקו גולמית — העתקה משאירה placeholders או נתיב של מכונה אחרת.
 
 ## ⚠️ למה הקבצים האלה כאן
 
