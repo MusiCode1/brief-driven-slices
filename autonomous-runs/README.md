@@ -122,6 +122,7 @@ runs/<date>-<שם>.md      — דוח פר-ריצה
 | 22 | 2026-08-29 | `playlist-nav-chrome` (drive-coding) — ‏prev אחרי TTS שאיחר; ‏מוזג ל-`integration/run-playlist-nav-chrome` ‏לא ל-`dev` | **0** / **0** | **0** | 0 |
 | 23 | 2026-08-29 | `session-scope-core` (drive-coding) — ‏גבול-סשן עוצר הקראה (S1); ‏מוזג ל-`integration/run-session-scope-core` @ `1fb02447`; ‏ממתין לעיניים | **1** / **2** | **1** | 0 |
 | 23 | 2026-08-29 | `session-scope-core` (drive-coding) — ‏גבול-סשן עוצר הקראה (S1); ‏מוזג ל-`integration/run-session-scope-core` @ `1fb02447` ‏לא ל-`dev` | **1** / **1** | **1** | 0 |
+| 24 | 2026-08-30 | `public-base-url` (drive-coding) — ‏PUBLIC_BASE_URL + CORS union; ‏מוזג ל-`integration/run-public-base-url` @ `dae6f694` ‏לא ל-`dev` | **1** / **2** | **1** | 0 |
 
 > ⚠️ **‏18 ‏שמור ל-`live-voice` (27/08)** — ‏הדוח קיים ב-`runs/2026-08-27-live-voice.md`
 > ‏אך **‏מעולם לא נכנסה לו שורה כאן**. ‏ריצה 19 ‏דילגה על 18 ‏במכוון, ‏כדי לא לייצר
