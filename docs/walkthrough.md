@@ -672,3 +672,18 @@ grep "הנחה לא-מאומתת" plan-pitfalls.md ✅. grep "מקורות" patt
 - ‏מחיקת התיקייה הישנה ב-my-skills (`git rm`) — ‏הצעד האחרון, ‏commit נפרד ב-my-skills, ‏רק אחרי grep נקי.
 - ‏calev tier: heavy (complexity 8) — ‏smoke של opencode run + ‏בדיקת symlinks + grep נקי.
 - ‏מה שלא נכנס (brief שני, ‏עתידי): ‏קטלוגים תמציתיים, ‏זיקוק תקופתי, ‏טקסונומיה מתפתחת, ‏יומן גלובלי.
+
+---
+
+## 2026-08-31 — סקירת-תהליך (Claude) + יישום שש המלצות
+
+סקירה רוחבית של 29 ריצות אוגוסט (`autonomous-runs/2026-08-31-process-review-claude.md`),
+אושרה במלואה ע"י המשתמש ויושמה באותו סשן:
+
+| מה | איפה |
+|----|------|
+| פנקס נגזר מ-frontmatter (פערים 0+4) | `scripts/render-run-ledger.py` + יישור מספור חד-פעמי ב-`runs/` (9b/23b/23c) + הקפאת הטבלה הידנית ב-README |
+| צופה קנוני (פער 9, חדש) | `scripts/watch-dispatch.sh` — הכרעה-לפי-ארטיפקט, notify בלבד, גלאי-קיפאון; חווט ב-MISSION_TEMPLATE + kickoff-mordechai |
+| פער 6 (מות-זרם ב-idle) | נסגר ✅ — אומת בריצות 26–29 |
+| תור-פריוויו + פרוב-חשוד + BACKLOG #87 | בריפו docs-repo/drive-coding (`plans/preview-queue.sh`, `plans/backlog-status.sh`) |
+| זיקוק אוגוסט (טקסונומיית-מתכנן) | סוכן-רקע → `distillations/2026-08-31-report.md` + patterns.md |

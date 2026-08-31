@@ -93,7 +93,19 @@ runs/<date>-<שם>.md      — דוח פר-ריצה
 
 התערבויות-מוצר אינן נספרות לרעה — שער-המיזוג ואישור-הפריוויו הם **תכנון**, לא חיכוך.
 
-### הפנקס
+### הפנקס — נגזר, לא נכתב ביד (מ-31/08)
+
+> 🔑 **הפנקס הקנוני מיוצר ע"י `../scripts/render-run-ledger.py`** מתוך ה-frontmatter
+> של `runs/*.md` — סוגר את פערים 0+4 (שורה כפולה לריצה 23, ריצה 18 שנשמטה,
+> שלוש כפילויות-מספור). `--check` נכשל על דוח בלי frontmatter או כפל-מספר,
+> והרצף לתנאי-היציאה מחושב אוטומטית בתחתית הפלט.
+>
+> ‏שורת-פנקס חדשה = **‏frontmatter ‏בדוח-הריצה**, ‏לא עריכה כאן. ‏שדה חדש:
+> `new_territory: true/false` (‏עמודת "‏שטח חדש?" — ‏אפס-על-שטח-מוכר הוא
+> ‏אינדיקציה חלשה). ‏המספור הישן יושר חד-פעמית ב-31/08 ‏למספרים הקנוניים
+> (`9b`/`23b`/`23c` ‏למקרים שנפלו בין הכיסאות).
+
+### הפנקס הידני — ⛔ מוקפא 31/08, היסטוריה בלבד
 
 | # | תאריך | ריצה | התערבויות: מוצר / צנרת | כשלי-מסירה | תיקונים קבועים |
 |---|---|---|---|---|---|
@@ -123,6 +135,12 @@ runs/<date>-<שם>.md      — דוח פר-ריצה
 | 23 | 2026-08-29 | `session-scope-core` (drive-coding) — ‏גבול-סשן עוצר הקראה (S1); ‏מוזג ל-`integration/run-session-scope-core` @ `1fb02447`; ‏ממתין לעיניים | **1** / **2** | **1** | 0 |
 | 23 | 2026-08-29 | `session-scope-core` (drive-coding) — ‏גבול-סשן עוצר הקראה (S1); ‏מוזג ל-`integration/run-session-scope-core` @ `1fb02447` ‏לא ל-`dev` | **1** / **1** | **1** | 0 |
 | 24 | 2026-08-30 | `public-base-url` (drive-coding) — ‏PUBLIC_BASE_URL + CORS union; ‏מוזג ל-`integration/run-public-base-url` @ `dae6f694` ‏לא ל-`dev` | **1** / **2** | **1** | 0 |
+| 25 | 2026-08-30 | `cursor-sdk-acp` (ריפו חדש) — ‏גשר SDK→ACP מלא; ‏4 סלייסים ל-`main` @ `9f1dcc9`; ‏מרדכי על Grok (הקפאת Claude) | **5** / **3** | **1** | 2 |
+| 26 | 2026-08-31 | `cascade-close-children` (drive-coding) — סגירת-הורה סוגרת ילדים; מוזג ל-`integration/run-cascade-close-children` @ `4b385a37` לא ל-`dev` | **0** / **0** | **0** | 0 |
+| 27 | 2026-08-31 | `acp-wire` (drive-coding + cursor-sdk-acp) — שלב 1 stdio/unix-socket; מוזג ל-`integration/run-acp-wire` @ `a0572cb4` / `2796669` לא ל-`edge`/`dev`/`main` | **1** / **1** | **0** | 0 |
+| 28 | 2026-08-31 | `acp-wire-http` (drive-coding + cursor-sdk-acp) — שלב 2 Streamable HTTP; מוזג ל-`integration/run-acp-wire` @ `d74592c5` / `8ea3c6d` לא ל-`edge`/`dev`/`main` | **0** / **1** | **0** | 0 |
+| 29 | 2026-08-31 | `acp-wire-be-dedupe` — סידור BE / from-line-wire; מוזג ל-`integration/run-acp-wire-be` @ `d79e150f` לא ל-`edge`/`dev` | **0** / **1** | **0** | 1 |
+| 30 | 2026-08-31 | `ws-transport-dedupe` — browser WS→acp-wire; מוזג ל-`integration/run-ws-transport-dedupe` @ `c58fdac6` לא ל-`edge`/`dev` | **0** / **0** | **0** | 0 |
 
 > ⚠️ **‏18 ‏שמור ל-`live-voice` (27/08)** — ‏הדוח קיים ב-`runs/2026-08-27-live-voice.md`
 > ‏אך **‏מעולם לא נכנסה לו שורה כאן**. ‏ריצה 19 ‏דילגה על 18 ‏במכוון, ‏כדי לא לייצר
