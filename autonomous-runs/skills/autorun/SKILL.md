@@ -64,6 +64,21 @@ description: |
 - אחרי שיגור: `session_state` (`turnState`) + `notify_parent` מהילד + `git`. אל תיעלם.
 - סגירה: `session_close` / `close` — רק id שפתחת. MCP לא סוגר לבד.
 
+### 🔴 מעקב־טיק (`AGENT_WATCH_TICK`) — חי ≠ עובד
+
+🔴 **תהליך-הצופה הוא `$BDS_SCRIPTS/watch-dispatch.sh` — חובה. אסור צופה
+ad-hoc** (OPEN-GAPS פער 9; שלוש ריצות שילמו צנרת על מאולתרים). הסקריפט
+מחזיק את ההמתנה, מכריע לפי ארטיפקט, ומעיר ב-`notify` בהכרעה או בקיפאון.
+**כשהטיק מעיר את המתאם** — הוא בודק תוכן, לא רק חיות:
+
+1. הודעות/כלים אחרונים של מרדכי **וילדים** (לא רק `turnState`/`busy`)
+2. `git log` / `status` בעץ־ההרצה — התקדמות מאז הטיק הקודם?
+3. `$BDS_REPORTS/<project>/` — דוחות חדשים?
+
+`idle`/`busy` בלי שינוי ב־git/דוחות/הודעות = תקוע → דחיפה או שחזור.
+מחקר לבריפים/משימות: `docs/investigations/2026-08-31-agent-watch-tick-obligation.md`.
+פירוט + מלכודות צופה: basic-memory `צופה systemd ל-notify של drive-coding — PATH ו-CRLF`.
+
 בגוף הפרומפט לילד — להנחות אותו ל-`notify_parent` בסיום (הסעיף כבר קיים בקובצי הסוכן).
 
 ## 6 — ארבע האזהרות בשיגור
