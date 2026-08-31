@@ -1,3 +1,15 @@
+---
+run: 18
+date: 2026-08-27
+project: drive-coding
+slices: [live-contract-gemini, live-context, live-secretary-say, live-secretary-live]
+interventions_product: 4
+interventions_plumbing: 6
+handoff_failures: 5
+permanent_fixes: 0
+verdict: 4 סלייסים מוזגו לענף-ההרצה · תקרית verdict-עצמי (MISSION_TEMPLATE §8)
+# frontmatter הוסף בדיעבד 2026-08-31 — הריצה שמעולם לא קיבלה שורה בפנקס (פער 0); המספרים מגוף הדוח (שורות 298-300)
+---
 # דוח-ריצה — `live-voice` (‏27/08/2026) · **סגור**
 
 > **קשת**: Track B · משטח-קול realtime · **בסיס**: `dev` @ `3952f4f9`

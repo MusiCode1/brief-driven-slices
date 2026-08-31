@@ -1,5 +1,5 @@
 ---
-run: 8
+run: 9  # תוקן 31/08 למספר הקנוני מהפנקס (פער 4)
 date: 2026-08-23
 project: InboxSMS
 mission: InboxSMS/plans/missions/ingest-worker.md

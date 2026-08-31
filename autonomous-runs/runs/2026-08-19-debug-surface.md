@@ -1,5 +1,6 @@
 ---
-run: 3
+run: 3  # אינה נספרת — הופסקה וצומצמה לביצוע-ישיר
+counted: false
 date: 2026-08-19
 project: drive-coding
 mission: docs-repo/drive-coding/plans/missions/debug-surface.md

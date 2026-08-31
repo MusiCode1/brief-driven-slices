@@ -1,3 +1,15 @@
+---
+run: 20
+date: 2026-08-27
+project: drive-coding
+slices: [session-create-contract]
+interventions_product: 1
+interventions_plumbing: 4
+handoff_failures: 2
+permanent_fixes: 3
+verdict: כלב GO · מוזג ל-edge באישור · כל התפקידים על Cursor
+# frontmatter הוסף בדיעבד 2026-08-31 (טאטוא-פנקס); המספרים מהשורה הקנונית בפנקס
+---
 # ‏ריצה 20 — `session-create-contract` (drive-coding)
 
 > **‏תאריך**: 2026-08-27 · **‏בסיס**: `dev` @ `3952f4f9` · **‏ענף-הרצה**: `integration/run-session-create-contract`

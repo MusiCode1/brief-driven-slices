@@ -1,3 +1,16 @@
+---
+run: null
+counted: false
+date: 2026-08-29
+project: drive-coding
+slices: []
+interventions_product: 0
+interventions_plumbing: 1
+handoff_failures: 2
+permanent_fixes: 1
+verdict: 🛑 הפלה בבדיקת-טרום — לא שוגר אף סוכן (התוצאה הנכונה)
+# frontmatter הוסף בדיעבד 2026-08-31; אינה נספרת ברצף — לא שוגר סוכן
+---
 # ריצה — `queue-audit` (הפלה בבדיקת-טרום)
 
 > **תאריך**: 2026-08-29 · **פרויקט**: drive-coding · **תוצאה**: 🛑 **לא שוגר אף סוכן**

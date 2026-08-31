@@ -1,3 +1,15 @@
+---
+run: 10
+date: 2026-08-23
+project: drive-coding
+slices: [control-roles]
+interventions_product: 1
+interventions_plumbing: 6
+handoff_failures: 0
+permanent_fixes: 4
+verdict: בוצע · אומת · לא מוזג — ממתין לעיני המשתמש
+# frontmatter הוסף בדיעבד 2026-08-31 (טאטוא-פנקס); המספרים מהשורה הקנונית בפנקס
+---
 # ריצה — `control-roles` (23/08)
 
 > **תוצאה:** בוצע · אומת · **לא מוזג** — ממתין לעיני המשתמש

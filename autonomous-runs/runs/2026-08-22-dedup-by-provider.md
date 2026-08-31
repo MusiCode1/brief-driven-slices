@@ -1,5 +1,5 @@
 ---
-run: 6
+run: 7  # תוקן 31/08 למספר הקנוני מהפנקס (פער 4)
 date: 2026-08-22
 project: InboxSMS
 mission: InboxSMS/plans/missions/dedup-by-provider.md

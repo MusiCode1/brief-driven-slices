@@ -1,5 +1,5 @@
 ---
-run: 9
+run: 11  # תוקן 31/08 למספר הקנוני מהפנקס (פער 4)
 date: 2026-08-23
 project: drive-coding
 mission: docs-for-llm/plans/missions/wire-rec-compress.md
