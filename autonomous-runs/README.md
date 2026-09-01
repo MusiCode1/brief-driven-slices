@@ -141,7 +141,7 @@ runs/<date>-<שם>.md      — דוח פר-ריצה
 | 28 | 2026-08-31 | `acp-wire-http` (drive-coding + cursor-sdk-acp) — שלב 2 Streamable HTTP; מוזג ל-`integration/run-acp-wire` @ `d74592c5` / `8ea3c6d` לא ל-`edge`/`dev`/`main` | **0** / **1** | **0** | 0 |
 | 29 | 2026-08-31 | `acp-wire-be-dedupe` — סידור BE / from-line-wire; מוזג ל-`integration/run-acp-wire-be` @ `d79e150f` לא ל-`edge`/`dev` | **0** / **1** | **0** | 1 |
 | 30 | 2026-08-31 | `ws-transport-dedupe` — browser WS→acp-wire; מוזג ל-`integration/run-ws-transport-dedupe` @ `c58fdac6` לא ל-`edge`/`dev` | **0** / **0** | **0** | 0 |
-| 34 | 2026-09-01 | `agent-scopes-r2` (drive-coding) — S0+S2; מוזג ל-`integration/run-agent-scopes-r2` @ `16796fe7` לא ל-`dev`; S3 roleLabel נפתח | **0** / **0** | **0** | 0 |
+| 34 | 2026-09-01 | `agent-scopes-r2` (drive-coding) — S0+S2+S3; מוזג ל-`integration/run-agent-scopes-r2` @ `4cabdc81` לא ל-`dev`; דמו §7 בעיניים | **0** / **0** | **0** | 0 |
 
 > ⚠️ **‏18 ‏שמור ל-`live-voice` (27/08)** — ‏הדוח קיים ב-`runs/2026-08-27-live-voice.md`
 > ‏אך **‏מעולם לא נכנסה לו שורה כאן**. ‏ריצה 19 ‏דילגה על 18 ‏במכוון, ‏כדי לא לייצר

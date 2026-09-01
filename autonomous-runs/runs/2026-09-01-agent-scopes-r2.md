@@ -3,62 +3,62 @@ run: 34
 date: 2026-09-01
 project: drive-coding
 mission: docs-for-llm/plans/missions/agent-scopes-and-charter-r2.md
-slices: [scope-accident-proofing, agent-charter-c2]
+slices: [scope-accident-proofing, agent-charter-c2, agent-role-label]
 interventions_product: 0
 interventions_plumbing: 0
 handoff_failures: 0
 permanent_fixes: 0
 plan_rounds: 1
-brief_to_dispatch: "0:07 / 0:12"
-verdict: החזיקה — S0+S2 מוזגו לענף-ההרצה; S3 roleLabel נפתח
+brief_to_dispatch: "0:07 / 0:12 / 0:08"
+verdict: החזיקה — S0+S2+S3 מוזגו לענף-ההרצה; דמו §7 בעיניים
 ---
 
-# דוח-ריצה 34 — `agent-scopes-and-charter-r2` (S0+S2; S3 בפתיחה)
+# דוח-ריצה 34 — `agent-scopes-and-charter-r2` (S0+S2+S3; דמו §7)
 
 > הדוח הזה על ה*ריצה*, לא על הפרויקט.
-> אימות-תוכן: `$BDS_REPORTS/drive-coding/agent-scopes-r2-{scope-accident-proofing,agent-charter-c2}-{avigail,calev}.md`
-> נשאר: S3 `roleLabel` → דמו §7. לא מוזג ל-`dev`/`edge`.
+> אימות-תוכן: `$BDS_REPORTS/drive-coding/agent-scopes-r2-{scope-accident-proofing,agent-charter-c2,agent-role-label}-{avigail,calev}.md`
+> נשאר: דמו §7 חי. לא מוזג ל-`dev`/`edge`.
 
 ## שעון ה-plan-gate
 
-| מדד | S0 | S2 | הסף |
-|---|---|---|---|
-| סבבי אביגיל עד dispatch | **1** (USABLE-AFTER-FIX → הרתמה; תוקן-במקום) | **1** (USABLE-AFTER-FIX → hook תמיד ב-`getOrCreateHost` + מוקי `consumeCharter`; תוקן-במקום) | 1 ✅ |
-| זמן-קיר בריף→dispatch | **0:07** (`c2abbd8` ~07:38 → אליעזר ~07:46) | **0:12** (`4f11480` 07:59 → אליעזר `1e42d3b6` 08:11) | ≤ שעתיים ✅ |
-| חריגת-תקרה | הקפאת Claude — אביגיל `cursor`/grok-4.6 · אליעזר+כלב `cursor`/composer-2.5 | אותו | אין ✅ |
+| מדד | S0 | S2 | S3 | הסף |
+|---|---|---|---|---|
+| סבבי אביגיל עד dispatch | **1** (USABLE-AFTER-FIX) | **1** (USABLE-AFTER-FIX) | **1** (USABLE-AFTER-FIX — מחגר מול קבצי-חוב; תוקן-במקום) | 1 ✅ |
+| זמן-קיר בריף→dispatch | **0:07** | **0:12** | **0:08** (`7851781` 08:32 → אליעזר ~08:40) | ≤ שעתיים ✅ |
+| חריגת-תקרה | cursor/Grok + composer-2.5 | אותו | אותו | אין ✅ |
 
 ## מה נמסר
 
-שני סלייסים מוזגו ל-**`integration/run-agent-scopes-r2`** (`--no-ff`). **לא מוזג ל-`dev`/`edge`/`main`.**
+שלושה סלייסים מוזגו ל-**`integration/run-agent-scopes-r2`** (`--no-ff`). **לא מוזג ל-`dev`/`edge`/`main`.**
 
 | סלייס | קומיטים | merge |
 |---|---|---|
 | `scope-accident-proofing` C0–C3 | `28ae857f` · `38f4a7d5` · `a101b1d3` · `f2927838` | `1e63d0a1` |
-| `agent-charter` C0–C1 (נקי) | `slice/agent-charter` @ `723ea428` | `e066388c` |
-| `agent-charter-c2` C2–C3 | `1e42d3b6` · `09ab7f3d` | **`16796fe7`** |
+| `agent-charter` C0–C1 | `723ea428` | `e066388c` |
+| `agent-charter-c2` C2–C3 | `1e42d3b6` · `09ab7f3d` | `16796fe7` |
+| `agent-role-label` C0–C3 | `964c3f1c` · `2a1f0042` · `70f3bfc0` · `f3a7e833` | **`4cabdc81`** |
 
-כלב S0: **GO**. כלב S2 light+phase C2: **GO** @ `09ab7f3d` (G5 + mutation gate 9 בנפרד עם פלט). typecheck לא הורץ (אדום על הבסיס).
+כלב S0/S2/S3: **GO**. typecheck לא הורץ (אדום על הבסיס).
 
 ## סשנים שנפתחו ונסגרו
 
-| agentId | מי | מסלול | נסגר? | ראיה |
-|---|---|---|---|---|
-| `931e250c-6a44-46e2-af2d-3b564cfc47cb` | אביגיל S0 (cursor / grok-4.6) | MCP | ✅ | `session_close` אחרי USABLE-AFTER-FIX |
-| `27c28a68-b8b4-487c-b89c-243ddb1bdfd5` | אליעזר S0 (cursor / composer-2.5) | MCP | ✅ | אחרי מיזוג `f2927838` |
-| `e447d2ea-fa01-44ab-86a6-075887479c8d` | כלב S0 (cursor / composer-2.5) | MCP | ✅ | אחרי GO |
-| `cc056a6f-…` | אביגיל S2 (cursor / grok-4.6) | MCP | ✅ | אחרי USABLE-AFTER-FIX |
-| `5bc783df-f693-4575-a4a6-0b234f5ff613` | אליעזר S2 (cursor / composer-2.5) | MCP | ✅ | אחרי GO + מיזוג |
-| `5dff0dc7-0ef0-4d0e-888f-dbdf8e0e202d` | כלב S2 (cursor / composer-2.5) | MCP | ✅ | אחרי GO @ `09ab7f3d` |
+| agentId | מי | נסגר? |
+|---|---|---|
+| `931e250c-…` | אביגיל S0 | ✅ |
+| `27c28a68-…` | אליעזר S0 | ✅ |
+| `e447d2ea-…` | כלב S0 | ✅ |
+| `cc056a6f-…` | אביגיל S2 | ✅ |
+| `5bc783df-f693-4575-a4a6-0b234f5ff613` | אליעזר S2 | ✅ |
+| `5dff0dc7-0ef0-4d0e-888f-dbdf8e0e202d` | כלב S2 | ✅ |
+| `6d3e6ec2-0f1f-4ffe-b0e8-e46c1b18b0a2` | אביגיל S3 | ✅ |
+| `b028bb31-2b7b-4a73-8d92-3052deb9541d` | אליעזר S3 | ✅ |
+| `00b0a7d3-aa4f-4046-8562-3313ccff8c2e` | כלב S3 | ✅ |
 
-לא נסגר (לא שלי): סוכנים אחרים על המכונה. אני (`7c74dc14-…`) נשאר עד `notify_parent` להורה. צופי `s0-*` ו-`s2-calev-watch` נהרגו אחרי איסוף.
+אני (`7c74dc14-…`) נשאר עד `notify_parent` להורה.
 
 ## התערבויות-משתמש — הספירה
 
-אין. הודעות-notify אינן התערבות.
-
-**מוצר: 0 · צנרת: 0.**
-
-ליד-פספוס שלא דלף: `watch-dispatch --expect-commits 2` על כלב S2 הוכרע מיד כי קומיטי אליעזר כבר היו. הצופה נהרג והופעל מחדש כגלאי-קיפאון. הסיום נקבע לפי דוח+`turnState: idle`, לא לפי הכרעת-הצופה הראשונה. לא נספר כשל-מסירה — לא מוזג ולא הוכרז GO לפני הדוח.
+אין. **מוצר: 0 · צנרת: 0.**
 
 ## כשלי-מסירה
 
@@ -69,22 +69,21 @@ verdict: החזיקה — S0+S2 מוזגו לענף-ההרצה; S3 roleLabel נ�
 | שער | תפס | פספס |
 |---|---|---|
 | אביגיל S0 | `makeScopeGateApp` בלי `/reply`/`/state` | — |
-| אביגיל S2 | hook רק בטרנרי `hostOpts` (מסלול `session_open` קר בלי hook); מוקי `consumeCharter` | — |
-| כלב S0 | G1/G2/G5 בנפרד + מוטציה | סוויטת G7 המלאה (light) |
-| כלב S2 | G5 + mutation gate 9 בנפרד; סוויטות G8 | typecheck (מדלג במודע) |
-| **המשתמש** | — | עיניים למיזוג החוצה ולדמו §7 — טרם |
+| אביגיל S2 | hook רק בטרנרי `hostOpts`; מוקי `consumeCharter` | — |
+| אביגיל S3 | C2/C3 מגדלים קבצי-חוב — `lint:size` היה נופל | — |
+| כלב S0–S3 | שערי DoD + מוטציות בנפרד | typecheck (מדלג במודע) |
+| **המשתמש** | — | עיניים למיזוג החוצה ולדמו §7 |
 
 ## תיקונים קבועים שנוצרו
 
-אין חדשים. תיקון ריצה 32 (דוח אחרי הסלייס הראשון) הופעל לפני S2.
+אין חדשים. תיקון ריצה 32 הופעל לפני S2.
 
 ## מה עדיין לא נבדק
 
-- S3 `roleLabel` (בריף נכתב; plan-gate).
-- דמו §7 חי (PORT≥4003, HTTPS, אישור-עצמי + charter + roleLabel).
+- דמו §7 חי (PORT≥4003, HTTPS, ארבעת התרחישים).
 - `bun run typecheck` אדום על 2 שגיאות `provider/client.ts` (pre-existing).
 - מיזוג החוצה — המשתמש בלבד, אחרי §7.
 
 ## הערכה
 
-S0+S2 החזיקו: plan-gate סבב אחד לכל סלייס, runtime-gate GO, מיזוג לענף-ההרצה. החסם הבא: S3 על בסיס `16796fe7`.
+שלושת הסלייסים החזיקו: plan-gate סבב אחד, runtime-gate GO, מיזוג לענף-ההרצה. החסם: עיניים בדמו §7.
