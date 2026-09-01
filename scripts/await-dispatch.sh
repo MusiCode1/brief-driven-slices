@@ -9,7 +9,11 @@
 #
 # ‏שימוש:
 #   await-dispatch <name> --repo <path> --branch <ref> --base <ref> \
-#                  --expect-commits <n> [--timeout <sec>]
+#                  --expect-commits <n> [--timeout <sec>] [--expect-file <path>]
+#
+# `--expect-file` — ‏ארטיפקט-קובץ שחייב להתקיים ‏ולהיות **‏לא-ריק**. ‏מאמת/מבקר
+# ‏מוסר **‏דוח ולא קומיטים**, ‏ולכן: --expect-commits 0 --expect-file <‏נתיב-הדוח>.
+# ‏בלי זה השופט מכריז "‏גמור" ‏מיָדית (0 ‏קומיטים + ‏עץ נקי = ‏תנאי מתקיים).
 #
 # ‏קודי-יציאה — ‏**‏מובחנים בכוונה**:
 #   0  ‏הושלם ואומת   — ‏סנטינל ירה, ‏מספר הקומיטים תואם, ‏העץ נקי
@@ -19,7 +23,7 @@
 set -uo pipefail
 
 NAME="${1:?usage: await-dispatch <name> --repo P --branch B --base R --expect-commits N}"; shift
-REPO="" BRANCH="" BASE="" EXPECT="" TIMEOUT=60 WORKTREE=""
+REPO="" BRANCH="" BASE="" EXPECT="" TIMEOUT=60 WORKTREE="" EXPECT_FILE=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --repo) REPO="$2"; shift 2 ;;
@@ -28,6 +32,8 @@ while [ $# -gt 0 ]; do
     --expect-commits) EXPECT="$2"; shift 2 ;;
     --timeout) TIMEOUT="$2"; shift 2 ;;
     --worktree) WORKTREE="$2"; shift 2 ;;
+    # ‏ארטיפקט-קובץ: ‏המסירה של **‏מאמת/מבקר** ‏היא דוח, ‏לא קומיט (‏נוסף 01/09).
+    --expect-file) EXPECT_FILE="$2"; shift 2 ;;
     *) echo "await-dispatch: unknown arg $1" >&2; exit 4 ;;
   esac
 done
@@ -49,9 +55,17 @@ artifact_report() {
   echo "commits: $n (‏מצופה $EXPECT) · ‏עץ שנבדק: $TREE"
   git -C "$REPO" log --oneline "$BASE..$BRANCH" 2>/dev/null | head -10
   if [ -n "$dirty" ]; then echo "tree: ‏מלוכלך"; echo "$dirty"; else echo "tree: ‏נקי"; fi
+  if [ -n "$EXPECT_FILE" ]; then
+    if [ -s "$EXPECT_FILE" ]; then
+      echo "‏ארטיפקט-קובץ: ‏✅ $EXPECT_FILE ($(stat -c %s "$EXPECT_FILE" 2>/dev/null) ‏בייט)"
+    else
+      echo "‏ארטיפקט-קובץ: ‏⏳ ‏טרם קיים / ‏ריק — $EXPECT_FILE"
+    fi
+  fi
   # ‏🔴 ‏-ge ‏ולא ‏= : ‏"‏חלקי" ‏הוא **‏פחות** ‏מהמצופה. ‏מתכנן שממזג שני סלייסים
   # ‏לענף-ההרצה מייצר יותר קומיטים מהמצופה — ‏וזו הצלחה, ‏לא חלקיות.
-  [ "$n" != "ERR" ] && [ "$n" -ge "$EXPECT" ] 2>/dev/null && [ -z "$dirty" ]
+  [ "$n" != "ERR" ] && [ "$n" -ge "$EXPECT" ] 2>/dev/null && [ -z "$dirty" ] \
+    && { [ -z "$EXPECT_FILE" ] || [ -s "$EXPECT_FILE" ]; }
 }
 
 while :; do
