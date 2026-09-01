@@ -41,13 +41,24 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-notify() {  # ‏הערוץ היחיד שמעיר סוכן. ‏בלי --notify-agent — ‏הדפסה בלבד (‏ריצה ידנית).
-  local msg="$1"
+# ‏הערוץ שמעיר סוכן. ‏בלי --notify-agent — ‏הדפסה בלבד (‏ריצה ידנית).
+# ‏🔴 ‏כישלון-notify ‏אינו אזהרה ב-stderr. ‏ב-tmux ‏אף אחד לא קורא את הפאנל, ‏ואז
+# ‏הצופה "‏עובד" ‏בזמן שהערוץ היחיד שלו מת. ‏לכן: ‏ניסיון שני, ‏ואם גם הוא נכשל —
+# ‏נפילה ל-tg (‏מעיר **‏אדם**, ‏לא סוכן) + ‏קוד-שגיאה שמדביק את המתקשר.
+notify() {
+  local msg="$1" out rc
   echo "── notify ──"; echo "$msg"
   [ -n "$NOTIFY" ] || return 0
-  node "$HERE/dispatch-via-api.mjs" notify --base "$NBASE" --agent "$NOTIFY" \
-    --text "$msg" \
-    || echo "⚠️ watch-dispatch: notify ‏נכשל — ‏המשגר לא הוער. ‏בדוק ש-$NBASE ‏חי ושה-agent ‏קיים." >&2
+  out="$(node "$HERE/dispatch-via-api.mjs" notify --base "$NBASE" --agent "$NOTIFY" --text "$msg" 2>&1)"; rc=$?
+  if [ $rc -eq 0 ]; then return 0; fi
+  sleep 5   # ‏תקלת-רשת חולפת אינה ערוץ מת
+  out="$(node "$HERE/dispatch-via-api.mjs" notify --base "$NBASE" --agent "$NOTIFY" --text "$msg" 2>&1)"; rc=$?
+  if [ $rc -eq 0 ]; then return 0; fi
+  echo "⚠️ watch-dispatch: notify ‏נכשל פעמיים (rc=$rc) — ‏המשגר לא הוער. ${out}" >&2
+  if command -v tg >/dev/null 2>&1; then
+    tg --title "watch-dispatch [$NAME] — ‏ערוץ ההערה מת" --msg "$msg" >/dev/null 2>&1 || true
+  fi
+  return 1
 }
 
 # ‏חתימת-התקדמות: tip ‏של הענף + ‏מצב-העץ + ‏גודל לוג-השיגור. ‏אם היא לא זזה — ‏קיפאון.
@@ -61,6 +72,13 @@ progress_sig() {
 
 LAST_SIG="$(progress_sig)"; LAST_MOVE=$(date +%s); STALL_SENT=0
 echo "WATCH_START $NAME · interval=${INTERVAL}s · stall=${STALL}s · notify=${NOTIFY:-stdout}"
+
+# ‏🔴 ‏שער-השקה בר-כישלון: ‏מוודאים שהערוץ **‏מגיע**, ‏לא שהוגדר. ‏צופה שמתחיל עם
+# ‏ערוץ מת הוא הגרוע משני העולמות — ‏הוא נראה חי ושותק ברגע ההכרעה. ‏נתפס 01/09.
+if [ -n "$NOTIFY" ]; then
+  notify "watch-dispatch [$NAME] ‏✅ ‏הצופה מזוין · repo=$REPO · branch=$BRANCH · interval=${INTERVAL}s · stall=${STALL}s" \
+    || { echo "‏🔴 watch-dispatch: ‏ערוץ ההערה מת בהשקה — ‏לא מתחיל. ‏תקן --notify-agent/--notify-base." >&2; exit 4; }
+fi
 
 while :; do
   OUT="$("$HERE/await-dispatch.sh" "$NAME" "${PASS[@]}" --timeout "$INTERVAL" 2>&1)"; RC=$?

@@ -49,7 +49,9 @@ artifact_report() {
   echo "commits: $n (‏מצופה $EXPECT) · ‏עץ שנבדק: $TREE"
   git -C "$REPO" log --oneline "$BASE..$BRANCH" 2>/dev/null | head -10
   if [ -n "$dirty" ]; then echo "tree: ‏מלוכלך"; echo "$dirty"; else echo "tree: ‏נקי"; fi
-  [ "$n" = "$EXPECT" ] && [ -z "$dirty" ]
+  # ‏🔴 ‏-ge ‏ולא ‏= : ‏"‏חלקי" ‏הוא **‏פחות** ‏מהמצופה. ‏מתכנן שממזג שני סלייסים
+  # ‏לענף-ההרצה מייצר יותר קומיטים מהמצופה — ‏וזו הצלחה, ‏לא חלקיות.
+  [ "$n" != "ERR" ] && [ "$n" -ge "$EXPECT" ] 2>/dev/null && [ -z "$dirty" ]
 }
 
 while :; do
@@ -60,6 +62,19 @@ while :; do
     echo "── ‏הכרעת-סיום לפי ארטיפקט ──"
     if artifact_report; then echo "‏✅ ‏הושלם ואומת"; exit 0
     else echo "‏🔴 ‏חלקי — ‏אל תשגר מאמת. ‏ר' OPEN-GAPS ‏פער 2"; exit 3; fi
+  fi
+  # ‏🔴 ‏מסלול-MCP: ‏אין סנטינל בכלל. ‏הדוקטרינה בראש הקובץ אומרת ש**‏הסיום נקבע
+  # ‏ע"י git**, ‏והסנטינל הוא אות-חיוּת בלבד — ‏אבל הקוד הפך אותו לתנאי-קדם
+  # ‏להסתכל על git. ‏התוצאה: ‏ריצה ששוגרה ב-MCP (‏המסלול הראשי מאז `docs/dispatch.md`)
+  # ‏לעולם אינה מגיעה להכרעה, ‏והצופה מתקתק בשקט עד קיפאון. ‏נתפס 01/09.
+  if [ ! -f "$LOG" ]; then
+    ART="$(artifact_report)"; ARC=$?
+    if [ $ARC -eq 0 ]; then
+      echo "── ‏הכרעת-סיום לפי ארטיפקט בלבד (‏אין סנטינל — ‏שיגור MCP) ──"
+      echo "$ART"
+      echo "‏✅ ‏הושלם ואומת (‏בלי אות-חיוּת; ‏הסנטינל נכתב רק במסלול dispatch-executor)"
+      exit 0
+    fi
   fi
   if [ $(( $(date +%s) - START )) -ge "$TIMEOUT" ]; then
     echo "‏⏳ ‏עדיין רץ אחרי ${TIMEOUT}s — ‏קרא שוב (‏זה אינו כישלון)"
