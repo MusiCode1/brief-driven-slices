@@ -117,7 +117,7 @@ description: |
 ‏מרדכי → ‏דף-החלטות (scope + 7 תרחישים/defaults) → ‏המשתמשת מאשרת פעם-אחת
 ‏מרדכי → ‏שיגור אליעזר לפי docs/dispatch.md   [‏רקע, noWait]
 ‏אליעזר מבצע, ‏המשגר מפעיל כלב, ‏מחזיר
-‏מרדכי מציג (‏web: preview חי) → ‏המשתמשת מאשרת בעיניים → ‏מרדכי עושה merge → archive brief + cleanup worktree (‏אטומי)
+‏מרדכי מציג (‏web: preview חי) → ‏המשתמשת מאשרת בעיניים → ‏מרדכי עושה merge → archive brief + סגירת פריוויו + מחיקת worktree וענף (‏אטומי)
 ```
 
 ### Mode 2 — ‏לילי (‏יתרו)
@@ -154,7 +154,8 @@ description: |
 ‏כלב (runtime-verifier, Sonnet, mode: light) ‏או כלב-heavy (Opus, complexity 8+)
   ↓ ‏בודק DoD ‏מול הקוד בסביבה אמיתית. ‏כותב report.
   ↓
-‏מרדכי ‏מוודא, ‏עושה merge ‏ל-dev — ‏**‏ריטואל אטומי**: merge → push → archive (brief → `docs/plans/archive/`) → מחיקת worktree.
+‏מרדכי ‏מוודא, ‏עושה merge ‏ל-dev — ‏**‏ריטואל אטומי**: merge → push → archive (brief → `docs/plans/archive/`) → **סגירת הפריוויו** → מחיקת worktree **ומחיקת הענף**.
+  ‏⚠️ ‏המיזוג אינו גמור עד שהניקוי גמור. ‏פירוט: `workflow.md` §‏ניקוי-אחרי-מיזוג.
 ```
 
 ## שכבת הזיקוק (לולאת שיפור עצמית)

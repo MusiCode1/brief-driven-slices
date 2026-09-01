@@ -153,16 +153,43 @@ ssh -i ~/.ssh/pico \
 
 ## Cleanup ‏בסוף slice
 
-‏אחרי merge מוצלח ל-dev:
+‏חלק מריטואל-המיזוג, ‏לא צעד נפרד — ‏ר' `workflow.md` §‏ניקוי-אחרי-מיזוג.
+‏שלושה נסגרים יחד: **פריוויו · worktree · ענף**.
 
 ```bash
 cd <project-root>
 git worktree remove .worktrees/<name>
-git branch -d slice/<name>  # -D ‏אם force
+git branch -d slice/<name>  # -d ‏ולא -D: ‏מסרב לענף לא-ממוזג ⇒ ‏רשת-ביטחון
 git worktree prune          # ‏ניקוי רישומים תלויים
 ```
 
-‏אם ה-worktree ‏שינויים unstaged — `git worktree remove` ‏יתלונן. ‏החלט: `git stash` ‏או `git worktree remove --force`.
+‏אם ה-worktree ‏שינויים unstaged — `git worktree remove` ‏יתלונן. ‏החלט: ‏commit-WIP
+‏או `--force`. **‏לא `git stash`** ‏אם יש worktrees מקבילים — ‏מחסנית-ה-stash משותפת
+‏לכל הריפו, ‏וסוכן אחר עלול ‏להוציא את השינויים שלך.
+
+### ‏שתי מלכודות בניקוי-מסה
+
+**‏א. `git worktree remove` ‏אינו בודק תהליכים חיים.** ‏מחיקת worktree ‏מתחת ל-BE ‏רץ
+‏לוקחת איתה את ה-`FE_STATIC_DIR` ‏שלו. ‏לכן ניקוי-מסה עובר דרך כלי שבודק
+‏(‏ב-drive-coding: `scripts/prune-worktrees.mjs`, ‏dry-run ‏כברירת-מחדל).
+
+‏ובדיקת-cwd לבדה אינה מספיקה: **‏פריוויו יכול להצביע לתוך worktree ‏בעוד ה-cwd
+‏שלו במקום אחר.** ‏הסריקה השלמה היא על `FE_STATIC_DIR` ‏ו-fds פתוחים, ‏לא רק cwd:
+
+```bash
+for p in $(ls /proc | grep -E '^[0-9]+$'); do
+  tr '\0' '\n' < /proc/$p/environ 2>/dev/null | grep -q "FE_STATIC_DIR=.*/$NAME" && echo "$p"
+  ls -l /proc/$p/fd 2>/dev/null | grep -q "/$NAME/" && echo "$p"
+done
+```
+
+**‏ב. ‏ב-zsh ‏אין word-splitting ‏למשתנה לא-מצוטט.** ‏בניית דגלי-חריגה במחרוזת
+‏(`KEEP="--keep a --keep b"`) ‏ואז `tool $KEEP` ‏מעבירה אותם כ**ארגומנט אחד**,
+‏הכלי מתעלם מכולם — ‏והתוכנית שנראית "‏בטוחה" ‏מוחקת גם את מה שביקשת לשמור.
+‏ב-zsh: ‏`${=KEEP}`, ‏או מערך. **‏נמדד 2026-08-31: 56 ‏במקום 45.**
+
+> ‏מה שתפס את זה: ‏חישוב עצמאי של הרשימה הצפויה ‏והשוואה מול ה-dry-run.
+> ‏ניקוי-מסה בלי השוואה כזו הוא הימור.
 
 ## Shared assets ‏(images, audio, fixtures)
 
