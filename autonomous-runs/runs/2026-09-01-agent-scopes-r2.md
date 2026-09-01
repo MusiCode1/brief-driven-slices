@@ -5,19 +5,19 @@ project: drive-coding
 mission: docs-for-llm/plans/missions/agent-scopes-and-charter-r2.md
 slices: [scope-accident-proofing, agent-charter-c2, agent-role-label]
 interventions_product: 0
-interventions_plumbing: 0
+interventions_plumbing: 1
 handoff_failures: 0
-permanent_fixes: 0
+permanent_fixes: 2
 plan_rounds: 1
 brief_to_dispatch: "0:07 / 0:12 / 0:08"
-verdict: החזיקה — S0+S2+S3 מוזגו לענף-ההרצה; דמו §7 בעיניים
+verdict: החזיקה — S0+S2+S3 מוזגו; ביקורת-טענות 10/10; אינטגרציה מול edge; **מוזג ונדחף ל-edge** @ d8e6f321
 ---
 
 # דוח-ריצה 34 — `agent-scopes-and-charter-r2` (S0+S2+S3; דמו §7)
 
 > הדוח הזה על ה*ריצה*, לא על הפרויקט.
 > אימות-תוכן: `$BDS_REPORTS/drive-coding/agent-scopes-r2-{scope-accident-proofing,agent-charter-c2,agent-role-label}-{avigail,calev}.md`
-> נשאר: דמו §7 חי. לא מוזג ל-`dev`/`edge`.
+> נשאר: כלום. הסבב נסגר במיזוג ל-`edge` @ `d8e6f321` (נדחף ל-origin, השירות הופעל מחדש).
 
 ## שעון ה-plan-gate
 
@@ -87,3 +87,54 @@ verdict: החזיקה — S0+S2+S3 מוזגו לענף-ההרצה; דמו §7 ב
 ## הערכה
 
 שלושת הסלייסים החזיקו: plan-gate סבב אחד, runtime-gate GO, מיזוג לענף-ההרצה. החסם: עיניים בדמו §7.
+
+
+---
+
+## נספח — מה קרה אחרי הדוח הראשון (01/09, אחה"צ)
+
+### ביקורת-טענות עצמאית (בקשת-משתמש)
+
+המשתמש ביקש שמישהו יבדוק **כל טענה** שנמסרה לו על הפריוויו. כלב נוסף שוגר
+במצב ביקורת (`cursor`/grok-4.6 — מודל שונה מזה שביצע, כדי שלא יאשר את עצמו),
+עם T1–T10 ודרישת פקודה+פלט לכל טענה. תוצאה: **10 ✅ / 0 🔴**, דוח בן 443 שורות
+עם 68 בלוקי-פלט. T6 (הילד אינו מאשר לעצמו) הוכח חי: MCP `session_state` מחזיר
+`pending.permission: null` בזמן שה-`/state` הרגיל מחזיק `requestId: 0`, ו-`/reply`
+עם טוקן מוחזר 403. המבקר פתח 6 סוכנים לתרחישים ההרסניים וסגר את כל 6.
+
+### האינטגרציה מול edge — הכשל היחיד בסבב
+
+המיזוג ל-`edge` **נכשל בניסיון הראשון**: 13 קבצי UU (בפועל 16 עם טסטים ו-baseline),
+כי הבסיס היה `9370c282` בעוד edge בלע מאז `run-mcp-whoami-runtime` (#98),
+`run-mcp-whoami` (#95), `run-mcp-event-last-text` (#93) ו-`v0.38.0` — כולם נוגעים
+באותה צנרת session-host/MCP. בוטל מיָדית (`git merge --abort`), בלי נזק, ובלי
+לגעת בעבודה הלא-מקומטת של סוכן אחר שיושבת בעץ `edge`.
+
+מרדכי הכשיר את המיזוג ב-worktree נפרד (`integration/run-agent-scopes-r2-on-edge`),
+עם דרישה מפורשת ש**שתי מערכות התכונות ישרדו**. אומת בשלוש שכבות: grep-סימבולים
+(שלנו + של edge), כלב על העץ המשולב (GO, 55/55 ממוקד), וריצת-שערים עצמאית שלי —
+**3455 עוברים / 0 נופלים**, `typecheck` **נקי** (שתי שגיאות `provider/client.ts`
+נעלמו — edge הכיל את התיקון), מחגר `no growth`.
+
+### מסירה
+
+פריוויו שני מהעץ המשולב (`d8e6f321`, PORT 4033, מנהרת HTTPS) → עיני-משתמש →
+`git merge --ff-only` ל-`edge` → `git push origin edge` → `systemctl --user restart
+drive-coding-edge.service`. ה-`ExecStartPre` בנה את ה-FE מחדש (‏4 קובצי-באנדל
+מזכירים `roleLabel`), וה-BE רץ מ-`.../edge` @ `d8e6f321`.
+
+### התערבות-צנרת אחת
+
+| # | מה | סוג | היה נמנע אילו… |
+|---|---|---|---|
+| 1 | "הצופה לא מעיר אותך" — המשתמש הצביע שהצופה הקנוני שותק | **צנרת** | `await-dispatch` היה יודע להכריע גם בלי סנטינל (מסלול MCP), ו-`notify` כושל לא היה אזהרה ב-stderr |
+
+### שני תיקונים קבועים
+
+1. **`await-dispatch.sh`** — הכרעה לפי ארטיפקט כשאין סנטינל (מסלול MCP לא כותב אותו
+   לעולם ⇒ כל ריצת-MCP תיקתקה בשקט עד אינסוף), `-ge` במקום `=` על מספר קומיטים,
+   ודגל **`--expect-file`** — ארטיפקט-המסירה של מאמת הוא דוח, לא קומיט.
+2. **`watch-dispatch.sh`** — כישלון `notify` מקבל ניסיון שני, נפילה ל-`tg`, ו**שער-השקה
+   בר-כישלון** (`exit 4`) שמוודא שהערוץ מגיע ולא רק שהוגדר.
+
+שניהם מתועדים ב-`OPEN-GAPS.md` פער 9. קומיטים: `1e13d41`, `f043be5`.
