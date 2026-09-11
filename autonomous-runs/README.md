@@ -142,6 +142,7 @@ runs/<date>-<שם>.md      — דוח פר-ריצה
 | 29 | 2026-08-31 | `acp-wire-be-dedupe` — סידור BE / from-line-wire; מוזג ל-`integration/run-acp-wire-be` @ `d79e150f` לא ל-`edge`/`dev` | **0** / **1** | **0** | 1 |
 | 30 | 2026-08-31 | `ws-transport-dedupe` — browser WS→acp-wire; מוזג ל-`integration/run-ws-transport-dedupe` @ `c58fdac6` לא ל-`edge`/`dev` | **0** / **0** | **0** | 0 |
 | 34 | 2026-09-01 | `agent-scopes-r2` (drive-coding) — S0+S2+S3 · ביקורת-טענות 10/10 · אינטגרציה מול edge (16 UU) · **מוזג ונדחף ל-`edge` @ `d8e6f321`** + restart | **0** / **1** | **0** | **2** |
+| 40 | 2026-09-11 | `session-meta-config` (drive-coding) — `sessionMeta` פר-CLI ב-cli-specs + טוגל `injectDriveCodingMcp` + תיקון מסלול-registry שלא הזריק thinking; plan-gate יחיד, כלב GO 12/12; מוזג ל-`integration/run-session-meta-config` @ `e876e680` לא ל-`edge` | **0** / **1** | **0** | 0 |
 
 > ⚠️ **‏18 ‏שמור ל-`live-voice` (27/08)** — ‏הדוח קיים ב-`runs/2026-08-27-live-voice.md`
 > ‏אך **‏מעולם לא נכנסה לו שורה כאן**. ‏ריצה 19 ‏דילגה על 18 ‏במכוון, ‏כדי לא לייצר
