@@ -3,14 +3,14 @@ run: 43
 date: 2026-09-22
 project: fully-kiosk-admin
 mission: docs-repo/kiosk-admin/plans/missions/mission-multi-device.md
-slices: [s1-core, s2-devices-bulk]
+slices: [s1-core, s2-devices-bulk, s3-screen-grid]
 interventions_product: 1
-interventions_plumbing: 3
+interventions_plumbing: 5
 handoff_failures: 1
 permanent_fixes: 3
 plan_rounds: 2
 brief_to_dispatch: "S1 ~00:25 (מרדכי שוגר 01:11 · אביגיל 01:28 · דלתא 01:33 · אליעזר ~01:35)"
-verdict: החזיקה עם דליפה אחת — שער-אימות עבר על רגרסיה פונקציונלית בפיצ'ר המרכזי
+verdict: החזיקה — שלושה סלייסים נמסרו; דליפה אחת נתפסה ע"י המתאם והפכה לשער קבוע
 ---
 
 # דוח-ריצה 43 — `kiosk-multi-device`
