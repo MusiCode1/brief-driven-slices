@@ -143,6 +143,8 @@ runs/<date>-<שם>.md      — דוח פר-ריצה
 | 30 | 2026-08-31 | `ws-transport-dedupe` — browser WS→acp-wire; מוזג ל-`integration/run-ws-transport-dedupe` @ `c58fdac6` לא ל-`edge`/`dev` | **0** / **0** | **0** | 0 |
 | 34 | 2026-09-01 | `agent-scopes-r2` (drive-coding) — S0+S2+S3 · ביקורת-טענות 10/10 · אינטגרציה מול edge (16 UU) · **מוזג ונדחף ל-`edge` @ `d8e6f321`** + restart | **0** / **1** | **0** | **2** |
 | 40 | 2026-09-11 | `session-meta-config` (drive-coding) — `sessionMeta` פר-CLI ב-cli-specs + טוגל `injectDriveCodingMcp` + תיקון מסלול-registry שלא הזריק thinking; plan-gate יחיד, כלב GO 12/12; מוזג ל-`integration/run-session-meta-config` @ `e876e680` לא ל-`edge` | **0** / **1** | **0** | 0 |
+| 41 | 2026-09-16 | `extract-agent-runtime` (drive-coding) — הוצאת שכבת-הרצת-הסוכן ל-`@drive-coding/agent-runtime` (client/host/sockets), BE צרכן; refactor אפס-שינוי-התנהגות; אביגיל 1-סבב (USABLE-AFTER-FIX→תוקן-במקום), כלב-heavy GO (diff moves-only + baseline); 6 קומיטים על `integration/run-extract-agent-runtime`, **טרם מוזג** (ממתין למשתמש) | **0** / **1** | **1** | 0 |
+| 43 | 2026-09-22 | `kiosk-multi-device` (fully-kiosk-admin) — S1 `s1-core`: פיצול ה-singleton ל-KioskDevice/KioskStore, הגירה, ראוטים `/d/[id]`, מתג מכשירים; אביגיל 2 סבבים (NEEDS-REWORK→דלתא READY), כלב NO-GO (prettier)→GO; 3 קומיטים, מוזג ב-ff ל-`integration/run-multi-device` @ `875815f` לא ל-`main`. 🔴 **כלב פספס רגרסיה פונקציונלית**: החלפת-מכשיר לא מחליפה את ה-context (`setContext` ב-init בלי `{#key}`) — האזהרה של `svelte-check` נספרה כ"ירוק" | **1** / **3** | **1** | 0 |
 
 > ⚠️ **‏18 ‏שמור ל-`live-voice` (27/08)** — ‏הדוח קיים ב-`runs/2026-08-27-live-voice.md`
 > ‏אך **‏מעולם לא נכנסה לו שורה כאן**. ‏ריצה 19 ‏דילגה על 18 ‏במכוון, ‏כדי לא לייצר
