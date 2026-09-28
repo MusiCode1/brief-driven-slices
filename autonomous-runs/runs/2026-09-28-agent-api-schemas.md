@@ -1,5 +1,5 @@
 ---
-run: 50
+run: 51
 date: 2026-09-28
 project: drive-coding
 mission: docs-for-llm/plans/missions/agent-api-schemas.md
@@ -14,7 +14,11 @@ brief_to_dispatch: "0:57"
 verdict: הריצה החזיקה
 ---
 
-# דוח־ריצה 50 — `agent-api-schemas`
+# דוח־ריצה 51 — `agent-api-schemas`
+
+> ⚠️ **מוספר 51 ולא 50.** ‏`2026-09-28-agent-session-mechanical-split.md` תפס
+> ‏50 באותו יום ונקמט קודם. ‏שתי הריצות רצו במקביל, ושתיהן כתבו `run: 50` —
+> התנגשות־ספרור שנפתרה לפי סדר־הקומיט.
 
 > ⚠️ **הדוח הזה על ה*ריצה*, לא על הפרויקט.** מה שהקוד עושה שייך ל-`reports/`
 > ול-decisions של drive-coding. כאן: האם המערכת שמייצרת אותו החזיקה.
