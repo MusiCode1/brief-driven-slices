@@ -176,6 +176,13 @@ are always human(-model)-driven.
 | [`case-studies/`](case-studies/) | The real slices the methodology was forged on |
 | [`distillations/`](distillations/) | The self-improvement loop's outputs |
 
+**Two sub-projects sit beside the slice methodology — each one scoped to a different unit of work:**
+
+| Path | Unit | What it answers |
+|------|------|-----------------|
+| [`autonomous-runs/`](autonomous-runs/README.md) | a **round** | How one round runs end-to-end with no human in the loop — mission template, run reports, open gaps, the `autorun` skill |
+| [`completion-ledger/`](completion-ledger/README.md) | a **project** | What the boxes are, and how you know the project is finished. Hebrew: **ספירת הגומר**. Field contract, ledger + decisions-queue templates, per-project instances |
+
 ---
 
 ## Installing CLI adapters
