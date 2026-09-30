@@ -21,6 +21,12 @@ flush() {                       # ‏תיבה בלי ⟂ ‏היא תיבה שא
   id=""
 }
 
+# ─── סמני-אימות: תיבה שנבדקה ידנית ונמצאה פתוחה באמת מפסיקה להיות 🟡 ───
+#     בלעדיהם `G4` (‏פרוב-חשוד = 0) אינו יכול להוריק לעולם: ההיוריסטיקה
+#     יורה על **קיום דוח-כלב**, ואין שדה שאומר "בדקתי, והוא באמת פתוח".
+#     הסמן הוא **ראיה מתוארכת**, לא שדה-סטטוס — ולכן אינו רוקב.
+VERIFIED="$(grep -oP 'פרוב אומת[^—]*— *\K[A-Za-z]+[0-9]+' "$DOC" 2>/dev/null | tr '\n' ' ')"
+
 fence=0
 while IFS= read -r line; do
   # ─── גדר-קוד: המקרא בראש הפנקס מכיל שורת-תיבה לדוגמה, ואסור לספור אותה ───
@@ -61,7 +67,7 @@ while IFS= read -r line; do
   fi
 
   # ‏פרוב-חשוד: ‏"‏פתוח" ‏אך קיים דוח-כלב לאותו slug
-  if [[ $state == open && -z $note ]]; then
+  if [[ $state == open && -z $note && " $VERIFIED " != *" $id "* ]]; then
     slug="$(grep -oP '(?<=\x60)[a-z0-9][a-z0-9-]+(?=\x60)' <<<"$title" | head -1)"
     if [[ -n ${slug:-} ]] && ls "${BDS_REPORTS:-$HOME/Projects/brief-driven-slices/main/reports}/${BDS_PROJECT:-drive-coding}/${slug}"*-calev*.md >/dev/null 2>&1; then
       note="🟡 ‏יש דוח-כלב (\`$slug\`) ‏והפרוב מחזיר פתוח — ‏בדוק שהוא מצביע נכון"; ((suspect++))
