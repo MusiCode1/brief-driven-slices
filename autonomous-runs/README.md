@@ -304,3 +304,10 @@ runs/<date>-<שם>.md      — דוח פר-ריצה
 ⇒ ‏**‏צופה חייב לאמת את ערוץ-ההובלה (‏קוד-HTTP), ‏לא רק לפרסר.**
 
 ‏דוח: `runs/2026-09-30-attach-status-gate-bce.md` · ‏תיקון קבוע: ‏`rules/210` ‏· ‏2 ‏מועמדים פתוחים.
+
+**מצב (30/09, ריצה 57, `state-connection-entry`):** סלייס B1+B2 נמסר לענף-ההרצה
+`integration/run-state-connection-entry` @ `29fc2d2e` ונדחף; כלב-heavy GO ‏6/6,
+אפס ממצאים פתוחים אחרי תיקון דלתא. ‏**0 התערבויות-משתמש · 3 כשלי-מסירה ·
+1 תיקון-תיעוד קבוע** (`DC_DEPLOYMENT_DIR` לפריוויו מבודד). ‏`plan_rounds: 1` ·
+`brief_to_dispatch: ≤00:10` לפי חותמות לידת הבריף וקובץ-הקוד הראשון. ‏`edge`
+עדיין מחכה לפריוויו production ולאישור המשתמש. דוח: `runs/2026-09-30-state-connection-entry.md`.
