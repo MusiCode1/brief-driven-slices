@@ -12,7 +12,7 @@ DOC="${1:-DEFINITION-OF-DONE.md}"
 open=0; closed=0; broken=0; suspect=0; refs=0; probes=0; raw=0
 RLM=$'\u200f'; LRM=$'\u200e'      # ‏סימני-כיווניות נפוצים בפנקס עברי
 rows=(); seen=(); dups=()
-id=""; title=""
+id=""; title=""; checked=0
 
 flush() {                       # ‏תיבה בלי ⟂ ‏היא תיבה שאי-אפשר להכריע
   [[ -n $id ]] || return
@@ -25,7 +25,7 @@ flush() {                       # ‏תיבה בלי ⟂ ‏היא תיבה שא
 #     בלעדיהם `G4` (‏פרוב-חשוד = 0) אינו יכול להוריק לעולם: ההיוריסטיקה
 #     יורה על **קיום דוח-כלב**, ואין שדה שאומר "בדקתי, והוא באמת פתוח".
 #     הסמן הוא **ראיה מתוארכת**, לא שדה-סטטוס — ולכן אינו רוקב.
-VERIFIED="$(grep -oP 'פרוב אומת[^—]*— *\K[A-Za-z]+[0-9]+' "$DOC" 2>/dev/null | tr '\n' ' ')"
+VERIFIED="$(grep -oP 'פרוב אומת[^—]*— *\K[A-Za-z]+[0-9]+(\.[0-9]+)*[a-z]?' "$DOC" 2>/dev/null | tr '\n' ' ')"
 
 fence=0
 while IFS= read -r line; do
@@ -35,9 +35,10 @@ while IFS= read -r line; do
   line="${line//$RLM/}"; line="${line//$LRM/}"      # ‏בלי זה `**‏A1**` ‏אינו מתאים
   [[ $line =~ ^-\ \[[\ x]\] ]] && ((raw++))
   # ─── שורת-תיבה ────────────────────────────────────────────────────────────
-  if [[ $line =~ ^-\ \[[\ x]\]\ \*\*([A-Za-z]+[0-9]+[a-z]?)\*\*\ ·\ (.*)$ ]]; then
+  if [[ $line =~ ^-\ \[[\ x]\]\ \*\*([A-Za-z]+[0-9]+(\.[0-9]+)*[a-z]?)\*\*\ ·\ (.*)$ ]]; then
     flush
     id="${BASH_REMATCH[1]}"; title="${BASH_REMATCH[2]}"
+    checked=0; [[ $line == '- [x] '* ]] && checked=1
     [[ " ${seen[*]-} " == *" $id "* ]] && dups+=("$id")
     seen+=("$id")
     continue
@@ -52,18 +53,21 @@ while IFS= read -r line; do
   check="${BASH_REMATCH[1]}"; expect="${BASH_REMATCH[2]}"; ((probes++))
   [[ -n $id ]] || continue
 
-  note=""; state=open
+  note=""; state=open; proven=0
   out="$(eval "$check" 2>/dev/null | tr -d '[:space:]')"
   if [[ $out =~ ^[0-9]+$ ]]; then
     case "$expect" in
-      ">0")  (( out > 0 ))  && state=closed ;;
-      "=0")  (( out == 0 )) && state=closed ;;
-      "="*)  (( out == ${expect#=} )) && state=closed ;;
+      ">0")  (( out > 0 ))  && proven=1 ;;
+      "=0")  (( out == 0 )) && proven=1 ;;
+      "="*)  (( out == ${expect#=} )) && proven=1 ;;
       *)     note="⚠️ ‏`expect` ‏אינו \`>0\`/\`=0\`/\`=N\`: $expect"; ((broken++)) ;;
     esac
   else
     # ‏פלט שאינו מספר חשוף — ‏הסיבה השכיחה: ‏`rg -n` ‏במקום `rg -c`
     note="⚠️ ‏הפלט אינו מספר: $check"; ((broken++))
+  fi
+  if (( checked && proven )); then state=closed
+  elif (( checked )); then note="⚠️ ‏[x] בלי פרוב תואם"; ((broken++))
   fi
 
   # ‏פרוב-חשוד: ‏"‏פתוח" ‏אך קיים דוח-כלב לאותו slug
