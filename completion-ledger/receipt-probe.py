@@ -6,6 +6,8 @@ import json
 import re
 from pathlib import Path
 
+APPROVING_VERDICTS = {"GO", "FUNCTIONAL_GO"}
+
 
 def matches(receipt: Path, task: str, verdict: str, scope: str, sha: str) -> bool:
     try:
@@ -19,14 +21,13 @@ def matches(receipt: Path, task: str, verdict: str, scope: str, sha: str) -> boo
     recorded_task = data.get("taskId", data.get("taskID", data.get("task_id", data.get("task"))))
     if recorded_task is None and isinstance(recorded_scope, str):
         # Some existing receipts put the task ID in their scoped acceptance sentence.
-        recorded_task = task if re.search(rf"(?<![A-Za-z0-9.]){re.escape(task)}(?![A-Za-z0-9.])", recorded_scope) else None
+        recorded_task = task if re.search(rf"(?<![A-Za-z0-9_.-]){re.escape(task)}(?![A-Za-z0-9_.-])", recorded_scope) else None
     recorded_sha = next((data[key] for key in ("candidateSHA", "sourceSHA", "codeSHA", "sha", "head") if key in data), None)
     return (
         isinstance(recorded_task, str)
         and recorded_task == task
         and data.get("verdict") == verdict
-        and re.search(r"(^|_)GO($|_)", verdict) is not None
-        and "NO_GO" not in verdict
+        and verdict in APPROVING_VERDICTS
         and recorded_scope == scope
         and isinstance(recorded_sha, str)
         and recorded_sha.lower() == sha.lower()

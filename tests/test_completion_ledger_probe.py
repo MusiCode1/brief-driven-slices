@@ -49,6 +49,24 @@ class CompletionLedgerProbeTests(unittest.TestCase):
     def test_existing_private_receipt(self):
         self.assertEqual(self.run_receipt(REAL_RECEIPT), "1")
 
+    def test_negative_verdicts_and_embedded_task_ids(self):
+        with tempfile.TemporaryDirectory() as temp:
+            receipt = Path(temp) / "receipt.json"
+            base = {
+                "verdict": "FUNCTIONAL_GO", "scope": "Accepted H2 only",
+                "sourceSHA": "ec65b8fe65a6d9d2878d4c4d4803c53dcfcdebaa",
+            }
+            for verdict in ("NOT_GO", "NO_GO", "FUNCTIONAL_GO_PENDING", "GO_REVISE"):
+                with self.subTest(verdict=verdict):
+                    receipt.write_text(json.dumps({**base, "verdict": verdict}))
+                    self.assertEqual(self.run_receipt(receipt, verdict=verdict, scope=base["scope"]), "0")
+            for scope in ("Accepted H2-old only", "Accepted pre-H2 only", "Accepted H2.1 only", "Accepted H2_more only"):
+                with self.subTest(scope=scope):
+                    receipt.write_text(json.dumps({**base, "scope": scope}))
+                    self.assertEqual(self.run_receipt(receipt, scope=scope), "0")
+            receipt.write_text(json.dumps(base))
+            self.assertEqual(self.run_receipt(receipt, scope=base["scope"]), "1")
+
     def test_dotted_and_legacy_ids_and_checkbox(self):
         with tempfile.TemporaryDirectory() as temp:
             ledger = Path(temp) / "ledger.md"
@@ -75,6 +93,32 @@ class CompletionLedgerProbeTests(unittest.TestCase):
             result = subprocess.run(["bash", str(ROOT / "ledger-status.sh"), str(ledger)], capture_output=True, text=True)
             self.assertEqual(result.returncode, 3)
             self.assertIn("פנקס לא-מוסב", result.stderr)
+            self.assertNotIn("פתוחים: 0", result.stdout)
+
+    def test_indented_child_and_conflicting_second_probe(self):
+        with tempfile.TemporaryDirectory() as temp:
+            ledger = Path(temp) / "ledger.md"
+            ledger.write_text("""- [x] **A1** · parent
+  ⟂ `echo 1` → `=1`
+  ⟂ `echo 0` → `=1`
+  - [ ] A2n · measuring child
+    ⟂ `echo 0` → `=1`
+""")
+            result = subprocess.run(["bash", str(ROOT / "ledger-status.sh"), str(ledger)], capture_output=True, text=True, check=True)
+            self.assertIn("⬜ A1", result.stdout)
+            self.assertIn("יותר משורת ⟂ אחת", result.stdout)
+            self.assertIn("⬜ A2n", result.stdout)
+            self.assertIn("פתוחים: 2 · ‏סגורים: 0", result.stdout)
+
+    def test_unrecognized_child_is_rejected_even_with_valid_probe(self):
+        with tempfile.TemporaryDirectory() as temp:
+            ledger = Path(temp) / "ledger.md"
+            ledger.write_text("""- [x] **A1** · closed
+  ⟂ `echo 1` → `=1`
+  - [ ] A2n: malformed child
+""")
+            result = subprocess.run(["bash", str(ROOT / "ledger-status.sh"), str(ledger)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 3)
             self.assertNotIn("פתוחים: 0", result.stdout)
 
 
