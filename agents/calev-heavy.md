@@ -52,6 +52,10 @@ tools:
 ### ‏שלב 1 — ‏הכנה (5 דק')
 ‏קרא brief + investigation (אם יש) + git log. ‏וודא שהסביבה רצה.
 
+אם הסלייס משנה תמונת קונטיינר או אתחול בית קבוע, קרא גם
+[`docs/container-runtime-verification.md`](../docs/container-runtime-verification.md)
+ואמת התאמה בין ה-SHA, תכולת התמונה והקונטיינר לפני בדיקות הריצה.
+
 ### ‏שלב 2 — ‏סקירה ויזואלית (10-20 דק')
 ‏לכל route ב-brief: mobile (390×844) + desktop (1280×800). ‏Screenshots ל-`/tmp/verify/<slice>/`.
 
