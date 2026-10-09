@@ -5,14 +5,14 @@ project: drive-coding
 mission: drive-coding/plans/missions/codex-agent-prompt.md
 slices: [codex-agent-prompt]
 base: ffeff0bcc7949d08f005cbf2bc77cb375eecc0a7
-interventions_product: 0
+interventions_product: 1
 interventions_plumbing: 0
 handoff_failures: 8
 permanent_fixes: 2
 new_territory: true
 plan_rounds: 1
 brief_to_dispatch: ≤00:32:02
-verdict: GO-awaiting-user-merge-approval
+verdict: completed
 ---
 
 # דוח ריצה 67 — הזרקת פרומפט הסוכן ל-Codex
@@ -133,7 +133,8 @@ fail-open, ולכן פרומפט המשטח יכול להגיע בלי שימו�
 
 הפנקס נגזר מ-frontmatter באמצעות scripts/render-run-ledger.py;
 אין לערוך את הטבלה הידנית המוקפאת ב-README. הרצף הנדרש לא הושג:
-אפס התערבויות משתמש הושג, אפס כשלי מסירה לא הושג.
+לאחר אישור המיזוג נמנית התערבות מוצר אחת (שער האישור המתוכנן);
+אפס כשלי מסירה לא הושג.
 
 ## בדיקת דוח הריצה
 
@@ -155,3 +156,25 @@ completion-ledger (7db96df ו-0af2919). הריפו אוסר מיזוג ענפי�
 לא בוצעו merge, rebase, reset או force. הדוח נדחף במקום זאת בענף התיעוד
 docs/autorun67-codex-agent-prompt. ה-main המקומי נשאר עם הקומיט המקורי;
 הדוח מגובה ב-remote, ושילובו ב-main יוכל להיעשות במסגרת המיזוג המורשה הבא.
+
+## סגירת המיזוג — 2026-10-09
+
+המשתמש בדק סשן Codex חדש בפריוויו ואישר מיזוג במפורש. אישור זה נספר
+כהתערבות מוצר אחת; זה שער המיזוג המתוכנן, לא כשל צנרת. מספר כשלי המסירה
+והתיקונים הקבועים אינו משתנה. ה-verdict הסופי completed מחליף המתנה לאישור.
+
+הקוד מוזג ל-edge ב-`1deb5bec`, גרסה `0.42.0` ב-`74850128` נדחפה ואומתה
+ב-ref המרוחק. 13 קומיטים יצאו בדחיפת edge, כולם של הריצה הזאת. אחרי המיזוג
+עברו tsc ושערי pre-push, provider connection 98/98; תת-קבוצת backend
+שהריץ המתאם: 80 עברו ושני כשלי http-mcp נשארו זהים לבסיס.
+
+הפריוויו שהוחזר לבקשת המשתמש נסגר: BE `1672753`, autossh `1671345`
+וצאצאיהם `1671353` ו-`1692503` אינם חיים; פורט 4013 פנוי. שני worktrees
+של הסלייס וההרצה והענפים המקומיים הוסרו אחרי בדיקות clean, containment
+וסריקת תהליכים. הסוכנים כבר נסגרו בעת המסירה הקודמת.
+
+הבריף הועבר ל-docs-repo/drive-coding/plans/archive/codex-agent-prompt.md
+ב-`99049a1`; בדחיפה יצא גם `6760e38` מסשן wake-word-cdn-assets מקביל.
+הדוח המקצועי הסופי נשמר בריפו הפרטי reports ב-`ef926ed`.
+דוח autorun זה מתעדכן בענף docs/autorun67-codex-agent-prompt; אין מיזוג
+ל-main של ריפו השיטה במסגרת אישור המשתמש למיזוג Drive Coding.
