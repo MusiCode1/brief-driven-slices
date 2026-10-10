@@ -76,7 +76,9 @@ scripts/dispatch-via-api.mjs open --base http://127.0.0.1:<port> \
   --permission allow_once --json
 
 # 2 · מודל מהרשימה שנדפסה, ואז משימה בלי המתנה
-scripts/dispatch-via-api.mjs send --agent <id> --prompt-file <f> \
+#     🛑 --base חובה גם כאן. בלעדיו send פונה ל-127.0.0.1:4050 ונופל ב-ECONNREFUSED.
+scripts/dispatch-via-api.mjs send --base http://127.0.0.1:<port> \
+  --agent <id> --prompt-file <f> \
   --set "model=<ערך מהרשימה>" --no-wait
 
 # 3 · אחרי איסוף ראיה
