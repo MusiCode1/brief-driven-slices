@@ -3,15 +3,15 @@ run: 71
 date: 2026-10-15
 project: drive-coding
 mission: drive-coding/plans/missions/state-structure-continuation.md
-slices: [state-reconnect-b3-refresh, state-error-b6-refresh]
+slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh]
 interventions_product: 0
 interventions_plumbing: 0
 handoff_failures: 14
 permanent_fixes: 2
-plan_rounds: 2
+plan_rounds: 3
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
-verdict: "ריצה פתוחה; B3 ו-B6 מאומתים ונדחפו לענף הרצה; B4 לפני אביגיל; אין מיזוג ל-edge"
+verdict: "ריצה פתוחה; B3 ו-B6 מאומתים ונדחפו לענף הרצה; B4 בביצוע לאחר אביגיל; אין מיזוג ל-edge"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -132,6 +132,16 @@ verdict: "ריצה פתוחה; B3 ו-B6 מאומתים ונדחפו לענף ה�
 התיעוד הקנוני main שותף עבר שחזור היסטוריה בידי סשן אחר; cb5aae6 פורסם כחלק מכך. ההורה דחף אחריו0bf5f32, קומיט תכנון אחד שלו בלבד. אין ניסיון force או דחיפה לריפו הישן. run71/checkpoints נסגרים לכל סלייס לפני dispatch הבא; הריצה כולה פתוחה.
 
 שלבB4/B5 המבני מוכן לאביגיל עלc6e78964. Preflight176passed ושלושsuite-import failures בסיסיות של mocksTTS, rc1; הן בתחום fixtures של הסלייס. חיווט pending נמדד בהדמיה1883→1841 (42נטו), עם חשבון שמרני לבעלות close; זה אינו מוצר שהוטמע. בסיס קפוא ל-C1 נבדק ומפת C2/C3 בהכנה. אין B4מימוש ואין מיזוג mainline.
+
+## התחלת B4/B5 המבני — 2026-10-16
+
+בריף state-exit-b4-refresh נולד ב-02:29:23.623027241; תצפית החזרת send ב-02:54:47 נותנת חסם עליון25:24 לתכנון→שיגור, לא חותמת של dispatch מדויק. אביגיל סבב אחד: Claude39d19b92 נכשל במכסה לפני עבודה ונסגר; Cursor/Grok4.7high d44edd94 החזירה USABLE-AFTER-FIX עם שני ממצאי confusion. המודל המתקדם מוצדק לבעלות WS/SSE ולמרוצי keepContext/pending, לא לחוקרים הצרים שהשתמשו ב-Luna.
+
+הממצא הראשון חשף callbacks של disposeFailedWarm/cold.prepare שאינם סגירה מלאה; הבריף b3f768b מגדיר עבורם פעולות owner צרות עם אותו dispose לעומת client.close, בלי IO במשאבי VM או שינוי מדיניות B3. הממצא השני משך המלצת הכנה ישנה שסתרה את סדר cleanup החי, ותיקן אותה בגוף המסמך. שאילתות/לינט בריף0אדום. plan_verified=true ללא אביגיל נוספת. אביגיל נסגרה לאחר הדוח, והעץ הוסר לאחר בדיקת cwd.
+
+אליעזר היחיד afe8e975-ab41-4cd4-bbeb-c9085f6f781a, Composer2.5, מבצע על slice/state-exit-b4-refresh @c6e78964. אין הודעות לתור עסוק, אין notifyOnDone/subscription נוספים, ויש צופה קנוני ודוח מוסכם. אין עדיין קבלה או מיזוג B4. תיקון fixturesTTS, owner.close/release ו-pendingIO מחוברים באותו scope; דוחות תכנון S2/S3 הם קריאה בלבד ולא מוצר שבוצע.
+
+ארכיון B6 ותכנון B4 נדחפו ב-drive-coding-docs ba566b1; מיפוי Speaker ב8a2aecb; plan-gate בb3f768b. בכל אחת מדחיפות ההורה היה קומיט שלו בלבד. שינויים של עמיתים נשמרו ולא הוכללו ב-stage. שתי נקודות הביקורת הקודמות נשארות סגורות; שאר הגל פתוח.
 
 ## מה עדיין אינו מוכח
 
