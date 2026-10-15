@@ -3,15 +3,15 @@ run: 71
 date: 2026-10-15
 project: drive-coding
 mission: drive-coding/plans/missions/state-structure-continuation.md
-slices: [state-reconnect-b3-refresh]
+slices: [state-reconnect-b3-refresh, state-error-b6-refresh]
 interventions_product: 0
 interventions_plumbing: 0
-handoff_failures: 12
+handoff_failures: 14
 permanent_fixes: 2
-plan_rounds: 1
+plan_rounds: 2
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
-verdict: "ריצה פתוחה; B3 מאומת ונדחף לענף הרצה; B6 בבדיקת תכנון; אין מיזוג ל-edge"
+verdict: "ריצה פתוחה; B3 ו-B6 מאומתים ונדחפו לענף הרצה; B4 לפני אביגיל; אין מיזוג ל-edge"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -92,6 +92,8 @@ verdict: "ריצה פתוחה; B3 מאומת ונדחף לענף הרצה; B6 ב
 | 10 | תיקון התכנון הראשוני של ההורה כלל context identity אך לא guard אחרי listAgents; awaitCurrent בודק לפני await בלבד | הבריף תוקן לפני קבלה, ו-9a9c6312 כולל guard אחרי await; שתי מוטציות עצמאיות אדומות |
 | 11 | preflight צר השאיר fixtures שקראו נתיב VM שהוסר, וה-FE המלא גילה ארבעה כשלי assertion | 7b4d1acf מתאים שלושה קבצי בדיקה ל-owner ול-reconnect ציבורי; expect נשארים זהים, GO19/19 |
 | 12 | המתכנן מיזג פנימית את 3dca ב-f7c27439 לפני האימות העצמאי הסופי, בעוד דיווח ההורה טען שאין מיזוג | השגיאה נרשמה במפורש; אין שכתוב היסטוריה. d6a07220 מקדם לקצה המאומת, ואין מיזוג mainline |
+| 13 | מסירת B6 ראשונה חסרה מוטציות בפועל, observer ריאקטיבי ומבחן אותו snapshot; חלק מהמקרים השתמשו ב-turn חדש | ההורה החזיר לאותו מבצע idle; 441a230e הוסיף בדיקות ומוטציות אמיתיות, וכלב שיחזר עצמאית |
+| 14 | רשימת רגרסיה כללה קובץ שאינו קיים וחסרה union מלא; מבחן HTTP החזיק owner null | נדרש union קיים בן14קבצים ו-attachRemote שיוצר HttpConnection אמיתי;027337c0 ו-heavy188/188 מאמתים |
 
 מפקד עצמאי על a36945f7 הוכיח שה-backend אינו מסדר prompts בתור: noWait, RPC ו-delivery לאירועים יכולים לחפוף. turnSeq מגן על state, לא מסדר ACP; cancel/session-new אינם מחסום לסיום הפעולה הישנה. הקשר הסיבתי למקרה Cursor לא בודד בניסוי, ולכן לא מוצג כמוכח. הראיות ב-drive-coding-docs, `investigations/state-structure/dispatch-concurrency-audit-a36945f7.md`.
 
@@ -119,12 +121,22 @@ verdict: "ריצה פתוחה; B3 מאומת ונדחף לענף הרצה; B6 ב
 
 התיעוד הקנוני עבר ל-`/home/user/Projects/drive-coding-docs`, main משותף. `docs-repo/drive-coding` הוא קישור תאימות בלבד. מסמכי הריצה הישנים נכללו במעבר עד source d963477; ea02d27 מעגן את בריף B6 על d6a עם preflight74/74. אין דחיפות חדשות לריפו התיעוד הישן ואין שיתוף תעבורת סוכנים גולמית.
 
-ניסיון אביגיל Claude9d393133 נכשל ב-OAuth refresh לפני תחילת עבודה ונסגר. אביגיל Cursor/Grok4.6 high (ccedd524) רצה כגיבוי מידי על worktree פרטי d6a, עם prompt יחיד ודיווח סיום בלבד. טרם התקבלה הכרעתה; plan_verified אינו true וטרם שוגר מבצע B6.
+ניסיון אביגיל Claude9d393133 נכשל ב-OAuth refresh לפני תחילת עבודה ונסגר. אביגיל Cursor/Grok4.6 high (ccedd524) רצה כגיבוי מידי על worktree פרטי d6a, עם prompt יחיד ודיווח סיום בלבד. אביגיל החזירה USABLE-AFTER-FIX, שני ניסוחי חוזה תוקנו במקום ואומתו לפני dispatch. plan_verified=true בקומיט cb5aae6; סבב אחד. ההמשך ותוצאתו מתועדים בנקודת הביקורת להלן.
+
+## נקודת ביקורת סגורה — B6, 2026-10-16
+
+בעלות השגיאות הועברה ל-ErrorScope במוצר a92b48fb, עם שני קומיטי בדיקות441a230e/027337c0. כלב-heavy03ca1c1d (Cursor/Grok4.6 high) GO6/6 על027337c0: 14קבצים188/188, 12פרובים, takeover/visibility זהה על הבסיס, שתי מוטציות assertion. VM1898→1883. FE37diagnostics29E/8W/15,0/0; אין לקרוא לזה types ירוקים.
+
+המקור נדחף בשלושה קומיטים; c6e78964 ממזג פנימית אחרי GO, זהה ל027337c0. דחיפת integration כללה ארבעה קומיטים מאזd6a, כולםB6: שלושה מקור ומיזוג. executor5262278a ו-heavy03ca1c1d נסגרו אחרי idle וראיות. העצים יוסרו רק אחרי סריקת תהליכים. הארכיון שנבדק הוא drive-coding-docs/investigations/state-error-b6-refresh/final-027337c0/; אין JSONL או תעבורת ACP גולמית.
+
+התיעוד הקנוני main שותף עבר שחזור היסטוריה בידי סשן אחר; cb5aae6 פורסם כחלק מכך. ההורה דחף אחריו0bf5f32, קומיט תכנון אחד שלו בלבד. אין ניסיון force או דחיפה לריפו הישן. run71/checkpoints נסגרים לכל סלייס לפני dispatch הבא; הריצה כולה פתוחה.
+
+שלבB4/B5 המבני מוכן לאביגיל עלc6e78964. Preflight176passed ושלושsuite-import failures בסיסיות של mocksTTS, rc1; הן בתחום fixtures של הסלייס. חיווט pending נמדד בהדמיה1883→1841 (42נטו), עם חשבון שמרני לבעלות close; זה אינו מוצר שהוטמע. בסיס קפוא ל-C1 נבדק ומפת C2/C3 בהכנה. אין B4מימוש ואין מיזוג mainline.
 
 ## מה עדיין אינו מוכח
 
-השלמת B6 ושאר S1/S2/S3, קבלה משולבת, fault injection בדפדפן החדש, ספק ACP חי ופריוויו של התוצאה המשולבת. אף אחד מאלה אינו נגזר מקבלת B3 או מהפריוויו הישן.
+שאר S1/S2/S3, קבלה משולבת, fault injection בדפדפן החדש, ספק ACP חי ופריוויו של התוצאה המשולבת. אף אחד מאלה אינו נגזר מקבלת B3 או מהפריוויו הישן.
 
 ## סגירה
 
-הריצה נמשכת. נקודת הביקורת של B3 סגורה; זו אינה סגירת run71. לפני סוף הגל יש לעדכן checkpoints, סשנים, ארכוב, דחיפות ומספרי הקומיטים בפועל; להשאיר פריוויו חדש חי ולבקש אישור מפורש למיזוג לענף המשותף. אין דרישה לפעולת המשתמש כרגע.
+הריצה נמשכת. נקודות הביקורת של B3 ו-B6 סגורות; זו אינה סגירת run71. לפני סוף הגל יש לעדכן checkpoints, סשנים, ארכוב, דחיפות ומספרי הקומיטים בפועל; להשאיר פריוויו חדש חי ולבקש אישור מפורש למיזוג לענף המשותף. אין דרישה לפעולת המשתמש כרגע.
