@@ -3,15 +3,15 @@ run: 71
 date: 2026-10-15
 project: drive-coding
 mission: drive-coding/plans/missions/state-structure-continuation.md
-slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh, state-transcript-c2-refresh]
+slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh, state-transcript-c2-refresh, state-session-operations-c2l-refresh]
 interventions_product: 0
 interventions_plumbing: 0
 handoff_failures: 24
 permanent_fixes: 3
-plan_rounds: 5
+plan_rounds: 6
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
-verdict: "ריצה פתוחה; S1 ו-C1 מאומתים בענף הרצה; C2 במימוש לאחר שער תכנון; אין מיזוג ל-edge"
+verdict: "ריצה פתוחה; S1 ו-C1/C2 מאומתים בענף הרצה; C2L באימות תכנון; אין מיזוג ל-edge"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -233,10 +233,18 @@ C1 מוכן עלcaed4778; זהות עץ מלאה ל0a06 מאפשרת שימוש 
 
 אליעזר יחיד5b74f2cf-911f-43b8-9f5d-cc6bc0d98e2f, Codex Sol/medium, רץ ב-slice/state-transcript-c2-refresh מבסיס9fe עם צופהc2-exec-root-watch, קומיט אחד ודוח מוסכם. אין prompt לתורעסוק ואין מאמת לפני מסירתexactSHA. הכנת lifetimeCost ב-nativeSol ופרובsame-id נקודתי ב-nativeLuna/high פועלים בעצים פרטיים/scratch; אינם עורכים מוצר או תיעוד הסלייס. אין קבלת runtime ל-C2 ואין מיזוגmainline.
 
+## C2 — סגירה והמשך לבעלות פעולות מאוחרות
+
+C2 קיבל GO עצמאי5/5 על4b1f43d35e33940a2361ef26a46cb3c58f7763d1. union13/163, alias4, early4, שלוש מוטציות actual בשני transports עם AssertionError ושחזור; fullFE213/2242 מדויק שומש מחדש אחרי140hashes+12source. root אימת69hashes של ארכיון המאמת. Counter37 ללא דלתא, VM1750→1685, סך תחום+81. מקור נדחף בקומיט מבצע אחד; מיזוג פנימי9e0ac849 זהה לו ונדחף עם שני קומיטי השרשרת. המבצע5b74f2cf והמאמתb121eef3 נסגרו אחריidle, והעצים הוסרו אחריproc-scan. docs34740a0 של המבצע נדחף בקומיט שלו בלבד. מסירה וראיות קנוניות ב-investigations/state-transcript-c2-refresh/. באג97 ו-C3/S3 לא נסגרו.
+
+C2L הוא הסלייס הבא בתוךS2 לפניC3: חילוץ newSession/switchSession לבעלות operation ו-config bound עד setter/persist. פרוב same-id אמיתי הוכיח שחזרה לאותו client/view/sessionId צריכה דור פעולה; snapshot של metadata/status היה משנה wire ולכן אלה נשארים קריאות חיות מאחורי guard. סקיצת עלות על4b1f הממשי:VM1685→1612,impurity43→35,תחום+236; אין runtime/typecheck או GO לסקיצה. ארכיוני ההכנה נדחפו ב-docs21f5402 ו-9eee6e3, כל אחד קומיט root אחד בלבד.
+
+אביגיל יחידהc18904ac-da02-457e-aa15-4a6b29904932 שוגרה ב-MCP ל-worktree detached על9e0ac849 אחרי lint0/0. Astra/high מוצדק במורכבות9 של post-await וזהויות החוזרות לערכים קודמים; fallback ללא המתנה לספקים שנכשלו. צופה c2l-plan-root-watch, דוח+notify_parent יחיד, ללא notifyOnDone/subscription. זה סבב התכנון6. במקביל native Sol/medium בודק רק את החוזה הסינכרוני של C1 מול reader עתידי ל-C3 בעץ נפרד; אין מימוש C3.
+
 ## מה עדיין אינו מוכח
 
 יתר S2 ו-S3, קבלה משולבת, fault injection בדפדפן החדש, ספק ACP חי ופריוויו של התוצאה המשולבת. אף אחד מאלה אינו נגזר מקבלת B3 או מהפריוויו הישן.
 
 ## סגירה
 
-הריצה נמשכת. נקודות הביקורת של B3, B6, B4 ו-C1 סגורות; זו אינה סגירת run71. לפני סוף הגל יש לעדכן checkpoints, סשנים, ארכוב, דחיפות ומספרי הקומיטים בפועל; להשאיר פריוויו חדש חי ולבקש אישור מפורש למיזוג לענף המשותף. אין דרישה לפעולת המשתמש כרגע.
+הריצה נמשכת. נקודות הביקורת של B3, B6, B4, C1 ו-C2 סגורות; זו אינה סגירת run71. לפני סוף הגל יש לעדכן checkpoints, סשנים, ארכוב, דחיפות ומספרי הקומיטים בפועל; להשאיר פריוויו חדש חי ולבקש אישור מפורש למיזוג לענף המשותף. אין דרישה לפעולת המשתמש כרגע.
