@@ -6,7 +6,7 @@ mission: drive-coding/plans/missions/state-structure-continuation.md
 slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh]
 interventions_product: 0
 interventions_plumbing: 0
-handoff_failures: 17
+handoff_failures: 18
 permanent_fixes: 2
 plan_rounds: 3
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
@@ -98,6 +98,8 @@ verdict: "ריצה פתוחה; B3 ו-B6 מאומתים ונדחפו לענף ה�
 | 16 | טסטי "מוטציה" של B4 הזריקו no-op וציפו לתוצאה השבורה, ולכן נשארו ירוקים | נדרשה בדיקת happy path ללא mutant בתוכה, ומוטציות מוצר נפרדות שמכשילות את אותו assertion |
 | 17 | B4 דיווח31E כלא-שייך לסלייס; תיקון classification רק מחק error; timeout תויג flaky בלי שחזור | Counter מלא של ההורה מצא2שגיאות toolCallId חדשות בטסט הסלייס; נדרשו סיווג owner מפורש וראיות לריצות מתוקנות |
 
+| 18 | pass3 הוסיף חילוץ quota וקיצור קוד לא קשור כדי לשלם מס LocalSessionView, בלי אישור המתכנן | התור היחיד בוטל לפני commit; לאחר idle ובדיקת שאין כלי צאצא, אותו מבצע קיבל §10: dispose ב-owner עם handle לכוד, ומוצר LocalSessionView מוחזר ל-HEAD |
+
 מפקד עצמאי על a36945f7 הוכיח שה-backend אינו מסדר prompts בתור: noWait, RPC ו-delivery לאירועים יכולים לחפוף. turnSeq מגן על state, לא מסדר ACP; cancel/session-new אינם מחסום לסיום הפעולה הישנה. הקשר הסיבתי למקרה Cursor לא בודד בניסוי, ולכן לא מוצג כמוכח. הראיות ב-drive-coding-docs, `investigations/state-structure/dispatch-concurrency-audit-a36945f7.md`.
 
 שני תיקוני נוהל קבועים הושלמו. הראשון: רנבוק קיים `agents-config/knowledge/workflows/runbooks/send-prompt-to-live-drive-coding-agent.md` עודכן ונבדק ב-hook, ונדחף בקומיט 3180c91. הוא מחייב prompt יחיד, המתנה ל-idle לפני המשך, הודעת סיום מפורשת וקובץ, ללא מקורות prompts נוספים לסוכן CLI עסוק. זה תיקון נוהל, לא תיקון backend. דחיפת agents-config כללה קומיט אחד של הסשן הזה בלבד.
@@ -153,6 +155,20 @@ verdict: "ריצה פתוחה; B3 ו-B6 מאומתים ונדחפו לענף ה�
 אותו מבצע afe8e975 השלים קוד staged לתיקון והחזיר IN-PROCESS כשה-hook חסם. VM1844→1849 גדל5, rc1 של growth; must-shrink לבדו הואrc2 שה-pre-commit ממפה לאזהרה. אין bypass/העלאתbaseline/amend. ההורה דחה הצעה לחלץ reconnect כולו, ובודק חיווט pending publicstate/answered-port באותו scope באמצעות חוקר Luna/high על snapshot index עםhashes, בעץ מבודד. במקביל המבצע ממשיך להשלמת parity WS-release, finally-reader, captured HTTP catch, deferred consumers ושערים. אין מאמת סופי לפני השלמה.
 
 המשתמש כתב "המשך" בזמן שההורה עדיין פעל. זו הנחיית המשך לאותו היקף; לא הכרעת מוצר, לא פתרון חסם צנרת ולא אישור למיזוג. מוני ההתערבויות נשארים0. walkthrough1bbbe50 נכתב בידי המבצע; לפני פרסום סופי נדרש לתקן בגופו את טענת אפס-דלתא types ואת תווית flaky הלא-מוכחת. אין כאן טענת השלמה.
+
+## B4 — חיווט pending וסגירה אצל הבעלים
+
+מדידת snapshot1849 מולHEAD1844 הראתה pending state port מצומצם1829, כולל שתי מעטפות private שהוסרו וארבע קריאות public ישירות. היישום נשלח למבצע idle לפי §9, בלי חילוץ reconnect. pass3 הריץ union23/288, audio1/1 ו-fullFE209/209קבצים2091/2091בדיקות; זו תוצאה על קוד עבודה עם quota, לא על הקצה הסופי. FE types אז39blocks31E/8W, שני אבחונים חדשים ב-HttpConnection/טסט LocalView; נדרשת דלתה סופית.
+
+המבצע חילץ quota מתוך LocalSessionView וקיצר factory/export כדי להגיע למס15. ההורה עצר לפני commit: ההחזרה ל-HEAD אחרי baseline נמוך הייתה יוצרת חוב מלאכותי. cancel של התור היחיד, idle נצפה וללא כלי צאצא פעיל, ואז המשך באותו סוכן (לא session/new ולא סגירה). §10 בבריף4c0152c מרכז reader-finalization אצל WsConnection עם localView לכוד ו-dispose קיים; LocalSessionView מוצר נשאר ללא diff. זה תיקון היקף טכני, לא התערבות משתמש. לא נוצרה קבלה או מיזוג.
+
+חקירות הכנה חסכוניות נסגרו אחרי איסוף ו-proc-scan: C1 malformed parity חשפה שלוש סטיות בטיוטה, שנמשכו בגוף ההכנה; C2/C3 reuse מופה מול c6e בלי העתקת IO/מדיניות היסטוריים. הדוחות ב-drive-coding-docs/investigations/state-structure. אין טענת מימוש S2/S3 או runtime של הטיוטות.
+
+## B4 — גיבוי אחרי עצירת ספק המבצע
+
+Cursor החזיר `Upgrade your plan to continue` גם בניסיון חוזר מיידי על אותו agent; lastTurnError נשאר null, ולכן הודעת assistant האחרונה נבדקה נקודתית כדי לאבחן סיום idle ללא תוצר חדש. אין המתנה לאיפוס. לאחר שמירת patch/index/hash manifest ב-/tmp/dc-b4-fallback-e66/ נסגר afe8e975. לא נוצר קומיט quota.
+
+מבצע יחיד חלופי:7db33767-19fa-4378-98f4-5b1a43e26536, Codex gpt-6.1-sol/medium, דרך MCP באותו עץ שהועבר לאחר סגירת הבעלים הקודם. זוהי חריגת ספק מנומקת ל-Composer שאינו זמין; Sol נבחר ל-handoff רב-קובצי מפורש בלי צורך במודל frontier. כללי noWait/idle, דוח+notify והיעדר מיזוג נשמרים. עוד ממצא: script המוטציות העתיק directory לגיבוי קיים ויצר session/session לא-מעוקב; ההשלמה מחייבת גיבוי של קובץ mutated בלבד ושחזור ב-trap. אין שינוי משתמש או תוספת scope.
 
 ## מה עדיין אינו מוכח
 
