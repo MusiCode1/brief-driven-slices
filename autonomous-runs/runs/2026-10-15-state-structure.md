@@ -11,7 +11,7 @@ permanent_fixes: 3
 plan_rounds: 4
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
-verdict: "ריצה פתוחה; S1 הושלם בענף הרצה; C1 באימות תכנון; אין מיזוג ל-edge"
+verdict: "ריצה פתוחה; S1 הושלם בענף הרצה; C1 במימוש; אין מיזוג ל-edge"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -199,6 +199,13 @@ C1 עדייןDRAFT: בריף76c712f, preflight69/69 עלfa139 ו-sketch1829→17
 C1 מוכן עלcaed4778; זהות עץ מלאה ל0a06 מאפשרת שימוש ב-preflight שש סוויטות69/69. sketch סטטי:VM1776→1735,classifier97,total+56; לא עבר typecheck/runtime. רק pure classifier וחיבורו לצרכן באותו קומיט, בלי להעביר lifetimes/reader או קוד שרת.
 
 אביגיל יחידה a9cbf7a5-81d3-4d9f-a139-6e23ce5b5a97 שוגרה דרך MCP ל-worktree פרטי caed4778. Opus ו-Cursor חסומים כפי שנמדד בריצה; Codex Sol/high הוא fallback מידתי לבדיקה סטטית של handler/contract אחד, ולא Astra של complexity10. ללא notifyOnDone/subscription או prompt לתור busy; דוח+notify יחיד וצופה קנוני. בריף נולד2026-10-16 04:15:00+03, שיגור actual session/send05:35+03 בקירוב לפי תצפית; אין טענה לדיוק שניות. ארבעה סבבי תכנון עד כה, אחד לכל סלייס.
+
+אביגיל החזירה USABLE-AFTER-FIX, ממצא confusion אחד: סקיצת העלות אימצה messageId רק ב-user-text, בעוד המקור עושה זאת לפני כל תוכן user. החוזה כבר היה נכון; הבריף חודד ובדיקת צרכן של בועה אופטימית עם ID ריק נוספה לפני handoff. הסקיצה החסרה אינה ראיית עלות מימוש מלא; הספירה הסופית מחייבת. שער התכנון תועד ב-docs ce21bc0 ונסגר בלי סבב נוסף; a9cbf7a5 נסגר אחרי idle וארטיפקט והעץ נוקה אחרי proc-scan.
+
+המבצע היחיד 463c6f34-b4e9-40ed-9e90-1a6cf38cf549 שוגר ב-Codex Sol/medium לעץ slice/state-frame-router-c1-refresh עלcaed4778. צופה קנוני dc-c1-executor-root-watch, קומיט אחד ודוח מוסכם; אין prompt נוסף בזמן busy. דרישות pure/consumer/מוטציות WS+HTTP ומפקד FE מלא נשמרות. מאמת light עתידי יהיה Luna/high, מודל שונה מהמבצע לפי הנחיית התפקיד; אין שיגור מאמת לפני exact tip ודוח. הכנת C2 מבודדת: native Sol/medium בונה sketch חיווט עלcaed4778 לקריאה/עלות בלבד, בלי קוד ריפו; חובה לרענן אחרי C1. מודל זה נבחר לחיווט מכני רב קבצי, לעומת Luna ששימש למפקד הצר. התכנון והסקיצות אינם runtime.
+
+עדכון התוכנית הקובעת ומפת גבולות C2 ב-docs845b172 נדחפו בקומיט הורה אחד בלבד. המפה כוללת כתיבה דרך reference של helper nesting ושלוש זהויות נפרדות: sessionId, אובייקט owner ודור תוכן. clear/replay מחליף דור גם באותו session; provisional→adopt שומר דור ותוכן. חריגי Speaker annotations נשארים מפורשים עדS3, בלי טענת writer יחיד של כל המערכת ב-C2.
+
 
 ## מה עדיין אינו מוכח
 
