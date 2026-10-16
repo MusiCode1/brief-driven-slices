@@ -6,13 +6,13 @@ mission: drive-coding/plans/missions/state-structure-continuation.md
 slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh, state-transcript-c2-refresh, state-session-operations-c2l-refresh, state-transcript-consumers-c3s3-refresh]
 interventions_product: 0
 interventions_plumbing: 0
-handoff_failures: 32
+handoff_failures: 34
 permanent_fixes: 3
-plan_rounds: 13
+plan_rounds: 14
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
 authorized_through_stage: 2
-verdict: "ריצה פתוחה עד סוף שלב 2; קבלת S על4e680f4a היא NO-GO12/13; אליעזר מממש תיקון M12 אחרי שער תכנון; סקיצת שלב1 מוכנה ללא מוצר; אין מיזוג mainline"
+verdict: "ריצה פתוחה עד סוף שלב 2; קבלת S על4e680f4a היא NO-GO12/13; דלתת factory/capture נסגרה ו-M12 חוזר להשלמת ביצוע; אין מיזוג mainline"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -437,3 +437,23 @@ docs29887ba נדחף: קומיט הורה אחד בלבד,65נתיבי תכנו�
 שלוש השלמות אביגיל נסגרו בגוף הבריף ובשאילתות מקור, ללא סבב נוסף. דלתת המועמד נמצאת ב-m12-cost-4e680f4a/plan-fixes, manifest ba900a124438004d35b05cdcf9dfb8a91c149eac74eaebea1a62ac469375f2fa; המתכנן שחזר אותה ב-rc0. VM 1433→1418 (−15 בדיוק), Reader293→257 ו-Remote328→309; כלל התחום +457. המועמד המקורי ושלב1A נשמרו זהים. זו היתכנות לפני בדיקות מוצר, לא GO.
 
 אליעזר יחיד 6a29706a-ef88-4634-8f93-386e11b86b55 שוגר דרך MCP על Sol/medium, fast off, בעץ slice/state-http-recovery-m12 מהבסיס4e680f4a. הוא קיבל את הבריף READY ואת דוח אביגיל המלא. צופה m12-eliezer-watch-e66 מצפה לקומיט קוהרנטי אחד ולדוח state-http-recovery-m12-eliezer.md. baseline read-only של ההורה עבר3/93 בעץ הביצוע; RED לשני חסמי הקבלה עדיין חובת המבצע. אין FE build/שרת/ילדים במסגרת המימוש, ולא שוגר מאמת קוד לפני המסירה. קבלת production ו-mainline נשארות שערים נפרדים.
+
+### M12 — המימוש עבר בדיקות ונעצר בשער המבני
+
+אליעזר סיים baseline-red התנהגותי לשני חסמי M12 ומסר WIP tree21198d49ef96329766a00b110515cdd5572aa0b4, ללא commit. union57/966 ו-fullFE223/2400 עברו; FE Counter מלא נשאר37=29E/8W/15 ללא דלתא, tsc0 ועשר מוטציות assertion-red→restored-green. בדוח מפורשת מגבלת fullFE: callback בדיקה אחד תוקן בזמן הריצה והורץ לאחריה בממוקדת וב-union המדויק. אין טענה לצילום tests קפוא מראש. שני כשלים נוספים מהמועמד הסטטי — prefix snapshot repair ו-terminal ב-onReady=false — תוקנו עם RED→GREEN, בלי שינוי ציפיות C3.
+
+שער staging האמיתי חסם patches-broadcaster.ts: הוספת node:crypto העלתה impurity1→2. מפקד ההורה הקודם בדק גודל ולא את השער המלא; זהו כשל הכנה33. אליעזר עצר כראוי, ללא raise/override/הסוואת IO, שינוי baseline או commit חלקי. דוחו נקרא במלואו והוא נשמר idle; לא שוגר מבצע כפול או מאמת קוד.
+
+דלתת §9 בבריף מעבירה את ה-UUID למפעל אמיתי של אתחול host entry, לפני יצירת host, ומחייבת ארגומנט identity ל-broadcaster. Registry נשאר בעל המפה, inFlight, commit ו-afterHostCreated. כשל hook אחרי map.set חייב להמשיך לנקות host בדיוק כבבסיס. עץ עלות פרטי m12-incarnation-cost-e66 נוצר על4e680f4a והוטען ב-WIP הקפוא; Sol/medium מודד בו candidate מלא, כיווץRegistry≥15 ושער staged כולל impurity. אין עדיין FEASIBLE או חידוש ביצוע; plan_verified=false לדלתה הזאת. NO-GO של production, bugs100/101 ושער mainline נשמרים. אין פעולה נדרשת מהמשתמש.
+
+מועמד החילוץ הוקפא ב-index tree5c35f14df77098a772b7db01cdeac7009b1ecf64 וב-manifest bdcbcedce0d06f5e2f3ec05a5d6684081a201432faa396e35e091c357db8a5b6. ההורה אימת134hashes מול הבסיס/WIP/מועמד, הריץ staged ratchet ב-rc0 ואימת שלא השתנו FE/core. Registry261→182code/impurity10→6; broadcaster חזר1→1 מול הבסיס; factory108code/182metric/impurity7 בתקציב400. baseline שיקף ארבעה shrink entries בלבד. יועץ העלות עבר5/123 ברתמה הקיימת ו-overlay סמנטי צר1→1 ללא דלתא; אין בכך GO.
+
+סקירת תכנון14 היא סקירה ראשונה של גבול ה-factory החדש בלבד, משום שהחלוקה של handshake/init/afterHostCreated השתנתה. אביגילec9ef184 עלAstra/high רצה בעץ פרטי m12-factory-avigail-e66, עם HEAD הבסיס ו-index המועמד המוצהר; אין הזזת מקור בזמן הסקירה. שלושת הממצאים המקוריים של אביגיל אינם נפתחים מחדש. צופה m12-factory-avigail-watch-e66 מחכה לדוח state-http-recovery-m12-factory-avigail.md; ה-WIP המכוון ייבדק מול ה-manifest לפני שחזור עץ הסקירה וניקויו. המבצע היחיד נשאר idle עד סגירת הדלתה.
+
+אביגיל סיימה USABLE-AFTER-FIX עם ממצא מקומי אחד: ref capture של תלויות האתחול עבר מזמן הקמת Registry לזמן יצירת host, וקריאות getters הפכו ל-method calls. הבריף מפריד כעת לכידת refs, קריאת ערכים חיים בכל יצירה ו-onSessionAttached הדינמי. כשל הכנה34 נוסף, ללא סבב סקירה חוזר וללא התערבות משתמש. אותו יועץ עלות מעדכן מועמד בתיקייה נפרדת; המועמד שנבדק והדוח נשמרים ללא שינוי. הסוקרת נסגרה אחרי אימות source/index, והעץ הוחזר לבסיס רק לאחר סיום הקריאה כדי לאפשר ניקוי וצופה קנוני; המועמד שמור בארכיון עם hash. אין שינוי מוצר או commit בעץ המבצע.
+
+סגירת הממצא נעשתה כשאילתת AST/source עם כל שמונת ports, local calls, values חיים ו-hook דינמי. ההורה קרא את דוח העלות החדש, אימת182hashes מול base/WIP/old/new והריץ staged ratchet0. המועמד הסופי f26df671f6b16c406ac3d8fbb82ff38dc6dc81c4 מזוהה ב-manifest c53f4718b7a542479823b1139bf04ef783d9933d9ce8e61f9890891c92078f4f. baseline נוצר מחדש מ-HEAD4e680 ואז הופחת לפי המקור הסופי; Registry261→187(-74), factory117code/191metric; סך מוצר3566→4145(+579), impurity93→97. אין תקרת182 ביניים ואין raise מולHEAD. בדיקות123 והסמנטיקה הצרה1→1 ללא דלתא הן הכנת עלות בלבד; בקרות החלפת refs/new entry זהות וניקוי נשארות למבצע.
+
+plan_verified=true לדלתה. סקירת אביגיל והמקורות הקודמים נשמרו, ללא סבב נוסף. עץ הסקירה נוקה אחרי proc-scan ריק וסיום הצופה; סוכן הסקירה נסגר. בריף/החלטות/ארכיוני עלות וייעוץ1B/2 יקומטו לפני חידוש אותו אליעזר. דוח1B ודוח כותרות2 הם advice-only על4e680; אין מוצר בשלבים אלה או הצגת ההמלצות כ-READY. S עדיין NO-GO12/13 עד קבלת production על תיקון M12.
+
+docs1c4b2d0 נדחף: קומיט אחד של ההורה,460 נתיבי בריף/החלטות/ארכיון מפורשים, אפס קומיטי עמיתים. walkthrough וארכיון WIP של המבצע נשמרו מחוץ לקומיט, כמו חמש עריכות העמיתים האחרות. לפי update-walkthrough זהו תיעוד תכנון של מרדכי ב-decisions; יומן הביצוע נשאר בבעלות אליעזר. המבצע6a29706a קיבל חידוש באותו סוכן עם הבריף המאומת, המועמד הסופי ובקרות consumer/mutation של capture/זהות/cleanup; אין שיגור כפול, fullFE חוזר ללא הצדקה או שינוי mainline. הצופה המקורי נשאר פעיל על קומיט קוהרנטי אחד ודוח READY-FOR-VERIFY.
