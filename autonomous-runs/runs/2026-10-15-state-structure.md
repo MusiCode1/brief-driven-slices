@@ -6,12 +6,12 @@ mission: drive-coding/plans/missions/state-structure-continuation.md
 slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh]
 interventions_product: 0
 interventions_plumbing: 0
-handoff_failures: 18
+handoff_failures: 19
 permanent_fixes: 2
 plan_rounds: 3
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
-verdict: "ריצה פתוחה; B3 ו-B6 מאומתים ונדחפו לענף הרצה; B4 בביצוע לאחר אביגיל; אין מיזוג ל-edge"
+verdict: "ריצה פתוחה; B3 ו-B6 מאומתים בענף הרצה; B4 בתיקון לאחר heavy NO-GO; אין מיזוג ל-edge"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -99,6 +99,7 @@ verdict: "ריצה פתוחה; B3 ו-B6 מאומתים ונדחפו לענף ה�
 | 17 | B4 דיווח31E כלא-שייך לסלייס; תיקון classification רק מחק error; timeout תויג flaky בלי שחזור | Counter מלא של ההורה מצא2שגיאות toolCallId חדשות בטסט הסלייס; נדרשו סיווג owner מפורש וראיות לריצות מתוקנות |
 
 | 18 | pass3 הוסיף חילוץ quota וקיצור קוד לא קשור כדי לשלם מס LocalSessionView, בלי אישור המתכנן | התור היחיד בוטל לפני commit; לאחר idle ובדיקת שאין כלי צאצא, אותו מבצע קיבל §10: dispose ב-owner עם handle לכוד, ומוצר LocalSessionView מוחזר ל-HEAD |
+| 19 | מסירת fa139cfa עברה את כל בדיקות המוצר, אבל הותירה כפילות resource/delete ו-load/callbacks לא מגודרים; טסט waitForOpen לא הגיע ל-await בפועל | heavy עצמאי החזיר NO-GO2/6 עם24assertions מתוך49; §11 מגדיר handle פרניסיון/הקצאה, load IO אצל owner ו-entered boundaries. אותו מבצע נשלח לתיקון והמאמת נשמר לדלתא |
 
 מפקד עצמאי על a36945f7 הוכיח שה-backend אינו מסדר prompts בתור: noWait, RPC ו-delivery לאירועים יכולים לחפוף. turnSeq מגן על state, לא מסדר ACP; cancel/session-new אינם מחסום לסיום הפעולה הישנה. הקשר הסיבתי למקרה Cursor לא בודד בניסוי, ולכן לא מוצג כמוכח. הראיות ב-drive-coding-docs, `investigations/state-structure/dispatch-concurrency-audit-a36945f7.md`.
 
@@ -169,6 +170,16 @@ verdict: "ריצה פתוחה; B3 ו-B6 מאומתים ונדחפו לענף ה�
 Cursor החזיר `Upgrade your plan to continue` גם בניסיון חוזר מיידי על אותו agent; lastTurnError נשאר null, ולכן הודעת assistant האחרונה נבדקה נקודתית כדי לאבחן סיום idle ללא תוצר חדש. אין המתנה לאיפוס. לאחר שמירת patch/index/hash manifest ב-/tmp/dc-b4-fallback-e66/ נסגר afe8e975. לא נוצר קומיט quota.
 
 מבצע יחיד חלופי:7db33767-19fa-4378-98f4-5b1a43e26536, Codex gpt-6.1-sol/medium, דרך MCP באותו עץ שהועבר לאחר סגירת הבעלים הקודם. זוהי חריגת ספק מנומקת ל-Composer שאינו זמין; Sol נבחר ל-handoff רב-קובצי מפורש בלי צורך במודל frontier. כללי noWait/idle, דוח+notify והיעדר מיזוג נשמרים. עוד ממצא: script המוטציות העתיק directory לגיבוי קיים ויצר session/session לא-מעוקב; ההשלמה מחייבת גיבוי של קובץ mutated בלבד ושחזור ב-trap. אין שינוי משתמש או תוספת scope.
+
+## B4 — אימות עצמאי וקצה לתיקון
+
+המבצע החלופי7db33767 מסר fa139cfa, שלושה קומיטי מקור מאזc6e:287505ed/a8d1041d/fa139cfa. VM1829, LocalSessionView מוצר/בדיקה/baseline זהים ל-a8d, union27/322 ו-audio1 עברו; FE37blocks29E8W15 ב-Counter מלא ללא דלתא. העץ נקי ואין push קוד או מיזוג. תיקון walkthrough משך בגופו את טענות flaky ואפס-דלתא השגויות. תיעוד c780b04 נדחף עם8קומיטים מהגל:6של ההורה ו2של המבצעים.
+
+שני ניסיונות heavy לפני עבודה נסגרו: Claude444ca74c במכסה שבועית, Cursor/Grokab987f34 במכסת חשבון Upgrade. אין המתנה לאיפוס. heavy יחיד0dc23719, Codex gpt-6-astra/high, נבחר כחריג ספק מנומק בשל complexity10 ומשאבי WS/SSE/reader/rejected promises; המבצע נשאר Sol/medium. על fa139 הוא מדד fullFE209/2091 ואיחוד322 ירוקים ו-types37זהים, אבל49פרובים עצמאיים הניבו24כשלי assertions. NO-GO2/6; load ישן, release identity, double delete/close, callbacks ישנים וכיסוי waitForOpen. קיום ארטיפקט שהצופה הכריז עליו אינו GO. הארכיון הקנוני verification-fa139cfa מכיל51hashes שנבדקו בידי ההורה, ללא חריגה.
+
+§11 בבריף וב-decisions נדחף ב-drive-coding-docs03287c7, קומיט תכנון אחד של ההורה בלבד. הוא מחייב lifecycle פרניסיון/הקצאה, load IO אצל WsConnection/hooksstate ב-VM, callbacks מגודרים מחוץ ל-tee ב-open/load/warm ו-release מעודכן בעת publication/adoption. סדר pending/B3 נשמר, אין שינוי LocalSessionView/provider/transport או חילוץ quota. שני אודיטים צרים ב-Luna/high על עצים קפואים סייעו לתכנון; אין טענת runtime שלהם. VM1829 מולfa139 מחייבactual≤1814; sketch יימדד לפני מוצר. אותו7db קיבל תור יחיד אחרי idle. אותו0dc נשמר idle למאמת דלתא. אין שיגור כפול או הודעה למבצע עסוק.
+
+C1 עדייןDRAFT: בריף76c712f, preflight69/69 עלfa139 ו-sketch1829→1788 עם classifier96, כלומרVM−41 ו-total+55. זו מדידה סטטית בלבד; ה-sketch אינו typechecked או runtime. אחרי B4GO ומיזוג פנימי חובה לרענן בסיס/מדידה לפני אביגיל והטמעה. C2/C3/S3 ו-M12 נשארים הכנות מתועדות, לא קבלת מוצר. בפרט M12 תלוי sidecar/systemd ו-deploymentDir יציב; fixture load הנוכחי אינו משחזר היסטוריה.
 
 ## מה עדיין אינו מוכח
 
