@@ -11,7 +11,7 @@ permanent_fixes: 3
 plan_rounds: 6
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
-verdict: "ריצה פתוחה; S1 ו-C1/C2 מאומתים בענף הרצה; C2L במימוש אחרי תיקון חוזה דחייה; אין מיזוג ל-edge"
+verdict: "ריצה פתוחה; S1 ו-C1/C2 מאומתים בענף הרצה; C2L באימות עצמאי על46fb3695; אין מיזוג ל-edge"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -246,6 +246,16 @@ C2L הוא הסלייס הבא בתוךS2 לפניC3: חילוץ newSession/swit
 אביגיל c18904ac נתנה USABLE-AFTER-FIX עם ממצא אחד: config ראשוני דחוי שהתיישן אחרי switch באותו חיבור עלול להגיע ל-open.failed ולבצע cleanup של החלופה. מקור9e0ac849 אומת, לא נטען runtime. הושלם חוזה catch stale-only בלי לבלוע שגיאות תקפות, consumer עד השלמת attach עם אפס close/delete, control תקף ומוטציה רביעית. זה כשל המסירה25. שער docs ea63159, lint0/0, plan_verified=true, ללא סבב אביגיל נוסף. הדוח נקרא במלואו, הסוכן נסגר אחריidle והעץ הוסר אחריproc-scan.
 
 אליעזר היחיד677021f4-1879-4d96-be8b-22a1e4da07d7 שוגר ב-Codex Sol/medium לעץ slice/state-session-operations-c2l-refresh על9e0ac849, קומיט קוהרנטי אחד וצופה c2l-exec-root-watch. אין prompt לתורbusy, ילדים, שרתים או מאמת לפני exact tip. docs572aeb6 ארכב הכנתC3: async-only משנה סדר observable; reader אחד לזרם אינו מחייב דחיית היישום המקומי. שלושת קומיטי המסירה/הכנתC3/שערC2L (0c52060,572aeb6,ea63159) נדחפו כל אחד כקומיט root אחד בלבד, בלי קומיטי עמיתים. זה עדיין תכנון C3, לא מוצר.
+
+## C2L — מסירת מבצע ואימות עצמאי
+
+המבצע מסר READY-FOR-VERIFY-heavy על46fb369536bdb154527f4d26797f958323b75344, קומיט אחד, מקור/index נקיים, בלי push קוד. union20/334; fullFE214/2290 הסופי, לאחר תיקון fallback ובדיקת צרכן נוספת; startup error נפרד אינו ראיית בדיקות. ארבע מוטציות actual חוזרות על מקור סופי, AssertionError ושחזור זהה-בתים. VM1685→1613, impurity43→35, סךתחום+248. FE37/29E8W15 Counter מלא ללא דלתא. root קרא דוח מלא ואימת121hashes ו-5source מול exactSHA. ארבעת קובצי C2 לא השתנו. docs ac86702 נדחף בידי המבצע, קומיט אחד שלו בלבד.
+
+כלב-heavy יחיד a463f754-1102-4d30-a623-e94ab72210ae, Codex Astra/high, שוגר לעץ detached על46fb עם צופה c2l-heavy-root-watch ודוח מוסכם. המודל מוצדק במורכבות9 של same-id ו-reject דרך Connection. אין שיגור נוסף, prompt לתורbusy או mainline merge. bug97 נשאר פתוח עד GO. המבצע677021f4 נשאר idle לדלתת מאמת.
+
+הכנות נפרדות: ייעוץ C3 ב-Astra/high על9e0ac849 בחר sink סינכרוני בשני המסלולים וקורא רשת יחיד, בלי תור FE שני; nested disposition לפי התנהגות VM, בלי שינוי snapshot HTTP. עלות281−42 חלקית בלבד, לא feasibility. הארכיון394fac7 כולל source וכלי קפואים, ושחזור מדידה זהה-בתים. Luna/medium מדד צדSpeaker לקראתS3:499→490 לשתי כתיבות בלבד, או461 בחילוץ annotationjobs; VM/helper/פורט לא נמדדו עדיין. docs ef82790 ו-394fac7 כל אחד קומיט root אחד בלבד. העצים של שני היועצים נוקו אחריproc-scan.
+
+על46fb שעדיין באימות שוגרו שני native preparers בעצים נפרדים: Sol/medium לסקיצת C3 מחוברת תחתtmp בלבד, Luna/high לפרוב baseline של hot new/switch ו-null messageId. הם אינם BDS gate או מימוש מוצר; כל קצה שיתוקן ב-heavy מחייב refresh. אין בריף C3 READY לפני בחירת גבול מלאה, מדידה ו-GO התלות.
 
 ## מה עדיין אינו מוכח
 
