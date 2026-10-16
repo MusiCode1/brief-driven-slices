@@ -6,13 +6,13 @@ mission: drive-coding/plans/missions/state-structure-continuation.md
 slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh, state-transcript-c2-refresh, state-session-operations-c2l-refresh, state-transcript-consumers-c3s3-refresh]
 interventions_product: 0
 interventions_plumbing: 0
-handoff_failures: 30
+handoff_failures: 31
 permanent_fixes: 3
 plan_rounds: 12
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
 authorized_through_stage: 2
-verdict: "ריצה פתוחה עד סוף שלב 2; C3+S3 שולב ב-4e680f4a; קבלת S בפריוויו רצה; שלב 1 בהכנת סקיצה; אין מיזוג mainline"
+verdict: "ריצה פתוחה עד סוף שלב 2; קבלת S על4e680f4a היא NO-GO12/13; מתוכנן תיקון M12; סקיצת שלב1 מוכנה ללא מוצר; אין מיזוג mainline"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -397,3 +397,23 @@ build production של Vite עם FE_ENV=preview על אותו SHA עבר rc0, 355
 מפקד חי של Remote.close לבדו הראה328→316, ירידה12; זו אינה הוכחת feasibility. על בסיס אותו ייעוץ שוגר native Sol/medium להכנת סקיצה מלאה ב-/tmp בלבד על4e680f4a: pending UI owner מקומי ו-HTTP actions תחומיים, ללא product writes/servers. תוצאת המדידה הראשונה VM1433→1418 ו-Remote328→275 טרם נאספה כ-verdict; ה-hashes והביקורת הסטטית עדיין בעבודה. אין READY או ביצוע שלב1 לפני קבלת S ובריף JIT מאומת.
 
 docs root8811a58 ו-514dd74 נדחפו, כל אחד קומיט אחד של ההורה ואפס קומיטי עמיתים. גם ארכיון דלתת ההערות ו-receipts ראשוניים נשמרו. עצי שני חוקרי המפות ויועץ הארכיטקטורה נוקו אחרי proc-scan ריק. הסוכן החסכוני של הסקיצה והמאמת המשולב ממשיכים; אין פעולה נדרשת מהמשתמש כעת. המסירה הסופית נשארת עד סוף שלב2 עם פריוויו ואישור mainline מפורש.
+
+## שלב 1 — סקיצה מלאה ושני בריפים בטיוטה
+
+סקיצת Sol/medium הושלמה בגרסה2 על4e680f4a, /tmp בלבד. ההורה קרא את הדוח, תיקן בגוף הביקורת ניסוח היסטורי מטעה, שחזר reproduce.py ב-rc0 ואימת11קובצי source/candidate מול git show וה-manifest. אחרי Biome: VM1433→1412 (-21), Remote328→279 (-49), lifecycle22→23; כלל שבעת הנתיבים1947→1949 (+2). זו היתכנות גודל בלבד; אין semantic typecheck/tests/runtime/READY, staged ratchet או מוצר של שלב1.
+
+החקירה תפסה פגם בגרסה1: pagehide→leaveRunning יוצר detached terminal ללא pageshow attach. גם beforeNavigate משליך willUnload ויכול לנקות לפני יציאה חיצונית. הכרעת ההורה לגרסה2: pagehide release-only כפי הבסיס, ו-willUnload כ-pause רק ב-HTTP; SPA exit מנקה UI/resources ללא פתרון בקשת השרת. getter נגזר צר תומך גם ב-HttpConnection לפני bind; WS hooks/cancelTurn/pagehide/isRemoteView נשמרו byte-identical. אין owner נוסף או טענת טוהר למתאם resolvers. ה-prebrief תוקן בגוף ומצבו נשאר היסטורי/JIT נדרש.
+
+Luna/medium מיפה בנפרד guard WS על אותו בסיס קפוא, ללא tests או מוצר. isHeld כוללmap+inFlight, והדחייה המתוכננת תקדים eviction ותשמור 1008/session-host-active; WS-first/WS→WS והכיוון HTTP שמאמץ WS נשארים positive controls. העץ הפרטי של המפה נוקה אחריproc-scan ריק. plans/brief-state-viewer-detach-1a.md ו-plans/brief-state-http-owner-ws-guard-1c.md נכתבו כטיוטות בלבד, lint0/0; אין אביגיל או מבצע בשלבים אלה לפני תלותS ורענוןbase. 1C עצמאי ויכול להקדים את1A לאחר הקבלה.
+
+docs29887ba נדחף: קומיט הורה אחד בלבד,65נתיבי תכנון/ארכיון מזוהים, ללא קומיטי עמיתים או עריכותיהם. archive57קבצים של הסקיצה כולל v1 היסטורי; לוגי פקודות הפקה נשמרו byte-identical כ-commands.jsonl.raw.txt עם מיפוי מפורש, ללא transcripts/הוראות גלובליות. diff-check של המסמכים עבר; rc2 בארכיון מוגבל לשני raw patches שנשמרו במכוון. הסקיצה בעץ נקי נשמרת לרענון בסיס אחרי תוצאת הקבלה.
+
+בקבלתS שכבר רצה הוכחו offline→snapshot באותו page ללא כפילות, playing+ended אמיתיים מול MP3 סינתטי, ותשובתACPאמיתיM13-ACP-OK. restart שלBE431518 אחרי416233 שמר sidecarPID423726 ואת זהות/טקסט הודעותACP. אלה ארטיפקטים ביניים בלבד: המאמת5a4c28e1 עדיין פועל, דוחו המלא והכרעתM01–M13 טרם נכתבו. אין GO משולב, mainline merge או פעולה נדרשת מהמשתמש.
+
+## קבלת S — NO-GO במבחן ההתאוששות
+
+כלב-heavy5a4c28e1 סיים על exactSHA4e680f4a: NO-GO,12/13. ההורה קרא את הדוח המלא, אימת194חתימות ו-20assertions של הקבלות ב-rc0. אלה מאמתים גם שחזור failures, ואינם הופכים NO-GO ל-GO. שני הממצאים ב-M12: restart באותו sessionId יוצר host עםversion13 מולwatermark43 שהלקוח ממשיך לשמור, ולכן permission חדשה אינה מוצגת; DELETE agent בזמןpending משאיר Allow/Responding/Connected לצדsse-gone. שניהם base-existing לפי מקור, ללא baseline browser נוסף, ועדיין חוסמים את החוזה המאושר. נוסף כשל מסירה31 לקבוצת הקבלה הזאת, ללא התערבות משתמש או שינוי plan_rounds.
+
+דוח וראיות נעולים בתיעוד הפרויקט תחת investigations/state-structure/verification-4e680f4a, כולל סקירת פרטיותLuna/medium נפרדת ל15screenshots שהתקבלו. כל ששת agents הבדיקה נסגרו, units inactive והדפדפן/פרופיל נוקו; BE431518 והמנהרה415875 נשארו מחוץ ל-cgroup של הסוכן. המאמת idle ונשמר לדלתה, עם worktree נקי וקפוא. צופה artifact-success אינו verdict מוצרי.
+
+הכשלים נרשמו ב-bugs100/101. bug41 ההיסטורי סגר רק פינויTTL; סיכון restart הוזכר בו במפורש, ולכן סגירתו ההיסטורית אינה משוכתבת. יועץ הארכיטקטורה הקייםAstra/high קיבל משימת קריאה צרה בעץ נפרד s-runtime-fix-plan-e66 על4e680f4a: incarnation אמיתי ללא ניחוש sessionId/epoch/version, ו-terminality משותפת ל-reader/view/UI בלי reply או owner חדש. לא נכתב מוצר ולא נפתח מבצע/מאמת נוסף. אחרי ההכרעה נדרשים מפקד מלא ובריף JIT מאומת לסבב תיקון1; שלב1 נשאר טיוטה עד סגירת קבלתS. אין פעולה נדרשת מהמשתמש.
