@@ -6,12 +6,12 @@ mission: drive-coding/plans/missions/state-structure-continuation.md
 slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh, state-transcript-c2-refresh, state-session-operations-c2l-refresh]
 interventions_product: 0
 interventions_plumbing: 0
-handoff_failures: 24
+handoff_failures: 25
 permanent_fixes: 3
 plan_rounds: 6
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
-verdict: "ריצה פתוחה; S1 ו-C1/C2 מאומתים בענף הרצה; C2L באימות תכנון; אין מיזוג ל-edge"
+verdict: "ריצה פתוחה; S1 ו-C1/C2 מאומתים בענף הרצה; C2L במימוש אחרי תיקון חוזה דחייה; אין מיזוג ל-edge"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -240,6 +240,12 @@ C2 קיבל GO עצמאי5/5 על4b1f43d35e33940a2361ef26a46cb3c58f7763d1. union
 C2L הוא הסלייס הבא בתוךS2 לפניC3: חילוץ newSession/switchSession לבעלות operation ו-config bound עד setter/persist. פרוב same-id אמיתי הוכיח שחזרה לאותו client/view/sessionId צריכה דור פעולה; snapshot של metadata/status היה משנה wire ולכן אלה נשארים קריאות חיות מאחורי guard. סקיצת עלות על4b1f הממשי:VM1685→1612,impurity43→35,תחום+236; אין runtime/typecheck או GO לסקיצה. ארכיוני ההכנה נדחפו ב-docs21f5402 ו-9eee6e3, כל אחד קומיט root אחד בלבד.
 
 אביגיל יחידהc18904ac-da02-457e-aa15-4a6b29904932 שוגרה ב-MCP ל-worktree detached על9e0ac849 אחרי lint0/0. Astra/high מוצדק במורכבות9 של post-await וזהויות החוזרות לערכים קודמים; fallback ללא המתנה לספקים שנכשלו. צופה c2l-plan-root-watch, דוח+notify_parent יחיד, ללא notifyOnDone/subscription. זה סבב התכנון6. במקביל native Sol/medium בודק רק את החוזה הסינכרוני של C1 מול reader עתידי ל-C3 בעץ נפרד; אין מימוש C3.
+
+## C2L — שער תכנון סגור ומבצע יחיד
+
+אביגיל c18904ac נתנה USABLE-AFTER-FIX עם ממצא אחד: config ראשוני דחוי שהתיישן אחרי switch באותו חיבור עלול להגיע ל-open.failed ולבצע cleanup של החלופה. מקור9e0ac849 אומת, לא נטען runtime. הושלם חוזה catch stale-only בלי לבלוע שגיאות תקפות, consumer עד השלמת attach עם אפס close/delete, control תקף ומוטציה רביעית. זה כשל המסירה25. שער docs ea63159, lint0/0, plan_verified=true, ללא סבב אביגיל נוסף. הדוח נקרא במלואו, הסוכן נסגר אחריidle והעץ הוסר אחריproc-scan.
+
+אליעזר היחיד677021f4-1879-4d96-be8b-22a1e4da07d7 שוגר ב-Codex Sol/medium לעץ slice/state-session-operations-c2l-refresh על9e0ac849, קומיט קוהרנטי אחד וצופה c2l-exec-root-watch. אין prompt לתורbusy, ילדים, שרתים או מאמת לפני exact tip. docs572aeb6 ארכב הכנתC3: async-only משנה סדר observable; reader אחד לזרם אינו מחייב דחיית היישום המקומי. שלושת קומיטי המסירה/הכנתC3/שערC2L (0c52060,572aeb6,ea63159) נדחפו כל אחד כקומיט root אחד בלבד, בלי קומיטי עמיתים. זה עדיין תכנון C3, לא מוצר.
 
 ## מה עדיין אינו מוכח
 
