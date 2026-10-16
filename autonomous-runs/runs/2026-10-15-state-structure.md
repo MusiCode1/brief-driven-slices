@@ -6,12 +6,12 @@ mission: drive-coding/plans/missions/state-structure-continuation.md
 slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh, state-transcript-c2-refresh, state-session-operations-c2l-refresh, state-transcript-consumers-c3s3-refresh]
 interventions_product: 0
 interventions_plumbing: 0
-handoff_failures: 28
+handoff_failures: 29
 permanent_fixes: 3
 plan_rounds: 10
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
-verdict: "ריצה פתוחה; S1 ו-C1/C2/C2L מאומתים בענף הרצה 85f89973; הכנת C3 נמשכת; אין מיזוג ל-edge"
+verdict: "ריצה פתוחה; S1 ו-C1/C2/C2L מאומתים על85f; C3+S3 בשער תכנון אחרי NEEDS-REWORK גם בדלתה; אין מיזוג ל-edge"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -309,3 +309,12 @@ C2L הוא הסלייס הבא בתוךS2 לפניC3: חילוץ newSession/swit
 הבריף תוקן ב-§2/§7: מפות קדם-job מתחלפות לפי content target בתחילת effect וגם לפני stop, בלי stop/audio/queue policy חדשה; באותו content נשמרים זנבות ו-counts. target provenance יחיד נלכד לצד mark ב-setHistory אחרי reset, וה-Speaker צורך epoch מונוטוני אך מזריע רק mark current. נדרשים consumer baseline-red ומוטציות נפרדות לקדם-job ול-history provenance. דלתה אחת שוגרה לאותה אביגיל idle, בלי סוכן חדש או סבב שלישי של C3; plan_rounds=10, handoff_failures=28 כולל חסם התכנון החדש.
 
 מפקד מלא לפני התיקון אומת בידי ההורה: 18 נתיבים, VM 1613→1425, Speaker 499→460, סך +515 codeLines, כל hashes של הבסיס מול85f, patch hash-exact. מקור זה בארכיון ואינו כולל את הממצא החדש; מפקד דלתא נפרד ב-Sol/medium נכתב בלי לדרוס אותו. docs e863c93 מכיל תכנון/ראיות של ההורה בלבד. אין מבצע מוצר לפני סגירת דלתת אביגיל והמדידה החדשה. אין מיזוג mainline.
+
+
+## C3+S3 — דלתת התכנון נותרה NEEDS-REWORK
+
+אביגיל מצאה בדלתה את ההתנגשות בין reset של annotation target לבין סימוני עיבוד ההקראה: reconnect מאוחר באותו RemoteSessionView פולט reset שני בעוד attachWindow כבר false, ולכן החלפת מפות בלי epoch חדש יכולה להקריא שוב תוכן שכבר עובד. זהו source trace, לא runtime. חלקי זליגת קדם-job ו-provenance נסגרו בתכנון; אין READY ליחידה כולה. הדוחות המקוריים נשמרו ללא שכתוב ב-plan-gate-85f89973. handoff_failures=29, plan_rounds=10; לא נפתח סבב שלישי אוטומטי.
+
+העלות המעודכנת נשמרה בנפרד ושוחזרה hash-exact בידי ההורה: VM1613→1427, Speaker499→470, Local249→218, Remote348→321; כל ארבעת חיובי15 נפרעים. total +530code/+443physical, impurity105→101. גודל אינו קבלת ההתנהגות. מפקד base/candidate חדש עם76hashes והוכחת root נמצא ב-investigations/state-structure/c3s3-prejob-cost-85f89973. source/index של ענף ההרצה והעץ המוכן למבצע נקיים85f; אין מוצר C3/S3 או מבצע פעיל.
+
+לפי agents/mordechai.md §plan-gate, אחרי rewrite אחד ודלתה שעדיין NEEDS חוזרים למשתמש; ההורה יבקש הרשאה מפורשת לסבב תכנון צר נוסף של חיי annotations מול המשכיות ההקראה. אין כשל מכסה או המתנה לשעון. אביגיל76dd4c4f נסגרה אחרי idle ואיסוף הדוח, ועץ האימות ועץ חוקר העלות נוקו לאחר proc-scan ריק. חוקר history הצר הסתיים ועצו נוקה. אין watcher נוסף. הענף המוכן slice/state-transcript-consumers-c3s3-refresh נשאר85f להמשך מורשה. run71 נשאר פתוח; production/ACP/mainline acceptance לא נסגרו.
