@@ -12,7 +12,7 @@ plan_rounds: 14
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
 authorized_through_stage: 2
-verdict: "ריצה פתוחה עד סוף שלב 2; קבלת S על4e680f4a היא NO-GO12/13; דלתת factory/capture נסגרה ו-M12 חוזר להשלמת ביצוע; אין מיזוג mainline"
+verdict: "ריצה פתוחה עד סוף שלב 2; קבלת S על4e680f4a היא NO-GO12/13; M12 נמסר על470d182b ואימות קוד עצמאי רץ; אין מיזוג mainline"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -457,3 +457,13 @@ docs29887ba נדחף: קומיט הורה אחד בלבד,65נתיבי תכנו�
 plan_verified=true לדלתה. סקירת אביגיל והמקורות הקודמים נשמרו, ללא סבב נוסף. עץ הסקירה נוקה אחרי proc-scan ריק וסיום הצופה; סוכן הסקירה נסגר. בריף/החלטות/ארכיוני עלות וייעוץ1B/2 יקומטו לפני חידוש אותו אליעזר. דוח1B ודוח כותרות2 הם advice-only על4e680; אין מוצר בשלבים אלה או הצגת ההמלצות כ-READY. S עדיין NO-GO12/13 עד קבלת production על תיקון M12.
 
 docs1c4b2d0 נדחף: קומיט אחד של ההורה,460 נתיבי בריף/החלטות/ארכיון מפורשים, אפס קומיטי עמיתים. walkthrough וארכיון WIP של המבצע נשמרו מחוץ לקומיט, כמו חמש עריכות העמיתים האחרות. לפי update-walkthrough זהו תיעוד תכנון של מרדכי ב-decisions; יומן הביצוע נשאר בבעלות אליעזר. המבצע6a29706a קיבל חידוש באותו סוכן עם הבריף המאומת, המועמד הסופי ובקרות consumer/mutation של capture/זהות/cleanup; אין שיגור כפול, fullFE חוזר ללא הצדקה או שינוי mainline. הצופה המקורי נשאר פעיל על קומיט קוהרנטי אחד ודוח READY-FOR-VERIFY.
+
+### מסירת M12 ואימות קוד לפני החלפת הפריוויו
+
+המבצע מסר READY-FOR-VERIFY-heavy על 470d182b46b33d083afe69c64783d6c30b2837b8, קומיט מוצר קוהרנטי אחד מעל 4e680f4a. source/index נקיים. דוחו נקרא במלואו; ההורה אימת 484 קובצי ארכיון ו-49 מקורות מול git show של הקצה, עם receipt ב-/tmp/dc-m12-root-code-handoff-e66/receipt.json. הארכיון הפרטי מזוהה exactSHA תחת investigations/state-structure/state-http-recovery-m12/final-470d182b46b33d083afe69c64783d6c30b2837b8. תיעוד המסירה נדחף ב-e2e4fac: קומיט אחד של המבצע, אפס של עמיתים; אין push קוד או מיזוג.
+
+union סופי של 59 קבצים/988 בדיקות עבר ב-rc0 עם --testTimeout=15000. ריצה קודמת בברירת המחדל5000 נכשלה ב-timeout של בדיקה קיימת המייבאת AgentSession; אותה סוויטה עברה בנפרד8/8, ללא שינוי מקור, ואז הורץ האיחוד מחדש. אין להציג את שתי פקודות האיחוד כזהות. fullFE223/2400 ו-Counter37=29E/8W/15 שימשו reuse אחרי audit של FE/core, עם מגבלת ה-callback המתועדת לעיל; בדיקות factory/Registry הסופיות וה-union הורצו על הקצה. ארבע מוטציות BE/factory חדשות עברו compile→AssertionError→byte-restored green, לצד תשע מוטציות FE שעוגניהן נותרו זהים. אלה ראיות מבצע, ולא GO עצמאי.
+
+אותו כלב-heavy 5a4c28e1-de6a-458f-8930-302dd343a970 נשמר מאימות S והועבר, לאחר סריקת תהליכים ועץ נקי, ל-detached 470d182b. הוא רץ על Astra/high בגלל מורכבות10 של ordered ingress, reentrancy ו-lifetimes. משימתו כעת DoD1–6 של הקוד בלבד, ללא build/שרת/דפדפן/restart. צופה יחיד m12-calev-code-watch-e66 מצפה ל-state-http-recovery-m12-calev-code.md. המבצע נשאר idle לדלתה; לא נפתח מאמת נוסף.
+
+הפריוויו על4014 עדיין מריץ4e680f4a. build/config חדשים הוכנו בלבד ב-/tmp/dc-m12-runtime-e66; אין החלפת שרת לפני GO קוד. לאחריו יבנה ההורה פעם אחת, ישמור deployment/store/fixture ומנהרה קיימים, וימסור לאותו מאמת קבלת production הכוללת שני צופים, restart עם sidecar חי ו-DELETE בזמן pending. NO-GO12/13, bugs100/101 ושער mainline נשארים בתוקף. הכנת Stage1A מתבצעת במקביל בעץ עלות נפרד; אין מוצר Stage1 לפני קבלת S. אין פעולה נדרשת מהמשתמש.
