@@ -6,12 +6,12 @@ mission: drive-coding/plans/missions/state-structure-continuation.md
 slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh]
 interventions_product: 0
 interventions_plumbing: 0
-handoff_failures: 20
+handoff_failures: 23
 permanent_fixes: 3
 plan_rounds: 4
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
-verdict: "ריצה פתוחה; S1 הושלם בענף הרצה; C1 במימוש; אין מיזוג ל-edge"
+verdict: "ריצה פתוחה; S1 ו-C1 מאומתים בענף הרצה; C2 בהכנה; אין מיזוג ל-edge"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -101,6 +101,10 @@ verdict: "ריצה פתוחה; S1 הושלם בענף הרצה; C1 במימוש;
 | 18 | pass3 הוסיף חילוץ quota וקיצור קוד לא קשור כדי לשלם מס LocalSessionView, בלי אישור המתכנן | התור היחיד בוטל לפני commit; לאחר idle ובדיקת שאין כלי צאצא, אותו מבצע קיבל §10: dispose ב-owner עם handle לכוד, ומוצר LocalSessionView מוחזר ל-HEAD |
 | 19 | מסירת fa139cfa עברה את כל בדיקות המוצר, אבל הותירה כפילות resource/delete ו-load/callbacks לא מגודרים; טסט waitForOpen לא הגיע ל-await בפועל | heavy עצמאי החזיר NO-GO2/6 עם24assertions מתוך49; §11 מגדיר handle פרניסיון/הקצאה, load IO אצל owner ו-entered boundaries. אותו מבצע נשלח לתיקון והמאמת נשמר לדלתא |
 | 20 | מסירת4c091e82 קשרה released לצמיתות ל-agentId, ולכן release נוסף לאחר warm לאותו agent ואותו owner נבלע | סקירת ההורה דרשה consumer; RED בפועל ציפה2 וקיבל1. הבהרת הבריףb98f7c9 מפרידה דור release ממחיקת allocation, ואותו מבצע משלים דלתא לפני heavy |
+
+| 21 | סקיצת הגודל של C1 השאירה אימוץ messageId רק בענף text, אף שהחוזה דורש אימוץ לפני כל תוכן user | אביגיל חשפה את הפער; הבריף והצרכנים חודדו לפני handoff. המדידה הסופית הייתה26 ולא41 שורות הפחתה, ושני transports מפריכים ניתוק |
+| 22 | דוח GO של C1 כלל משפט הפוך מהלוגים: "בדיקות התוכן עברו" תחת mutant | root בדק rc1/AssertionError וביקש תיקון ניסוח צר בלבד. המאמת תיקן בגוף שני עותקי הדוח; הראיות וה-verdict לא השתנו |
+| 23 | סקיצת C2 הראשונה טענה להעברת כתיבות הבנייה, אך b.messageId עדיין השתנה ב-VM; סדר clock/nesting השתנה | סקירת root והכנת 5c7 תיקנו את שלוש ההשמטות לפני בריף: פעולת adopt מחוברת, בדיקות parent/child לפני metadata, ו-clock לכל event. זוהי סקיצה בלבד ללא runtime |
 
 מפקד עצמאי על a36945f7 הוכיח שה-backend אינו מסדר prompts בתור: noWait, RPC ו-delivery לאירועים יכולים לחפוף. turnSeq מגן על state, לא מסדר ACP; cancel/session-new אינם מחסום לסיום הפעולה הישנה. הקשר הסיבתי למקרה Cursor לא בודד בניסוי, ולכן לא מוצג כמוכח. הראיות ב-drive-coding-docs, `investigations/state-structure/dispatch-concurrency-audit-a36945f7.md`.
 
@@ -207,10 +211,18 @@ C1 מוכן עלcaed4778; זהות עץ מלאה ל0a06 מאפשרת שימוש 
 עדכון התוכנית הקובעת ומפת גבולות C2 ב-docs845b172 נדחפו בקומיט הורה אחד בלבד. המפה כוללת כתיבה דרך reference של helper nesting ושלוש זהויות נפרדות: sessionId, אובייקט owner ודור תוכן. clear/replay מחליף דור גם באותו session; provisional→adopt שומר דור ותוכן. חריגי Speaker annotations נשארים מפורשים עדS3, בלי טענת writer יחיד של כל המערכת ב-C2.
 
 
+## C1 — סגירה והכנת C2
+
+מקור5c7ebee53de478052e9d8aff1c68b1d951529406 קיבל GO5/5 מכלב Luna/high, מודל שונה ממבצעSol/medium. המאמת הריץ pure60, consumer8 בכל transport, agent-null order ושתי מוטציות no-op assertion-red/byte-restore-green. הוא אימת54hashes של מסירת המבצע; root אימת אותם גם כן ועוד37קבצי אימות. fullFE המדויק של המבצע211קבצים2222בדיקות,rc0, פעם אחת; union146; types37ללא דלתתCounter. VM1776→1750, classifier97, גידול משולב71; אין טענת כיווץ כולל.
+
+המקור נדחף בקומיט אחד. מיזוג פנימי9fe02d999c06424fc24e53bef8f9ac433d405abd זהה בכל הקבצים למקור; דחיפת integration כללה שני קומיטים: מקור ומיזוג ההורה. mainline נשאר ללא מיזוג. המבצע463c6f34 והמאמתd7b92fb2 נסגרו אחרי idle; שני העצים הוסרו אחריproc-scan ומצב נקי. תיקון הניסוח בדוח לא דרש בדיקות נוספות ולא שינהGO. ארכיון ומסירה סופית ב-docs66988fe נדחפו, קומיט root אחד בלבד; מסירת המבצע3fa4180 נדחפה בקומיט המבצע בלבד. סקיצת C2 הישנה נשמרה עם מגבלותיה ב-docs9d4b2e9, קומיט root אחד בלבד.
+
+הכנת C2 על בסיס המיזוג9fe (tree-identical ל5c7):9סוויטות140/140,rc0. sketch מתוקן אחריC1:1750→1715,impurity43, שני קבצים חדשים67/134שורות וסךתחום+89codeLines. איןtypecheck/runtimeשלsketch ואיןplan-gateC2 עדיין. נבדקים גם awaits של new/switch חמים אחרי החלפת owner כדי לקבע חוזה scope בלי לטעון parity למרוץ שלא נמדד. S2C2/C3 ו-S3 והקבלה המשולבת ממשיכים; אין פעולה נדרשת מהמשתמש.
+
 ## מה עדיין אינו מוכח
 
-S2/S3, קבלה משולבת, fault injection בדפדפן החדש, ספק ACP חי ופריוויו של התוצאה המשולבת. אף אחד מאלה אינו נגזר מקבלת B3 או מהפריוויו הישן.
+יתר S2 ו-S3, קבלה משולבת, fault injection בדפדפן החדש, ספק ACP חי ופריוויו של התוצאה המשולבת. אף אחד מאלה אינו נגזר מקבלת B3 או מהפריוויו הישן.
 
 ## סגירה
 
-הריצה נמשכת. נקודות הביקורת של B3, B6 ו-B4 סגורות; זו אינה סגירת run71. לפני סוף הגל יש לעדכן checkpoints, סשנים, ארכוב, דחיפות ומספרי הקומיטים בפועל; להשאיר פריוויו חדש חי ולבקש אישור מפורש למיזוג לענף המשותף. אין דרישה לפעולת המשתמש כרגע.
+הריצה נמשכת. נקודות הביקורת של B3, B6, B4 ו-C1 סגורות; זו אינה סגירת run71. לפני סוף הגל יש לעדכן checkpoints, סשנים, ארכוב, דחיפות ומספרי הקומיטים בפועל; להשאיר פריוויו חדש חי ולבקש אישור מפורש למיזוג לענף המשותף. אין דרישה לפעולת המשתמש כרגע.
