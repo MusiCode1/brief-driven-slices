@@ -6,8 +6,8 @@ mission: drive-coding/plans/missions/state-structure-continuation.md
 slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh]
 interventions_product: 0
 interventions_plumbing: 0
-handoff_failures: 19
-permanent_fixes: 2
+handoff_failures: 20
+permanent_fixes: 3
 plan_rounds: 3
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
@@ -100,6 +100,7 @@ verdict: "ריצה פתוחה; B3 ו-B6 מאומתים בענף הרצה; B4 ב�
 
 | 18 | pass3 הוסיף חילוץ quota וקיצור קוד לא קשור כדי לשלם מס LocalSessionView, בלי אישור המתכנן | התור היחיד בוטל לפני commit; לאחר idle ובדיקת שאין כלי צאצא, אותו מבצע קיבל §10: dispose ב-owner עם handle לכוד, ומוצר LocalSessionView מוחזר ל-HEAD |
 | 19 | מסירת fa139cfa עברה את כל בדיקות המוצר, אבל הותירה כפילות resource/delete ו-load/callbacks לא מגודרים; טסט waitForOpen לא הגיע ל-await בפועל | heavy עצמאי החזיר NO-GO2/6 עם24assertions מתוך49; §11 מגדיר handle פרניסיון/הקצאה, load IO אצל owner ו-entered boundaries. אותו מבצע נשלח לתיקון והמאמת נשמר לדלתא |
+| 20 | מסירת4c091e82 קשרה released לצמיתות ל-agentId, ולכן release נוסף לאחר warm לאותו agent ואותו owner נבלע | סקירת ההורה דרשה consumer; RED בפועל ציפה2 וקיבל1. הבהרת הבריףb98f7c9 מפרידה דור release ממחיקת allocation, ואותו מבצע משלים דלתא לפני heavy |
 
 מפקד עצמאי על a36945f7 הוכיח שה-backend אינו מסדר prompts בתור: noWait, RPC ו-delivery לאירועים יכולים לחפוף. turnSeq מגן על state, לא מסדר ACP; cancel/session-new אינם מחסום לסיום הפעולה הישנה. הקשר הסיבתי למקרה Cursor לא בודד בניסוי, ולכן לא מוצג כמוכח. הראיות ב-drive-coding-docs, `investigations/state-structure/dispatch-concurrency-audit-a36945f7.md`.
 
@@ -179,7 +180,11 @@ Cursor החזיר `Upgrade your plan to continue` גם בניסיון חוזר �
 
 §11 בבריף וב-decisions נדחף ב-drive-coding-docs03287c7, קומיט תכנון אחד של ההורה בלבד. הוא מחייב lifecycle פרניסיון/הקצאה, load IO אצל WsConnection/hooksstate ב-VM, callbacks מגודרים מחוץ ל-tee ב-open/load/warm ו-release מעודכן בעת publication/adoption. סדר pending/B3 נשמר, אין שינוי LocalSessionView/provider/transport או חילוץ quota. שני אודיטים צרים ב-Luna/high על עצים קפואים סייעו לתכנון; אין טענת runtime שלהם. VM1829 מולfa139 מחייבactual≤1814; sketch יימדד לפני מוצר. אותו7db קיבל תור יחיד אחרי idle. אותו0dc נשמר idle למאמת דלתא. אין שיגור כפול או הודעה למבצע עסוק.
 
-C1 עדייןDRAFT: בריף76c712f, preflight69/69 עלfa139 ו-sketch1829→1788 עם classifier96, כלומרVM−41 ו-total+55. זו מדידה סטטית בלבד; ה-sketch אינו typechecked או runtime. אחרי B4GO ומיזוג פנימי חובה לרענן בסיס/מדידה לפני אביגיל והטמעה. C2/C3/S3 ו-M12 נשארים הכנות מתועדות, לא קבלת מוצר. בפרט M12 תלוי sidecar/systemd ו-deploymentDir יציב; fixture load הנוכחי אינו משחזר היסטוריה.
+C1 עדייןDRAFT: בריף76c712f, preflight69/69 עלfa139 ו-sketch1829→1788 עם classifier96, כלומרVM−41 ו-total+55. זו מדידה סטטית בלבד; ה-sketch אינו typechecked או runtime. אחרי B4GO ומיזוג פנימי חובה לרענן בסיס/מדידה לפני אביגיל והטמעה. C2/C3/S3 ו-M12 נשארים הכנות מתועדות, לא קבלת מוצר. בפרט M12 תלוי sidecar/systemd ו-deploymentDir יציב; fixture load הנוכחי אינו משחזר היסטוריה. מיפוי ההרחבה המצומצמת לפריוויו הסופי נדחף ב-docs f0acb8c; חקירת קוד בלבד.
+
+תיקון2 מסר4c091e82 עם375/375 באיחוד29קבצים,49/49 פרובים קפואים ושבע מוטציות assertion red→green; types37blocks זהים, VM1829→1776. fullFE מדויק הושאר ל-heavy כמותר. docs f08d2f1 נדחף בידי המבצע, קומיט שלו בלבד. לפני שיגור heavy, סקירת ההורה הצביעה על release חוזר שנחסם. consumer ממוקד הוכיח RED על4c091e82, ודלתת generation מתבצעת באותו כותב אחרי idle. זהו המשך fix round2 לפני דלתת מאמת, ללא source push או merge.
+
+התיקון הקבוע השלישי הוא runbook פרויקט `workflows/runbooks/vitest-constructor-mocks-after-biome.md` ב-drive-coding-docs4714101: formatter המיר mock constructor אנונימי ל-arrow, ומנע הגעה ל-entered. function עם שם נשמר ועבר הרצה ממוקדת ואיחוד. החיפוש לפני הכתיבה כלל Recoll ו-BM בכל הפרויקטים ולא מצא runbook קיים. ההורה דחף קומיט תיעוד אחד שלו בלבד; אין שינוי כלי/timeout או קוד מוצר כדי לעקוף fixture שבור.
 
 ## מה עדיין אינו מוכח
 
