@@ -6,13 +6,13 @@ mission: drive-coding/plans/missions/state-structure-continuation.md
 slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh, state-transcript-c2-refresh, state-session-operations-c2l-refresh, state-transcript-consumers-c3s3-refresh]
 interventions_product: 0
 interventions_plumbing: 0
-handoff_failures: 31
+handoff_failures: 32
 permanent_fixes: 3
 plan_rounds: 13
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
 authorized_through_stage: 2
-verdict: "ריצה פתוחה עד סוף שלב 2; קבלת S על4e680f4a היא NO-GO12/13; אביגיל בודקת תיקון M12; סקיצת שלב1 מוכנה ללא מוצר; אין מיזוג mainline"
+verdict: "ריצה פתוחה עד סוף שלב 2; קבלת S על4e680f4a היא NO-GO12/13; אליעזר מממש תיקון M12 אחרי שער תכנון; סקיצת שלב1 מוכנה ללא מוצר; אין מיזוג mainline"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -425,3 +425,15 @@ docs29887ba נדחף: קומיט הורה אחד בלבד,65נתיבי תכנו�
 אביגיל יחידה 948f7c1e-f995-469d-802b-5237d4ff4e41 רצה על עץ פרטי state-http-recovery-m12-avigail-e66 בבסיס 4e680f4a. המודל Astra/high נבחר עקב מורכבות 10 של ordered reader/publication/terminal lifetimes; זה מסלול Codex הגיבוי הקיים, בלי המתנה למכסת ספק. סבב תכנון 13 כולל את הבדיקה הזאת; טרם התקבל verdict ו-plan_verified=false. צופה יחיד m12-avigail-watch-e66 מצפה לדוח state-http-recovery-m12-avigail.md.
 
 עץ הביצוע slice/state-http-recovery-m12 הוכן על אותו בסיס, עם frozen install וסנכרון SvelteKit בלבד; לא נכתב קוד מוצר ולא שוגר מבצע לפני שער התכנון. NO-GO של S, שני הבאגים הפתוחים 100/101 ושער המיזוג הסופי נשארים בתוקף.
+
+### סקירת M12 — שלוש השלמות לפני dispatch
+
+אביגיל החזירה USABLE-AFTER-FIX, עם שלושה ממצאים צהובים ולא NEEDS-REWORK: loading של פעולה שנפסלה בהחלפת host; turn ב-VM לאחר observer failure ו-terminal; סיווג 409 taken-over בפתיחת SSE. הדוח נקרא במלואו, YAML אומת, המקור נשאר נקי והסוכן נסגר. זהו כשל הכנה אחד נוסף (32), לא שלוש ריצות מוצר שנכשלו.
+
+החוזה תוקן בגוף הבריף; מפקד דלתה מופק בנפרד כדי לשמר את המועמד המקורי hash-identical. שאילתות וסף הכיווץ ייסגרו לפני READY; אין סבב אביגיל נוסף לממצאים מקומיים אלה, ואין דילוג על TDD או על קבלת production. לא שוגר מבצע.
+
+### שער M12 סגור — מבצע יחיד
+
+שלוש השלמות אביגיל נסגרו בגוף הבריף ובשאילתות מקור, ללא סבב נוסף. דלתת המועמד נמצאת ב-m12-cost-4e680f4a/plan-fixes, manifest ba900a124438004d35b05cdcf9dfb8a91c149eac74eaebea1a62ac469375f2fa; המתכנן שחזר אותה ב-rc0. VM 1433→1418 (−15 בדיוק), Reader293→257 ו-Remote328→309; כלל התחום +457. המועמד המקורי ושלב1A נשמרו זהים. זו היתכנות לפני בדיקות מוצר, לא GO.
+
+אליעזר יחיד 6a29706a-ef88-4634-8f93-386e11b86b55 שוגר דרך MCP על Sol/medium, fast off, בעץ slice/state-http-recovery-m12 מהבסיס4e680f4a. הוא קיבל את הבריף READY ואת דוח אביגיל המלא. צופה m12-eliezer-watch-e66 מצפה לקומיט קוהרנטי אחד ולדוח state-http-recovery-m12-eliezer.md. baseline read-only של ההורה עבר3/93 בעץ הביצוע; RED לשני חסמי הקבלה עדיין חובת המבצע. אין FE build/שרת/ילדים במסגרת המימוש, ולא שוגר מאמת קוד לפני המסירה. קבלת production ו-mainline נשארות שערים נפרדים.
