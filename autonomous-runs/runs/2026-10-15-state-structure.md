@@ -6,12 +6,12 @@ mission: drive-coding/plans/missions/state-structure-continuation.md
 slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh, state-transcript-c2-refresh, state-session-operations-c2l-refresh, state-transcript-consumers-c3s3-refresh]
 interventions_product: 0
 interventions_plumbing: 0
-handoff_failures: 29
+handoff_failures: 30
 permanent_fixes: 3
-plan_rounds: 10
+plan_rounds: 11
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
-verdict: "ריצה פתוחה; S1 ו-C1/C2/C2L מאומתים על85f; C3+S3 בשער תכנון אחרי NEEDS-REWORK גם בדלתה; אין מיזוג ל-edge"
+verdict: "ריצה פתוחה; C2L מאומת על85f; סבב תכנון ממוקד נוסף ל-C3+S3 אושר בידי המשתמש ורץ; אין מוצר או מיזוג mainline"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -318,3 +318,19 @@ C2L הוא הסלייס הבא בתוךS2 לפניC3: חילוץ newSession/swit
 העלות המעודכנת נשמרה בנפרד ושוחזרה hash-exact בידי ההורה: VM1613→1427, Speaker499→470, Local249→218, Remote348→321; כל ארבעת חיובי15 נפרעים. total +530code/+443physical, impurity105→101. גודל אינו קבלת ההתנהגות. מפקד base/candidate חדש עם76hashes והוכחת root נמצא ב-investigations/state-structure/c3s3-prejob-cost-85f89973. source/index של ענף ההרצה והעץ המוכן למבצע נקיים85f; אין מוצר C3/S3 או מבצע פעיל.
 
 לפי agents/mordechai.md §plan-gate, אחרי rewrite אחד ודלתה שעדיין NEEDS חוזרים למשתמש; ההורה יבקש הרשאה מפורשת לסבב תכנון צר נוסף של חיי annotations מול המשכיות ההקראה. אין כשל מכסה או המתנה לשעון. אביגיל76dd4c4f נסגרה אחרי idle ואיסוף הדוח, ועץ האימות ועץ חוקר העלות נוקו לאחר proc-scan ריק. חוקר history הצר הסתיים ועצו נוקה. אין watcher נוסף. הענף המוכן slice/state-transcript-consumers-c3s3-refresh נשאר85f להמשך מורשה. run71 נשאר פתוח; production/ACP/mainline acceptance לא נסגרו.
+
+
+## C3+S3 — חידוש מורשה והפרדת שתי הזהויות
+
+המשתמש אישר במפורש את ההמשך לאחר העצירה: "אוקיי, אני מאשר. רוץ." ההרשאה פותחת סבב תכנון ממוקד נוסף; שער הפריוויו ואישור mainline נשארו בתוקף. החקירה התפצלה ליועץ Astra/high לחיי התוכן, ול-Sol/medium למדידת reconnect ומפקד מלא. לכל אחד עץ פרטי קפוא על85f. אלה אינם מבצעי מוצר או תפקידי gate.
+
+שישה פרובי runtime על85f עברו ומדדו את ההתנהגות הקיימת, כולל second fetch/reset אמיתי והוכחה שה-effect קרא אחריו. reconnect של אותו view משמר processedSegments, זנב speakPending, Markdown פתוח ו-tool callIDs בעוד historyEpoch נשאר1. הפרוב חשף גם דילוג קיים על suffix ו-chunk עקב כיווץ segments ב-snapshot; באג99 נרשם בנפרד, ואין שינוי cursor/policy בגל המבני. ראיות ודוח ב-investigations/state-structure/c3s3-reconnect-baseline-85f89973; docs0bed361 נדחף בקומיט הורה אחד. עץ הפרוב נוקה אחרי proc-scan ריק.
+
+הכרעת התכנון מפרידה A, יעד annotations שמוחלף בכל reset/replace, מ-P, זהות עיבוד שנשמרת רק ב-same-session reconnect מוכר. מפות Speaker, provenance של historyMark ומונה completion נושאים P; כל async write/outcome נשאר מגודר ב-A ובניסיון שנלכד. new/load יוצרים replacement intent פרטי לפני RPC; structural frame צורך reference פעם אחת; success אינו מאפס שוב, ו-catch מנקה רק reference שלו. אין זהות שרת חדשה, וחוסר operation ID ב-wire מתועד כמגבלה. הבריף והייעוץ המלא עם חתימת6faa4745 נשמרו ב-docs8d76293, קומיט הורה אחד שנדחף.
+
+אביגיל יחידה219156fa-601f-447d-960d-bef9bf16ada7 שוגרה ב-Codex Astra/high על worktree c3s3-processing-avigail-e66, detached85f. המודל נבחר למורכבות lifetime/provenance, reentrancy ו-catch מול שני גבולות structural; זו סקירה ממוקדת של התיקון המאושר, ולא פתיחת C3 מחדש. צופה קנוני c3s3-processing-plan-root-watch; דוח צפוי state-transcript-consumers-c3s3-refresh-avigail-processing.md. זה סבב11; לא נוספו כשלי מסירה לפני דוח.
+
+מפקד חדש מלא הורכב ושוחזר בידי ההורה:19נתיבים/18snapshots, VM1613→1433, Local249→218, Speaker499→470. לאחר חילוץ בעלות ה-intent הפרטי באותו lifecycle, Remote348→334: ירידה14 ולא15. זה PARTIAL גלוי, לא feasibility. הסך+596code/+514physical, impurity105→101, Biome0errors/9warnings; לא הורצו tests/typecheck בסקיצה. המועמדים הקודמים נשמרו. אין עקיפת ratchet, חילוץ תחום זר או כיווץ תחביר כדי לשלם שורה. אין מבצע C3/S3 לפני סגירת gate והפער הקונקרטי.
+
+
+אביגיל219156fa החזירה NEEDS-REWORK עיצובי אחד; הדוח המלא נקרא ונשמר ב-investigations/state-transcript-consumers-c3s3-refresh/processing-plan-85f89973. הפרדת A/P/history/count עברה סקירה סטטית, אך success של I1 לפני structural ואחריו reject של I2 מוחקים obligation מוכר; ה-snapshot שלI1 מסווג continuation. זה מידע לקוח שאבד, לא מגבלת wire. handoff_failures=30. במסגרת הסבב הנוסף שאושר נעשה rewrite ממוקד אחד ודלתה באותו מאמת; לא נפתח מאמת כפול. אין מבצע מוצר.
