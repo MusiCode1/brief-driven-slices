@@ -3,15 +3,15 @@ run: 71
 date: 2026-10-15
 project: drive-coding
 mission: drive-coding/plans/missions/state-structure-continuation.md
-slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh]
+slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh, state-transcript-c2-refresh]
 interventions_product: 0
 interventions_plumbing: 0
 handoff_failures: 23
 permanent_fixes: 3
-plan_rounds: 4
+plan_rounds: 5
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
-verdict: "ריצה פתוחה; S1 ו-C1 מאומתים בענף הרצה; C2 בהכנה; אין מיזוג ל-edge"
+verdict: "ריצה פתוחה; S1 ו-C1 מאומתים בענף הרצה; C2 בבדיקת תכנון; אין מיזוג ל-edge"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -218,6 +218,14 @@ C1 מוכן עלcaed4778; זהות עץ מלאה ל0a06 מאפשרת שימוש 
 המקור נדחף בקומיט אחד. מיזוג פנימי9fe02d999c06424fc24e53bef8f9ac433d405abd זהה בכל הקבצים למקור; דחיפת integration כללה שני קומיטים: מקור ומיזוג ההורה. mainline נשאר ללא מיזוג. המבצע463c6f34 והמאמתd7b92fb2 נסגרו אחרי idle; שני העצים הוסרו אחריproc-scan ומצב נקי. תיקון הניסוח בדוח לא דרש בדיקות נוספות ולא שינהGO. ארכיון ומסירה סופית ב-docs66988fe נדחפו, קומיט root אחד בלבד; מסירת המבצע3fa4180 נדחפה בקומיט המבצע בלבד. סקיצת C2 הישנה נשמרה עם מגבלותיה ב-docs9d4b2e9, קומיט root אחד בלבד.
 
 הכנת C2 על בסיס המיזוג9fe (tree-identical ל5c7):9סוויטות140/140,rc0. sketch מתוקן אחריC1:1750→1715,impurity43, שני קבצים חדשים67/134שורות וסךתחום+89codeLines. איןtypecheck/runtimeשלsketch ואיןplan-gateC2 עדיין. נבדקים גם awaits של new/switch חמים אחרי החלפת owner כדי לקבע חוזה scope בלי לטעון parity למרוץ שלא נמדד. S2C2/C3 ו-S3 והקבלה המשולבת ממשיכים; אין פעולה נדרשת מהמשתמש.
+
+## C2 — שער התכנון פתוח
+
+על9fe02d99 נמדד bug97 בארבעה פרוביWS דרך attach/detach ציבוריים: newSession/switchSession ישנים משנים שיחה חלופית אחרי resolve/reject. אלה פרובים המאשרים תוצאה שבורה, לא safetyGO. נשמרו בקומיט docs740c221, קומיט הורה אחד שנדחף. הכנת fences חיצוניים חשפה גם awaits פנימיים ב-remembered config; סקיצה כזו מורידה רק11שורותVM ואינה סוגרת את החוזה.
+
+ההכרעה המאושרת בתוךS2: C2content-only, אחריו סלייס lifetime ייעודי לפעולות חמות והמשכי config, ולפניC3. אין sessionId/provisional מקביל ב-TranscriptScope ואין clear חדש באימוץ. index/pending/subagent projection עוברים עם הכתיבות, אך cleanup נשמר כאתר האיפוס שלהם. הסקיצה הנבחרת1750→1685, impurity43, חדשים67/148metric, סךתחום+70; זו הכנתעלות בלבד. המדידה משוחזרת byte-identical מתוך הארכיון ללא worktree חי. docs cb4d4f2 נדחף, קומיט הורה אחד בלבד, ובו הבריף, ההכרעה והארכיונים. בדיקת source נפרדת מצאה trace של configישן→switchלאותוid→connected, לכן נדרש לבחון epoch לפי תרחיש ולא להסתפק בזהויותreferences.
+
+אביגיל יחידה27c96a2d-f8b1-4ef3-880f-050926f6f741 ב-Codex Astra/high, עץ פרטי state-transcript-c2-refresh-avigail על9fe. הבחירה המתקדמת מוצדקת בהנחות earlyreplay/Svelteproxy/aliaswrites ותוחלתprojection נפרדת; Opus/Cursor חסומים כפי שתועד בריצה. noWait, דוח+notify_parent וצופה קנוני c2-plan-root-watch; אין notifyOnDone/subscription ואין prompt לתורעסוק. אין עדיין plan_verified, מימושC2 או GO. native Sol/medium מבצע costsketch של הסלייס שאחריC2 ב-scratch בלבד; Luna/high ביצע חקירת target צרה, ללא מוצר או runtime. תחומי האחריות נפרדים.
 
 ## מה עדיין אינו מוכח
 
