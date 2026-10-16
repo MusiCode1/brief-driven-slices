@@ -346,3 +346,14 @@ C2L הוא הסלייס הבא בתוךS2 לפניC3: חילוץ newSession/swit
 דלתת אביגיל219156fa עלbab18d7 הסתיימה READY, ממצא1סגור ואפסחדשים. ההורה קרא FULL ושמר report+delta בנפרד; אין טענת runtime. המפקד הסופי c3s3-intent-cost-85f89973 שוחזר hash-exact בידי ההורה,13מקורות מולgit show85f וכל19הנתיבים; rc0, ארבעתמסי15תקינים. דלתתowner/Remoteבלבד מול334, סך+622code/+549physical/impurity−4. השער והראיות נשמרו ב-docs1c06441, קומיט הורה אחד שנדחף. plan_verified=true. אביגיל נסגרה אחריidle, ועצי המאמת/העלות נוקו אחריproc-scanריק.
 
 אחרי session_list פתח ההורה אליעזר יחיד503ac28b-fba1-44cd-b0af-380731c9a6b8 ב-Codex Sol/medium, fastoff, mode מהקטלוג, BDS_SLICE+IN-PROCESS-APPROVED. ענףslice/state-transcript-consumers-c3s3-refresh ובסיס85f; svelte-kit sync בנתיב החדשrc0לפניdispatch. שיגור נמדד2026-10-16T11:18+03; צופהc3s3-exec-root-watch, קומיט1+דוחמבצע,stall2400. המודל המבצע חסכוני ונבחרלחוזהנתוןוהרצה; heavyעצמאי יבדוקcomplexity10עלexactSHA. איןchildren/שרתים/build/פורטיםבמשימתהמבצע. ה-root מכיןfixtureסינתטיזמניב-stdioלקבלההסופיתבעץנפרד85f;איןמוצראוBEחיושוםראיהשלproductionעדיין.
+
+
+## הכנת הקבלה במקביל למימוש
+
+Sol/medium הכין fixture זמני מחוץ למוצר, בעץפרטי85f:15בדיקותstdioעברו,כולל entered/releaseלchunks,permission/replyלפיID,loadhistoryלפניresponse,cancel/EOFללאtimerיתום; PIDהבדיקהנסגר. backendtree316ecc123d1e789678ccedc315026ff105c9af40והמקורותננעלובhashes. איןמכאןSDK/sidecar/restart/UIGO. הראיותהסינתטיותנשמרו ב-investigations/state-structure/acceptance-preparation-85f89973;dumpשלAGENTS/סקיליםלאהועתקלתיעודהמשותף.
+
+שני חוקרי Luna/medium בעציםנפרדיםמיפו אתAPIהשליטה והקול. MCPSDKיכולליצורagentבמופעמבודדללאrootרשום;session_openיוצרHTTPhost/session,ואיןלקרואnewפעמיים. WS-firstדרךUInewו-queryws;handoffHTTP→WSמתועדבקודהבסיס. ElevenLabsrouteיכוללהחזירMP3קייםלפרובSpeakerאמיתי;Geminiwireלאהוכחולאאומץ. injectDriveCodingMcp:falseנתמךבCliSpecואינומכבהendpointMCP. ההורההכיןלקוחניסוישדורשbaseלולאהמפורשודוחה4000/4001/4002/4013;syntax/importsעברוללארשת.
+
+תוכניתהריצה plans/state-structure-final-acceptance.mdמגדירהM01–M13ועצירתBEשלנומולsidecarשנשארחי. מקורpackage.jsonהפריךפקודתindex.tsבייעוץ;הדוגמהתוקנהבגוףל-server.ts. Viteמקשרdebugל-FE_ENV,ולכןpreviewיהיהbuildproductionשלViteעםFE_ENV=previewופרסוםסטטיsameorigin,ללאVitedevאוhookמוצרחדש. docs83c9c08,083ba33,8f2b293נדחפו,כל אחדקומיטהורהאחדבלבד. עציהמכיניםנוקואחריproc-scanריק. איןbuild/BEחדש/מנהרה/תעבורתקבלהעדיין.
+
+המבצע503ac28bממשיךבאותועץובאותובסיס;קובציבדיקותlifetimeעודכנובפועל2026-10-16T11:49+03. איןדוחגמר,קומיטמוצראוGOעצמי;לאנפתחכפיל. הצעדהבאהואאיסוףמסירה,heavyעצמאיעלexactSHA,ורקאחרכךקידוםפנימיופריוויומשולב.
