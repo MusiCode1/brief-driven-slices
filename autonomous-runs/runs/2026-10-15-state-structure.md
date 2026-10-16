@@ -8,11 +8,11 @@ interventions_product: 0
 interventions_plumbing: 0
 handoff_failures: 36
 permanent_fixes: 3
-plan_rounds: 14
+plan_rounds: 15
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
 authorized_through_stage: 2
-verdict: "ריצה פתוחה עד סוף שלב 2; קבלת S היא NO-GO12/13 וקוד M12 על470d182b הוא NO-GO4/6; אותו מבצע מתקן שני חסמים לפי§10; אין מיזוג mainline"
+verdict: "ריצה פתוחה עד סוף שלב 2; קוד M12 על 275199ed עבר GO6/6, קבלת production רצה; סקירת תכנון מותנית של 1C במקביל; אין מיזוג mainline"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -477,3 +477,15 @@ union סופי של 59 קבצים/988 בדיקות עבר ב-rc0 עם --testTime
 אותו אליעזר6a29706a קיבל המשך על Sol/medium, עם רגרסיות, שתי מוטציות actual, fullFE קפוא ואיחוד עם15000ms מפורש. צופה יחיד m12-eliezer-codefix-watch-e66 מצפה לקומיט תיקון אחד מעל470d ולדוח חדש state-http-recovery-m12-code-fix-eliezer.md. אותו מאמת5a4c נשאר idle לדלתה. אין build או החלפת preview לפני GO קוד. הדוח העצמאי והראיות נשמרו ב-investigations/state-structure/state-http-recovery-m12/verification-code-470d182b; NO-GO הקודם נשאר.
 
 הכנת Stage1A על470d הסתיימה ב-FEASIBLE-cost-only: VM1418→1397,Remote310→246, תחום2110→2087 ו-impurity51→51. ההורה אימת30 snapshots ושער staged0. ניסיון reproduce ראשון של ההורה נכשל ב-pathspec של helper שכבר נמחק מה-index; הרתמה בלבד תוקנה ל-stage מחדש מתוך HEAD והיועץ שחזר מקצה לקצה לאותו manifest/index בלי unstaged. זהו כשל מסירה36, שמור עם rc128 ולוגים מקוריים, ללא שינוי מועמד. התיעוד וטיוּטות1A/1C נדחפו ב-2485be0: קומיט אחד של ההורה, אפס עמיתים. אין מזה READY של Stage1; עוגני הדלתה ייבדקו מחדש אחרי תיקון M12. מפת backend צרה ל-1B עודכנה לקריאה בלבד על470d ונשמרה בארכיון; עץ הקריאה נוקה אחרי סריקת תהליכים ריקה. אין פעולה נדרשת מהמשתמש.
+
+### קוד M12 התקבל; קבלת production על הגרסה המתוקנת
+
+שני חסמי הקוד נסגרו ב-275199edd4ea80c59ab548e852a67311035a9fd6. אותו כלב-heavy נתן GO לקוד בלבד, DoD6/6; ההורה קרא את הדוח ואימת 262 קובצי ראיה. ארבעת הפרובים המקוריים עברו ללא שינוי, ושלושה פרובים עצמאיים נוספים בדקו השלמה ישנה בזמן load חדש וריאנטרנס של lifecycle אחרי UI fault. fullFE223/2411 ואיחוד59/999 התקבלו אחרי אימות 941 hashes קפואים; שתי מוטציות actual עברו AssertionError ושחזור bytes. אין תוספת למניין כשלי המסירה בסגירת תיקון זה. דוח NO-GO הקודם נשמר. הארכיון החדש נמצא בתיעוד הפרויקט תחת investigations/state-structure/state-http-recovery-m12/verification-codefix-275199ed.
+
+ההורה בנה את ה-FE פעם אחת על אותו קצה, rc0, עם קבלה לכל 355 קובצי ה-build. הפריוויו המבודד על 4014 הוחלף מאותו launcher/config/store/fixture; local/public החזירו200 ואותו index4583 bytes עם SHA256 75a7ed52f67835e0c25a3b939400497a6c3fc3ba546a56c62b22ef650e93b985. PID פתיחה623360 הוא היסטורי לפני בדיקת restart; ה-PID העדכני נמצא ב-runtime receipt של המאמת. המנהרה415875 נשארה ללא שינוי. אין בנייה שנייה, נגיעה ב-4000–4002/4013 או שינוי mainline.
+
+אותו מאמת5a4c28e1 רץ כעת בפאזת production מפורשת: שני viewers, restart עם sidecar חי, watermark חדש ו-permission חדשה באותו page; DELETE בזמן pending; בקרות HTTP/WS/offline/history/audio ו-ACP אמיתי קצר. צופה m12-calev-production-watch-e66 מצפה לדוח state-http-recovery-m12-calev-production.md. NO-GO12/13 של S והבאגים100/101 נשארים פתוחים עד קבלה זו; אין להסיק GO מצופה ארטיפקט.
+
+סקירת תכנון15 נפתחה ל-1C בלבד, עם base275199ed. Claude/Opus6a342190 נחסם במכסה ונסגר; Cursor/Grok6ab46956 החזיר Upgrade plan ונסגר אחרי אימות דרך אירוע סיום. ללא המתנה, נפתח גיבוי Codex79696d70 על Astra/high לתפקיד ההסקה המחייב, בעץ פרטי state-http-owner-ws-guard-1c-avigail-e66. הסקירה מותנית וסטטית: product dispatch ו-READY לביצוע ממתינים ל-GO של S וקיבוע בסיס ההרצה. צופה יחיד stage1c-avigail-watch-e66; אין מבצע נוסף.
+
+הכנת המדיניות הטהורה לכותרות Stage2 נשמרה ב-bc7397d: קומיט אחד של ההורה, אפס עמיתים. 12 מקרי נתונים ושרשרת הורצו גם בידי ההורה; 24 שורות קוד, impurity0. אין אחסון, CAS או wiring ולכן אין READY של Stage2. הכנת fixture ל-Stage1A מוגבלת ל-stdio סינתטי ואריזה, ללא שינוי fixture הפריוויו הפעיל. אין פעולה נדרשת מהמשתמש.
