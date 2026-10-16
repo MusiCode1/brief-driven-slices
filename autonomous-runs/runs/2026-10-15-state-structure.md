@@ -3,12 +3,12 @@ run: 71
 date: 2026-10-15
 project: drive-coding
 mission: drive-coding/plans/missions/state-structure-continuation.md
-slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh, state-transcript-c2-refresh, state-session-operations-c2l-refresh, state-frame-projection-c3-refresh]
+slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh, state-transcript-c2-refresh, state-session-operations-c2l-refresh, state-transcript-consumers-c3s3-refresh]
 interventions_product: 0
 interventions_plumbing: 0
-handoff_failures: 27
+handoff_failures: 28
 permanent_fixes: 3
-plan_rounds: 8
+plan_rounds: 10
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
 verdict: "ריצה פתוחה; S1 ו-C1/C2/C2L מאומתים בענף הרצה 85f89973; הכנת C3 נמשכת; אין מיזוג ל-edge"
@@ -265,7 +265,7 @@ C2L הוא הסלייס הבא בתוךS2 לפניC3: חילוץ newSession/swit
 
 פרוב הכנה נפרד מדד את באג 98: hot new/switch מנקים bubbles אבל משאירים הודעות ישנות ב-VM; chunk ללא messageId מצטרף להודעה שכבר אינה מוצגת. הפרוב מצפה לתוצאה השבורה ואינו safety GO. נכתב באג ב-docs 643779e עם מקור ופקודת שחזור. התכנון הממוקד ל-C3 מאפס את שדות התוכן בתחילת מעבר חוקי, משמר שדות control, ושומר early frames באימוץ שאחריו. זהו חריג parity מפורש בתחום lifetime המאושר; טרם מומש.
 
-סקיצת C3 המלאה על 46fb, בעל אותו tree כמו 85f, כוללת imports/factories/bootstrap/cleanup. לאחר Biome: VM 1613→1421, Local 249→218, Remote 348→321, וסך 11 snapshots גדל ב-217. ריכוז כתיבת שדה pending אצל אותו state owner משאיר request maps ומדיניות cancel ב-Local; אין חילוץ quota או כיווץ סינטקס. אלה מספרי הכנה בלבד, ללא tests/typecheck. שאלות סדר reset ו-Patch.version נבדקות בחוקר צר לפני בריף; fakes/harness צריכים migration. אין מימוש C3 או קבלת production.
+סקיצת C3 המלאה על 46fb, בעל אותו tree כמו 85f, כוללת imports/factories/bootstrap/cleanup. לאחר Biome: VM 1613→1421, Local 249→218, Remote 348→321, וסך 11 snapshots גדל ב-218 (תיקון חשבון מול המקורות הקפואים; המדדים נשארו זהים). ריכוז כתיבת שדה pending אצל אותו state owner משאיר request maps ומדיניות cancel ב-Local; אין חילוץ quota או כיווץ סינטקס. אלה מספרי הכנה בלבד, ללא tests/typecheck. שאלות סדר reset ו-Patch.version נבדקות בחוקר צר לפני בריף; fakes/harness צריכים migration. אין מימוש C3 או קבלת production.
 
 ## C3 — חיווט מלא ושער תכנון פתוח
 
@@ -283,6 +283,16 @@ C2L הוא הסלייס הבא בתוךS2 לפניC3: חילוץ newSession/swit
 
 עלות S3 מלאה על אותו בסיס נמדדה בנפרד: Speaker499→452, VM1613→1617 (גדילה4), כלל+200. זה PARTIAL ולא feasibility; owner/helper/port/fetch/layout כלולים, ללא העברת domain זר. ייעוץ ארכיטקטורה פרטי ב-Astra/high מכין חלוקת מסירה קוהרנטית משותפת לנתב ול-Speaker, עם snapshot משולב VM1425 ולא סכום אומדנים בלבד; source reset delta אינו משנה VM. לא יהיה baseline ביניים שיזכה סלייס עוקב בחיסכון קודם. אין dispatch מוצר לפני נעילת בריף משלים ואימותו. פרובי refetch-attempt ו-content identity נשארים בתחום ההכנה. אין מיזוג mainline.
 
+## C3+S3 — נעילת יחידת המסירה לפני מוצר
+
+מפקד ארכיטקטורה נוסף אישר שאין גוף תעתיק נוסף ב-VM שמממן את factory של Speaker בלי חילוץ תחום זר. הוחלט על יחידת commit קוהרנטית אחת ל-producer projection ול-consumer Speaker, על אותו בסיס85f, עם חוזים נפרדים ואימות עצמאי על אותו SHA. אין C3 baseline ביניים, API annotation רדום או קרדיט לכיווץ מסלייס שכבר הסתיים. source C3 טרם נכתב. עץ המבצע הריק שונה ל-slice/state-transcript-consumers-c3s3-refresh באותו בסיס; dependencies של preflight נשמרו. זה שינוי חלוקת מסירה בתוך הגל המאושר, ללא שינוי שער mainline.
+
+בריף משלים plans/brief-state-transcript-consumers-c3s3-refresh.md נכתב על החוזה המאומת של C3. אביגיל חדשה יחידה `76dd4c4f-41da-400d-8fad-ba340fd17024` רצה ב-Codex Astra/high על עץ פרטי באותו בסיס; זו סקירה ראשונה להיקף S3, סבב9 של הריצה, ולא סבב שלישי על C3. צופה c3s3-plan-root-watch. המודל מוצדק בזהויות content/attempt וב-settlement אחרי refetch. אביגיל C3 נסגרה אחרי idle וארכוב, ועץ התפקיד נוקה אחרי proc-scan. docs80fb27e נדחף בקומיט הורה אחד בלבד; method03a2d79 נדחף בקומיט הורה אחד.
+
+ייעוץ S3 הבחין בין content target לבין controller של כל fetch, וסגר source trace ל-append: chunk מוסיף segment חדש, ואילו set-message מחליף מקור. false של writer מונע annotation אך אינו abort אוטומטי ל-TTS תקף. activeFetches נסגר לכל Promise; pendingCount נסגר לפי זהות מערך jobs שנלכד בהשקה כדי ש-finally ישן לא יגרע מן התור החדש. אין שינוי LOOKAHEAD/Audio/Settings. הסקיצה המשולבת האמיתית VM1425 ו-Speaker452 לפני guards נשמרה עם58hashes ושחזור מדידה זהה; פירוק10→3 וחיווט11 תיקן שורה בכל צד של הדוח הקודם, הנטו+4 לא השתנה והמקור נשמר.
+
+מפקד סופי מלא נכתב ב-Sol/medium תחת tmp בלבד. source trace הוסיף guard גם אחרי await cacheKeyFor ולפני provider.synthesize; callback bound חובה ב-synthesis shell, בלי caller מוצר לא מוגן. אלה guards של אותו fetch, לא policy חדשה. חלון provider המתעלם מביטול כולל פינוי best-effort של stream שבבעלות הניסיון הישן, בלי הכנסתו ל-prepare. מחיר/מקורות סופיים עדיין באיסוף; אין טענת runtime או dispatch מוצר לפני gate משולב. בריף+רציונל משותף נרשמו ב-docs22ff46a; נדחף בקומיט הורה אחד בלבד.
+
 ## מה עדיין אינו מוכח
 
 יתר S2 ו-S3, קבלה משולבת, fault injection בדפדפן החדש, ספק ACP חי ופריוויו של התוצאה המשולבת. אף אחד מאלה אינו נגזר מקבלת B3 או מהפריוויו הישן.
@@ -290,3 +300,12 @@ C2L הוא הסלייס הבא בתוךS2 לפניC3: חילוץ newSession/swit
 ## סגירה
 
 הריצה נמשכת. נקודות הביקורת של B3, B6, B4, C1, C2 ו-C2L סגורות; זו אינה סגירת run71. לפני סוף הגל יש לעדכן checkpoints, סשנים, ארכוב, דחיפות ומספרי הקומיטים בפועל; להשאיר פריוויו חדש חי ולבקש אישור מפורש למיזוג לענף המשותף. אין דרישה לפעולת המשתמש כרגע.
+
+
+## C3+S3 — סגירת גבול העיבוד שלפני יצירת עבודת הקראה
+
+אביגיל החזירה NEEDS-REWORK אחד על יחידת המסירה: jobs מוגנים אינם מונעים ערבוב buffer/speakPending או דילוג processedSegments/processedNarrationCallIds לפי מזהים ממוחזרים. הדוח המקורי נשמר; זו מגבלת בסיס ביחס לחוזה החדש ולא ממצא runtime של מוצר שטרם נכתב. חוקר Luna/medium על worktree קפוא מיפה בנוסף ש-mark/epoch אינם קשורים לתוכן, ולכן reset A ו-replace B יכולים להתלכד לפני effect; לא טען הרצה בפועל.
+
+הבריף תוקן ב-§2/§7: מפות קדם-job מתחלפות לפי content target בתחילת effect וגם לפני stop, בלי stop/audio/queue policy חדשה; באותו content נשמרים זנבות ו-counts. target provenance יחיד נלכד לצד mark ב-setHistory אחרי reset, וה-Speaker צורך epoch מונוטוני אך מזריע רק mark current. נדרשים consumer baseline-red ומוטציות נפרדות לקדם-job ול-history provenance. דלתה אחת שוגרה לאותה אביגיל idle, בלי סוכן חדש או סבב שלישי של C3; plan_rounds=10, handoff_failures=28 כולל חסם התכנון החדש.
+
+מפקד מלא לפני התיקון אומת בידי ההורה: 18 נתיבים, VM 1613→1425, Speaker 499→460, סך +515 codeLines, כל hashes של הבסיס מול85f, patch hash-exact. מקור זה בארכיון ואינו כולל את הממצא החדש; מפקד דלתא נפרד ב-Sol/medium נכתב בלי לדרוס אותו. docs e863c93 מכיל תכנון/ראיות של ההורה בלבד. אין מבצע מוצר לפני סגירת דלתת אביגיל והמדידה החדשה. אין מיזוג mainline.
