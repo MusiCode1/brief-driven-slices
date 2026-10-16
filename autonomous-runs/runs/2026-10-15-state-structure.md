@@ -3,15 +3,15 @@ run: 71
 date: 2026-10-15
 project: drive-coding
 mission: drive-coding/plans/missions/state-structure-continuation.md
-slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh]
+slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh]
 interventions_product: 0
 interventions_plumbing: 0
 handoff_failures: 20
 permanent_fixes: 3
-plan_rounds: 3
+plan_rounds: 4
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
-verdict: "ריצה פתוחה; B3 ו-B6 מאומתים בענף הרצה; B4 בתיקון לאחר heavy NO-GO; אין מיזוג ל-edge"
+verdict: "ריצה פתוחה; S1 הושלם בענף הרצה; C1 באימות תכנון; אין מיזוג ל-edge"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -186,10 +186,24 @@ C1 עדייןDRAFT: בריף76c712f, preflight69/69 עלfa139 ו-sketch1829→17
 
 התיקון הקבוע השלישי הוא runbook פרויקט `workflows/runbooks/vitest-constructor-mocks-after-biome.md` ב-drive-coding-docs4714101: formatter המיר mock constructor אנונימי ל-arrow, ומנע הגעה ל-entered. function עם שם נשמר ועבר הרצה ממוקדת ואיחוד. החיפוש לפני הכתיבה כלל Recoll ו-BM בכל הפרויקטים ולא מצא runbook קיים. ההורה דחף קומיט תיעוד אחד שלו בלבד; אין שינוי כלי/timeout או קוד מוצר כדי לעקוף fixture שבור.
 
+## B4 — קבלה עצמאית וקידום פנימי
+
+תיקון הדור 0a06cd86 השלים את fix round2; כלב-heavy0dc23719 החזיר GO6/6 על SHA זה אחרי קריאת הדלתה והרצות עצמאיות. כל שש קבוצות ממצאי fa139 נסגרו. אותם49 פרובים עברו ללא שינוי, ונוספו24 בדיקות ציבוריות. שמונה מוטציות אמיתיות נכשלו באסרטציה ושוחזרו לירוק. fullFE על היעד המדויק רץ פעם אחת:210 קבצים,2145/2145,rc0; union29/377. types37=29E8W15 זהים בתוכן ובכפילויות. VM1883→1776, ואין שינוי LocalSessionView/provider/transport בבקרת הדלתה.
+
+חמשת קומיטי המקור נדחפו ל-slice/state-exit-b4-refresh. caed4778574e99f37c7978d29dd527f3a35c119d משלב אותם פנימית לאחר GO, ועץ המיזוג זהה ל0a06. דחיפת integration כללה שישה קומיטים: חמשת המבצעים ומיזוג ההורה. mainline לא מוזג. המבצע7db33767 והמאמת0dc23719 נסגרו אחרי idle; שלושת עצי B4/האימות/פרובC2 הוסרו לאחר בדיקת תהליכים ומצב נקי. הפריוויו הישן נשמר.
+
+ארכיון verification-0a06cd86 מכיל120hashes שנבדקו ללא חריגה, עם דוחות מלאים ומקורות סינתטיים. docs300765c נדחף: קומיט הורה אחד בלבד, עם הארכיון, מסירה ורענון C1; נוספו גם שתי מדידות הכנה ל-C2. בפתיחה ראשונית וב-newSession חם, אירוע לפני resolve נשאר ב-VM וב-stream אך adopt מאפס view.state; ב-load חם האימוץ קודם ל-replay. זהו חוזה שצריך לשמר בהעברת writer, לא שינוי מוצר שכבר הוטמע.
+
+## C1 — התחלת S2
+
+C1 מוכן עלcaed4778; זהות עץ מלאה ל0a06 מאפשרת שימוש ב-preflight שש סוויטות69/69. sketch סטטי:VM1776→1735,classifier97,total+56; לא עבר typecheck/runtime. רק pure classifier וחיבורו לצרכן באותו קומיט, בלי להעביר lifetimes/reader או קוד שרת.
+
+אביגיל יחידה a9cbf7a5-81d3-4d9f-a139-6e23ce5b5a97 שוגרה דרך MCP ל-worktree פרטי caed4778. Opus ו-Cursor חסומים כפי שנמדד בריצה; Codex Sol/high הוא fallback מידתי לבדיקה סטטית של handler/contract אחד, ולא Astra של complexity10. ללא notifyOnDone/subscription או prompt לתור busy; דוח+notify יחיד וצופה קנוני. בריף נולד2026-10-16 04:15:00+03, שיגור actual session/send05:35+03 בקירוב לפי תצפית; אין טענה לדיוק שניות. ארבעה סבבי תכנון עד כה, אחד לכל סלייס.
+
 ## מה עדיין אינו מוכח
 
-שאר S1/S2/S3, קבלה משולבת, fault injection בדפדפן החדש, ספק ACP חי ופריוויו של התוצאה המשולבת. אף אחד מאלה אינו נגזר מקבלת B3 או מהפריוויו הישן.
+S2/S3, קבלה משולבת, fault injection בדפדפן החדש, ספק ACP חי ופריוויו של התוצאה המשולבת. אף אחד מאלה אינו נגזר מקבלת B3 או מהפריוויו הישן.
 
 ## סגירה
 
-הריצה נמשכת. נקודות הביקורת של B3 ו-B6 סגורות; זו אינה סגירת run71. לפני סוף הגל יש לעדכן checkpoints, סשנים, ארכוב, דחיפות ומספרי הקומיטים בפועל; להשאיר פריוויו חדש חי ולבקש אישור מפורש למיזוג לענף המשותף. אין דרישה לפעולת המשתמש כרגע.
+הריצה נמשכת. נקודות הביקורת של B3, B6 ו-B4 סגורות; זו אינה סגירת run71. לפני סוף הגל יש לעדכן checkpoints, סשנים, ארכוב, דחיפות ומספרי הקומיטים בפועל; להשאיר פריוויו חדש חי ולבקש אישור מפורש למיזוג לענף המשותף. אין דרישה לפעולת המשתמש כרגע.
