@@ -3,12 +3,12 @@ run: 71
 date: 2026-10-15
 project: drive-coding
 mission: drive-coding/plans/missions/state-structure-continuation.md
-slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh, state-transcript-c2-refresh, state-session-operations-c2l-refresh]
+slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh, state-transcript-c2-refresh, state-session-operations-c2l-refresh, state-frame-projection-c3-refresh]
 interventions_product: 0
 interventions_plumbing: 0
-handoff_failures: 25
+handoff_failures: 27
 permanent_fixes: 3
-plan_rounds: 6
+plan_rounds: 8
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
 verdict: "ריצה פתוחה; S1 ו-C1/C2/C2L מאומתים בענף הרצה 85f89973; הכנת C3 נמשכת; אין מיזוג ל-edge"
@@ -266,6 +266,22 @@ C2L הוא הסלייס הבא בתוךS2 לפניC3: חילוץ newSession/swit
 פרוב הכנה נפרד מדד את באג 98: hot new/switch מנקים bubbles אבל משאירים הודעות ישנות ב-VM; chunk ללא messageId מצטרף להודעה שכבר אינה מוצגת. הפרוב מצפה לתוצאה השבורה ואינו safety GO. נכתב באג ב-docs 643779e עם מקור ופקודת שחזור. התכנון הממוקד ל-C3 מאפס את שדות התוכן בתחילת מעבר חוקי, משמר שדות control, ושומר early frames באימוץ שאחריו. זהו חריג parity מפורש בתחום lifetime המאושר; טרם מומש.
 
 סקיצת C3 המלאה על 46fb, בעל אותו tree כמו 85f, כוללת imports/factories/bootstrap/cleanup. לאחר Biome: VM 1613→1421, Local 249→218, Remote 348→321, וסך 11 snapshots גדל ב-217. ריכוז כתיבת שדה pending אצל אותו state owner משאיר request maps ומדיניות cancel ב-Local; אין חילוץ quota או כיווץ סינטקס. אלה מספרי הכנה בלבד, ללא tests/typecheck. שאלות סדר reset ו-Patch.version נבדקות בחוקר צר לפני בריף; fakes/harness צריכים migration. אין מימוש C3 או קבלת production.
+
+## C3 — חיווט מלא ושער תכנון פתוח
+
+בריף state-frame-projection-c3-refresh נכתב על `85f89973555a95064850d30a2cc0d5626684a33c` אחרי GO התלות. הוא בוחר SessionViewDelivery עם שדה state אחד, projector נתונים טהור ו-writer סינכרוני בשני המסלולים; תור patches וקורא ה-VM מוסרים. מפקד producer הוכיח reset כ-frame נפרד ו-update-session מרובה raw באותה גרסת שרת; נרמול patch/frame version נכתב במפורש, ללא שינוי server admission. הכנת source ו-migration inventory נשמרה בקומיט docs f470501; העלות הסופית VM 1613→1421, Local 249→218, Remote 348→321, כלל התחום גדל ב-218. שחזור עצמאי של source ומדדים עבר rc0; אין runtime לסקיצה. preflight על הבסיס האמיתי עבר 13 קבצים/270 בדיקות rc0 ומקור נקי.
+
+אביגיל יחידה `88abf571-ade4-488d-b2fc-cdace75a8b66` שוגרה ב-MCP, Codex Astra/high, לעץ detached על אותו בסיס; צופה c3-plan-root-watch. המודל מנומק במורכבות 10 של publication/throw, ToolContext, readiness ו-pending אחרי כשל UI. השיגור הראשון עם permissionPolicy בשם שאינו בקטלוג נדחה לפני יצירת סוכן; תוקן ל-allow_once ואז mode מהקטלוג החי. אין כפיל, מימוש מוצר, build או שרת. זה סבב תכנון 7. עץ המבצע הוכן ונשאר ללא קוד חדש עד gate. חוקרי batch ועלות נסגרו ועציהם נוקו; חוקר הכנת S3 משלים עלות port/owner/helper בעץ נפרד, ללא מוצר.
+
+מסירת C2L נדחפה ב-docs 0b48c15 יחד עם קומיט הבאג 643779e: שני קומיטי הורה בלבד. רישום הריצה c49ea41 נדחף בקומיט הורה אחד. אין מיזוג mainline ואין פעולה נדרשת מהמשתמש.
+
+## C3 — תיקון תכנון בעקבות NEEDS-REWORK
+
+אביגיל הראשונה העלתה שני ממצאים: reset HTTP חייב להיכתב לפני observer גם כשזה זורק, ו-publication לכל raw אינו משמר atomicity של batch בכשל producer באמצעו. שני הממצאים נרשמו ככשלי מסירה 26–27. הבריף תוקן בגופו; דלתה יחידה באותו סוכן ובעץ קפוא קיבלה READY ללא ממצאים. זה סבב תכנון 8, לא GO למוצר. הדוח המקורי נשמר ללא שינוי, והדלתה ב-state-frame-projection-c3-refresh-avigail-delta.md.
+
+ב-reset נבחר שלב structural לפני callback, transcript לפני holder/history, ורק אז observer/activity/classifier. המקור מחזיר observed no-op ולא מערך ריק; ה-marker המאוחר אינו גורר reduce/החלה חוזרת. בכשל producer נשאר prefix שכבר פורסם, lastVersion נשאר האחרון שהושלם, ו-admission מול max(lastVersion,state.version) מונע duplicate prefix. snapshot בגרסת prefix יכול לתקן לפני batch מוצלח מאוחר יותר; אין הבטחת retry לסיומת או payload טבעי פגום. עלות delta סטטית: delivery 138code/150physical, VM1421/Local218/Remote321; סך גידול246. השחזור של ההורה עבר byte-for-byte ו-metrics, ללא tests/typecheck בסקיצה.
+
+עלות S3 מלאה על אותו בסיס נמדדה בנפרד: Speaker499→452, VM1613→1617 (גדילה4), כלל+200. זה PARTIAL ולא feasibility; owner/helper/port/fetch/layout כלולים, ללא העברת domain זר. ייעוץ ארכיטקטורה פרטי ב-Astra/high מכין חלוקת מסירה קוהרנטית משותפת לנתב ול-Speaker, עם snapshot משולב VM1425 ולא סכום אומדנים בלבד; source reset delta אינו משנה VM. לא יהיה baseline ביניים שיזכה סלייס עוקב בחיסכון קודם. אין dispatch מוצר לפני נעילת בריף משלים ואימותו. פרובי refetch-attempt ו-content identity נשארים בתחום ההכנה. אין מיזוג mainline.
 
 ## מה עדיין אינו מוכח
 
