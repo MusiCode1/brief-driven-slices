@@ -6,7 +6,7 @@ mission: drive-coding/plans/missions/state-structure-continuation.md
 slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh]
 interventions_product: 0
 interventions_plumbing: 0
-handoff_failures: 14
+handoff_failures: 17
 permanent_fixes: 2
 plan_rounds: 3
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
@@ -94,6 +94,9 @@ verdict: "ריצה פתוחה; B3 ו-B6 מאומתים ונדחפו לענף ה�
 | 12 | המתכנן מיזג פנימית את 3dca ב-f7c27439 לפני האימות העצמאי הסופי, בעוד דיווח ההורה טען שאין מיזוג | השגיאה נרשמה במפורש; אין שכתוב היסטוריה. d6a07220 מקדם לקצה המאומת, ואין מיזוג mainline |
 | 13 | מסירת B6 ראשונה חסרה מוטציות בפועל, observer ריאקטיבי ומבחן אותו snapshot; חלק מהמקרים השתמשו ב-turn חדש | ההורה החזיר לאותו מבצע idle; 441a230e הוסיף בדיקות ומוטציות אמיתיות, וכלב שיחזר עצמאית |
 | 14 | רשימת רגרסיה כללה קובץ שאינו קיים וחסרה union מלא; מבחן HTTP החזיק owner null | נדרש union קיים בן14קבצים ו-attachRemote שיוצר HttpConnection אמיתי;027337c0 ו-heavy188/188 מאמתים |
+| 15 | מסירת B4 ראשונה הוכרזה READY אף ש-open לא גודר אחרי await, transport חלקי לא נסגר ו-release נשאר תלוי VM | ביקורת מקור של ההורה פתחה §8 ותיקון באותו מבצע; אין heavy או מיזוג של a8d |
+| 16 | טסטי "מוטציה" של B4 הזריקו no-op וציפו לתוצאה השבורה, ולכן נשארו ירוקים | נדרשה בדיקת happy path ללא mutant בתוכה, ומוטציות מוצר נפרדות שמכשילות את אותו assertion |
+| 17 | B4 דיווח31E כלא-שייך לסלייס; תיקון classification רק מחק error; timeout תויג flaky בלי שחזור | Counter מלא של ההורה מצא2שגיאות toolCallId חדשות בטסט הסלייס; נדרשו סיווג owner מפורש וראיות לריצות מתוקנות |
 
 מפקד עצמאי על a36945f7 הוכיח שה-backend אינו מסדר prompts בתור: noWait, RPC ו-delivery לאירועים יכולים לחפוף. turnSeq מגן על state, לא מסדר ACP; cancel/session-new אינם מחסום לסיום הפעולה הישנה. הקשר הסיבתי למקרה Cursor לא בודד בניסוי, ולכן לא מוצג כמוכח. הראיות ב-drive-coding-docs, `investigations/state-structure/dispatch-concurrency-audit-a36945f7.md`.
 
@@ -142,6 +145,14 @@ verdict: "ריצה פתוחה; B3 ו-B6 מאומתים ונדחפו לענף ה�
 אליעזר היחיד afe8e975-ab41-4cd4-bbeb-c9085f6f781a, Composer2.5, מבצע על slice/state-exit-b4-refresh @c6e78964. אין הודעות לתור עסוק, אין notifyOnDone/subscription נוספים, ויש צופה קנוני ודוח מוסכם. אין עדיין קבלה או מיזוג B4. תיקון fixturesTTS, owner.close/release ו-pendingIO מחוברים באותו scope; דוחות תכנון S2/S3 הם קריאה בלבד ולא מוצר שבוצע.
 
 ארכיון B6 ותכנון B4 נדחפו ב-drive-coding-docs ba566b1; מיפוי Speaker ב8a2aecb; plan-gate בb3f768b. בכל אחת מדחיפות ההורה היה קומיט שלו בלבד. שינויים של עמיתים נשמרו ולא הוכללו ב-stage. שתי נקודות הביקורת הקודמות נשארות סגורות; שאר הגל פתוח.
+
+## B4 — מסירה ראשונה ותיקון פתוח
+
+287505ed מתקן שלושה mocksTTS; a8d1041d מעביר close/pending עם VM1883→1844. המסירה נדחתה בקריאת קוד וגייטים: אין current אחרי await, transport לפניclient אינו נסגר, ושני אבחוני טסט חדשים. FE207files:2078passed ושני כשלים; אחד timeout ואחדclassification. אלו אינם GO, והודעת הצופה על קיום דוח אינה קבלה. ביקורת ההורה: state-exit-b4-refresh-root-review-a8d1041d.md; בריף4224252.
+
+אותו מבצע afe8e975 השלים קוד staged לתיקון והחזיר IN-PROCESS כשה-hook חסם. VM1844→1849 גדל5, rc1 של growth; must-shrink לבדו הואrc2 שה-pre-commit ממפה לאזהרה. אין bypass/העלאתbaseline/amend. ההורה דחה הצעה לחלץ reconnect כולו, ובודק חיווט pending publicstate/answered-port באותו scope באמצעות חוקר Luna/high על snapshot index עםhashes, בעץ מבודד. במקביל המבצע ממשיך להשלמת parity WS-release, finally-reader, captured HTTP catch, deferred consumers ושערים. אין מאמת סופי לפני השלמה.
+
+המשתמש כתב "המשך" בזמן שההורה עדיין פעל. זו הנחיית המשך לאותו היקף; לא הכרעת מוצר, לא פתרון חסם צנרת ולא אישור למיזוג. מוני ההתערבויות נשארים0. walkthrough1bbbe50 נכתב בידי המבצע; לפני פרסום סופי נדרש לתקן בגופו את טענת אפס-דלתא types ואת תווית flaky הלא-מוכחת. אין כאן טענת השלמה.
 
 ## מה עדיין אינו מוכח
 
