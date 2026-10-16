@@ -8,11 +8,11 @@ interventions_product: 0
 interventions_plumbing: 0
 handoff_failures: 31
 permanent_fixes: 3
-plan_rounds: 12
+plan_rounds: 13
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
 authorized_through_stage: 2
-verdict: "ריצה פתוחה עד סוף שלב 2; קבלת S על4e680f4a היא NO-GO12/13; מתוכנן תיקון M12; סקיצת שלב1 מוכנה ללא מוצר; אין מיזוג mainline"
+verdict: "ריצה פתוחה עד סוף שלב 2; קבלת S על4e680f4a היא NO-GO12/13; אביגיל בודקת תיקון M12; סקיצת שלב1 מוכנה ללא מוצר; אין מיזוג mainline"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -417,3 +417,11 @@ docs29887ba נדחף: קומיט הורה אחד בלבד,65נתיבי תכנו�
 דוח וראיות נעולים בתיעוד הפרויקט תחת investigations/state-structure/verification-4e680f4a, כולל סקירת פרטיותLuna/medium נפרדת ל15screenshots שהתקבלו. כל ששת agents הבדיקה נסגרו, units inactive והדפדפן/פרופיל נוקו; BE431518 והמנהרה415875 נשארו מחוץ ל-cgroup של הסוכן. המאמת idle ונשמר לדלתה, עם worktree נקי וקפוא. צופה artifact-success אינו verdict מוצרי.
 
 הכשלים נרשמו ב-bugs100/101. bug41 ההיסטורי סגר רק פינויTTL; סיכון restart הוזכר בו במפורש, ולכן סגירתו ההיסטורית אינה משוכתבת. יועץ הארכיטקטורה הקייםAstra/high קיבל משימת קריאה צרה בעץ נפרד s-runtime-fix-plan-e66 על4e680f4a: incarnation אמיתי ללא ניחוש sessionId/epoch/version, ו-terminality משותפת ל-reader/view/UI בלי reply או owner חדש. לא נכתב מוצר ולא נפתח מבצע/מאמת נוסף. אחרי ההכרעה נדרשים מפקד מלא ובריף JIT מאומת לסבב תיקון1; שלב1 נשאר טיוטה עד סגירת קבלתS. אין פעולה נדרשת מהמשתמש.
+
+## 2026-10-16 — פתיחת סקירת תיקון קבלת HTTP
+
+בריף JIT לתיקון שני חסמי M12 נכתב ב-drive-coding-docs/plans/brief-state-http-recovery-m12.md. מפקד סטטי של 18 נתיבי מנגנון שוחזר עצמאית: 33 קובצי מקור/מועמד תואמים manifest, 15 בסיסים תואמים git show, Remote −19, Reader −45 ו-VM −17, סך התחום +430. סקירה צרה של replacement intent מול commit הסתיימה ב-PASS סטטי בלבד. אין READY או קבלת התנהגות מהכנה זו. החומר נשמר בתיעוד בקומיט f5f82c2 ונדחף: קומיט אחד של ההורה, ללא קומיטים של אחרים.
+
+אביגיל יחידה 948f7c1e-f995-469d-802b-5237d4ff4e41 רצה על עץ פרטי state-http-recovery-m12-avigail-e66 בבסיס 4e680f4a. המודל Astra/high נבחר עקב מורכבות 10 של ordered reader/publication/terminal lifetimes; זה מסלול Codex הגיבוי הקיים, בלי המתנה למכסת ספק. סבב תכנון 13 כולל את הבדיקה הזאת; טרם התקבל verdict ו-plan_verified=false. צופה יחיד m12-avigail-watch-e66 מצפה לדוח state-http-recovery-m12-avigail.md.
+
+עץ הביצוע slice/state-http-recovery-m12 הוכן על אותו בסיס, עם frozen install וסנכרון SvelteKit בלבד; לא נכתב קוד מוצר ולא שוגר מבצע לפני שער התכנון. NO-GO של S, שני הבאגים הפתוחים 100/101 ושער המיזוג הסופי נשארים בתוקף.
