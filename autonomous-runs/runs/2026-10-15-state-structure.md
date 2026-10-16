@@ -6,12 +6,12 @@ mission: drive-coding/plans/missions/state-structure-continuation.md
 slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh, state-transcript-c2-refresh]
 interventions_product: 0
 interventions_plumbing: 0
-handoff_failures: 23
+handoff_failures: 24
 permanent_fixes: 3
 plan_rounds: 5
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
-verdict: "ריצה פתוחה; S1 ו-C1 מאומתים בענף הרצה; C2 בבדיקת תכנון; אין מיזוג ל-edge"
+verdict: "ריצה פתוחה; S1 ו-C1 מאומתים בענף הרצה; C2 במימוש לאחר שער תכנון; אין מיזוג ל-edge"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -226,6 +226,12 @@ C1 מוכן עלcaed4778; זהות עץ מלאה ל0a06 מאפשרת שימוש 
 ההכרעה המאושרת בתוךS2: C2content-only, אחריו סלייס lifetime ייעודי לפעולות חמות והמשכי config, ולפניC3. אין sessionId/provisional מקביל ב-TranscriptScope ואין clear חדש באימוץ. index/pending/subagent projection עוברים עם הכתיבות, אך cleanup נשמר כאתר האיפוס שלהם. הסקיצה הנבחרת1750→1685, impurity43, חדשים67/148metric, סךתחום+70; זו הכנתעלות בלבד. המדידה משוחזרת byte-identical מתוך הארכיון ללא worktree חי. docs cb4d4f2 נדחף, קומיט הורה אחד בלבד, ובו הבריף, ההכרעה והארכיונים. בדיקת source נפרדת מצאה trace של configישן→switchלאותוid→connected, לכן נדרש לבחון epoch לפי תרחיש ולא להסתפק בזהויותreferences.
 
 אביגיל יחידה27c96a2d-f8b1-4ef3-880f-050926f6f741 ב-Codex Astra/high, עץ פרטי state-transcript-c2-refresh-avigail על9fe. הבחירה המתקדמת מוצדקת בהנחות earlyreplay/Svelteproxy/aliaswrites ותוחלתprojection נפרדת; Opus/Cursor חסומים כפי שתועד בריצה. noWait, דוח+notify_parent וצופה קנוני c2-plan-root-watch; אין notifyOnDone/subscription ואין prompt לתורעסוק. אין עדיין plan_verified, מימושC2 או GO. native Sol/medium מבצע costsketch של הסלייס שאחריC2 ב-scratch בלבד; Luna/high ביצע חקירת target צרה, ללא מוצר או runtime. תחומי האחריות נפרדים.
+
+## C2 — שער תכנון סגור ומימוש יחיד
+
+אביגיל27c96a2d החזירה USABLE-AFTER-FIX עם ממצא confusion אחד: הבריף אסר clock default אך לא כלל את claude-subagent-parse.ts ברשימת המוצר. נוספה הרשאה מצומצמת להסרת default ותיקון התיאור; כל אתרי reduceSubagent נבדקו, ושני אתרי המוצר עוברים ל-owner ובדיקות קיימות כבר נותנות now. הקובץ אינו ב-size-baseline. חודדה בדיקת append/grouping בזמן freeze גם לפי reference. plan_verified=true מתועד ב-docs8db47e1; קומיט הורה אחד נדחף, בלי סבב אביגיל נוסף. הדוח נקרא במלואו, הסוכן נסגר אחריidle, והעץ נוקה לאחרproc-scan. זה כשל המסירה24, לא התערבות משתמש.
+
+אליעזר יחיד5b74f2cf-911f-43b8-9f5d-cc6bc0d98e2f, Codex Sol/medium, רץ ב-slice/state-transcript-c2-refresh מבסיס9fe עם צופהc2-exec-root-watch, קומיט אחד ודוח מוסכם. אין prompt לתורעסוק ואין מאמת לפני מסירתexactSHA. הכנת lifetimeCost ב-nativeSol ופרובsame-id נקודתי ב-nativeLuna/high פועלים בעצים פרטיים/scratch; אינם עורכים מוצר או תיעוד הסלייס. אין קבלת runtime ל-C2 ואין מיזוגmainline.
 
 ## מה עדיין אינו מוכח
 
