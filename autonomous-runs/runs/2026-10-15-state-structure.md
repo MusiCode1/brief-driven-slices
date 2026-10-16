@@ -12,7 +12,7 @@ plan_rounds: 12
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
 authorized_through_stage: 2
-verdict: "ריצה פתוחה עד סוף שלב 2; C3+S3 GO 8/8 על 511c7d9a; דלתת הערות וקבלת S ממתינות; אין מיזוג mainline"
+verdict: "ריצה פתוחה עד סוף שלב 2; C3+S3 שולב ב-4e680f4a; קבלת S בפריוויו רצה; שלב 1 בהכנת סקיצה; אין מיזוג mainline"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -380,3 +380,20 @@ Sol/medium הכין fixture זמני מחוץ למוצר, בעץ פרטי על 8
 המשתמש הרחיב במפורש: "אני רוצה לבצע עד סוף 2". היעד כעת: קבלת S, שלב 1 של חיי לקוח ובקשות, ואחריו שלב 2 של כותרות בסמכות השרת. ההרחבה עוגנה ב-master וב-mission בתיעוד, בלי לפתוח את שער mainline. קבלת S היא checkpoint לפני שינוי ההתנהגות; המסירה הסופית תהיה פריוויו עד סוף 2. לכל סלייס נשארים JIT, Avigail ו-Calev. תכנון מקור מוקדם לשלב 1 ולשלב 2 שוגר לשני חוקרי Luna/medium בעצים פרטיים קבועים על 511c7d9a; אין כתיבת מוצר בשלבים אלה לפני קבלת התלויות. אין פעולה נדרשת מהמשתמש כעת.
 
 תיעוד root נדחף בקומיטים beed021 (כלי launch וקול) ו-9969f9d (קבלה והרחבת יעד), כל אחד קומיט אחד של ההורה וללא קומיטי עמיתים. שני עצי הכנת launch/voice נוקו אחרי proc-scan ריק. launcher פרמטרי זמני עבר syntax בלבד; build/BE/tunnel עדיין לא הופעלו.
+
+
+## גל S — פריוויו משולב וקבלה פעילה
+
+דלתת F1 התקבלה ב-GO light על `01fead44db095e8e14da9f2e4f098e72dc8e4a2e`: כל הבתים שאינם הערות זהים, baseline זהה ו-F1 סגור. שני קומיטי מקור נדחפו; האינטגרציה `4e680f4a3ff2454c799387ab06df7528177caced` בעלת tree זהה `56ca3f3aaa89eef2eb3f942f19ff8d85319e3a70` נדחפה בשרשרת של שלושה קומיטים, שניים של המבצע ואחד של ההורה. אין mainline merge. המבצע503ac28b והמאמתab21d2e2 נסגרו אחרי idle ואיסוף הדוחות; שני העצים נוקו אחרי proc-scan ריק.
+
+build production של Vite עם FE_ENV=preview על אותו SHA עבר rc0, 355 קבצים נחתמו. BE מבודד על4014 ומנהרת HTTPS בבעלות ההורה ב-tmux-spawn, מחוץ ל-dc-agent. local/public החזירו200 ו-4577bytes; שני ספקי TTS זמינים לפי capabilities של המופע החדש. קובצי סוד מקומיים נשארו מחוץ ל-file-proxy base ולא בארכיון; canary סינתטי מחוץ לבסיס החזיר403. פריוויו נשאר חי גם אחרי סגירת ילדי C3. PIDs ראשוניים416233/415875 אינם מזהים שיש לסמוך עליהם בעתיד; runtime receipt ו-backend.pid מתעדכנים ב-restart.
+
+כלב-heavy יחיד5a4c28e1-de6a-458f-8930-302dd343a970 שוגר ב-Codex Astra/high על4e680f4a לעץ פרטי state-structure-final-calev-e66, אחרי catalog/session_list והכנתdeps+sync. סיבת המודל: M01–M13 חוצי שכבות, שני viewers, קול, restart ו-ACP חי. צופה state-structure-runtime-root-watch ממתין לדוח state-structure-final-calev.md. תפקידי QA לא יוצרים BDS children; agents במופע4014 הם נושאי בדיקה סינתטיים/ספק smoke יחיד עם cleanup מפורש. כלים מוטמעים של4002 אינם מופנים בטעות לשרת הבדיקה. זו אינה עדיין קבלת S כולה.
+
+## שלבים 1–2 — הכנה מוקדמת על קוד קבוע
+
+שתי מפות Luna/medium נקראו וארכבו; טענה שגויה על hooks reconnect תוקנה בגוף דוח שלב1: השורות1211–1260 שייכות ל-WS ולא ל-HTTP. אין שינוי גורף בהן. יועץ Astra/high בעץ01fead44 מיפה incarnation/activation/request, פרסום switch לכל viewers, reservation ל-new/load והבחנת admission/finished ב-HTTP/MCP. הייעוץ סטטי בלבד ומפריד raw ACP same-id חסר provenance מפקודות HTTP שניתן לגדר. guard WS משתמש ב-isHeld ואינו תלוי במספר viewers/pending. תוכנית המוצר המאושרת לא הורחבה ל-command bus או לחבילת client.
+
+מפקד חי של Remote.close לבדו הראה328→316, ירידה12; זו אינה הוכחת feasibility. על בסיס אותו ייעוץ שוגר native Sol/medium להכנת סקיצה מלאה ב-/tmp בלבד על4e680f4a: pending UI owner מקומי ו-HTTP actions תחומיים, ללא product writes/servers. תוצאת המדידה הראשונה VM1433→1418 ו-Remote328→275 טרם נאספה כ-verdict; ה-hashes והביקורת הסטטית עדיין בעבודה. אין READY או ביצוע שלב1 לפני קבלת S ובריף JIT מאומת.
+
+docs root8811a58 ו-514dd74 נדחפו, כל אחד קומיט אחד של ההורה ואפס קומיטי עמיתים. גם ארכיון דלתת ההערות ו-receipts ראשוניים נשמרו. עצי שני חוקרי המפות ויועץ הארכיטקטורה נוקו אחרי proc-scan ריק. הסוכן החסכוני של הסקיצה והמאמת המשולב ממשיכים; אין פעולה נדרשת מהמשתמש כעת. המסירה הסופית נשארת עד סוף שלב2 עם פריוויו ואישור mainline מפורש.
