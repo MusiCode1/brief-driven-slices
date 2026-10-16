@@ -6,13 +6,13 @@ mission: drive-coding/plans/missions/state-structure-continuation.md
 slices: [state-reconnect-b3-refresh, state-error-b6-refresh, state-exit-b4-refresh, state-frame-router-c1-refresh, state-transcript-c2-refresh, state-session-operations-c2l-refresh, state-transcript-consumers-c3s3-refresh]
 interventions_product: 0
 interventions_plumbing: 0
-handoff_failures: 34
+handoff_failures: 36
 permanent_fixes: 3
 plan_rounds: 14
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
 authorized_through_stage: 2
-verdict: "ריצה פתוחה עד סוף שלב 2; קבלת S על4e680f4a היא NO-GO12/13; M12 נמסר על470d182b ואימות קוד עצמאי רץ; אין מיזוג mainline"
+verdict: "ריצה פתוחה עד סוף שלב 2; קבלת S היא NO-GO12/13 וקוד M12 על470d182b הוא NO-GO4/6; אותו מבצע מתקן שני חסמים לפי§10; אין מיזוג mainline"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -467,3 +467,13 @@ union סופי של 59 קבצים/988 בדיקות עבר ב-rc0 עם --testTime
 אותו כלב-heavy 5a4c28e1-de6a-458f-8930-302dd343a970 נשמר מאימות S והועבר, לאחר סריקת תהליכים ועץ נקי, ל-detached 470d182b. הוא רץ על Astra/high בגלל מורכבות10 של ordered ingress, reentrancy ו-lifetimes. משימתו כעת DoD1–6 של הקוד בלבד, ללא build/שרת/דפדפן/restart. צופה יחיד m12-calev-code-watch-e66 מצפה ל-state-http-recovery-m12-calev-code.md. המבצע נשאר idle לדלתה; לא נפתח מאמת נוסף.
 
 הפריוויו על4014 עדיין מריץ4e680f4a. build/config חדשים הוכנו בלבד ב-/tmp/dc-m12-runtime-e66; אין החלפת שרת לפני GO קוד. לאחריו יבנה ההורה פעם אחת, ישמור deployment/store/fixture ומנהרה קיימים, וימסור לאותו מאמת קבלת production הכוללת שני צופים, restart עם sidecar חי ו-DELETE בזמן pending. NO-GO12/13, bugs100/101 ושער mainline נשארים בתוקף. הכנת Stage1A מתבצעת במקביל בעץ עלות נפרד; אין מוצר Stage1 לפני קבלת S. אין פעולה נדרשת מהמשתמש.
+
+### אימות M12 נכשל בשני גבולות; תיקון ממוקד באותו מבצע
+
+כלב-heavy החזיר NO-GO4/6 על470d182b. האיחוד העצמאי59/988 עבר, אך ארבעה פרובים עצמאיים הניבו שני AssertionError ושתי בקרות ירוקות: JSON פגום בסנאפשוט reconnect מגיע ל-retry; כשל observer לפני host recreation מונע invalidation של load ישן. pending callback ישן עדיין חסום, ולכן אין הכללה שגויה של הכשל. ההורה קרא את הדוח המלא ואימת216 קובצי manifest ב-rc0. שתי מוטציות namespace/stale-source נמדדו מחדש בידי המאמת כי hashes המסירה הישנה לא התאימו; שבע מוטציות אחרות התקבלו ב-reuse מאומת. זו קבוצת כשל מסירה35, לא waiver בגלל בסיס ישן.
+
+§10 בבריף מגדיר תיקון בשלושה מודולים בלבד: המרת SyntaxError של JSON snapshot ל-SseProtocolError בלי לשנות malformed409; ו-port lifecycle צר ב-SessionViewDelivery מחוץ למסירת UI, כדי שה-callback הקיים ב-projection יפסול load גם אחרי observer fault. אין state/owner נוסף, החייאת observer או נגיעה ב-VM/Remote החורגים. המתכנן מדד את שלושת המודולים בסורק המקורי; כולם מתחת גם לתקציב mixed400, אף שסורק מסווג שניים pure. gated staged/fullFE והפרובים המקוריים הם חובת המבצע על הקצה החדש.
+
+אותו אליעזר6a29706a קיבל המשך על Sol/medium, עם רגרסיות, שתי מוטציות actual, fullFE קפוא ואיחוד עם15000ms מפורש. צופה יחיד m12-eliezer-codefix-watch-e66 מצפה לקומיט תיקון אחד מעל470d ולדוח חדש state-http-recovery-m12-code-fix-eliezer.md. אותו מאמת5a4c נשאר idle לדלתה. אין build או החלפת preview לפני GO קוד. הדוח העצמאי והראיות נשמרו ב-investigations/state-structure/state-http-recovery-m12/verification-code-470d182b; NO-GO הקודם נשאר.
+
+הכנת Stage1A על470d הסתיימה ב-FEASIBLE-cost-only: VM1418→1397,Remote310→246, תחום2110→2087 ו-impurity51→51. ההורה אימת30 snapshots ושער staged0. ניסיון reproduce ראשון של ההורה נכשל ב-pathspec של helper שכבר נמחק מה-index; הרתמה בלבד תוקנה ל-stage מחדש מתוך HEAD והיועץ שחזר מקצה לקצה לאותו manifest/index בלי unstaged. זהו כשל מסירה36, שמור עם rc128 ולוגים מקוריים, ללא שינוי מועמד. התיעוד וטיוּטות1A/1C נדחפו ב-2485be0: קומיט אחד של ההורה, אפס עמיתים. אין מזה READY של Stage1; עוגני הדלתה ייבדקו מחדש אחרי תיקון M12. מפת backend צרה ל-1B עודכנה לקריאה בלבד על470d ונשמרה בארכיון; עץ הקריאה נוקה אחרי סריקת תהליכים ריקה. אין פעולה נדרשת מהמשתמש.
