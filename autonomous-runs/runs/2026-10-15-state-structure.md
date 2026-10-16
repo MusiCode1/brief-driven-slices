@@ -11,7 +11,7 @@ permanent_fixes: 3
 plan_rounds: 12
 brief_to_dispatch: "≤00:13 (artifact bound: 23:47:42–23:59:53)"
 new_territory: false
-verdict: "ריצה פתוחה; C2L מאומת על85f; C3+S3 עבר שער תכנון ומבצע יחיד רץ; אין מיזוג mainline"
+verdict: "ריצה פתוחה; C2L מאומת על 85f; C3+S3 מומש על 511c7d9a ובאימות heavy עצמאי; אין מיזוג mainline"
 ---
 
 # דוח ריצה 71 — השלמת הגל המבני בענף עבודה
@@ -357,3 +357,14 @@ Sol/medium הכין fixture זמני מחוץ למוצר, בעץ פרטי על 8
 תוכנית הריצה plans/state-structure-final-acceptance.md מגדירה M01–M13 ו-restart של ה-BE שבבעלותנו מול sidecar שנשאר חי. package.json הפריך פקודת index.ts בייעוץ; הדוגמה תוקנה בגוף ל-server.ts. Vite מקשר debug ל-FE_ENV, ולכן הפריוויו יהיה build production של Vite עם FE_ENV=preview ופרסום סטטי מאותו origin. לא נוספו Vite dev או hook מוצר. docs83c9c08, 083ba33 ו-8f2b293 נדחפו; כל אחד הוא קומיט הורה אחד בלבד. עצי המכינים נוקו אחרי proc-scan ריק. עדיין לא הורמו build, BE חדש, מנהרה או תעבורת קבלה.
 
 המבצע 503ac28b ממשיך באותו עץ ובאותו בסיס; קובצי בדיקות lifetime עודכנו בפועל ב-2026-10-16T11:49+03. אין דוח גמר, קומיט מוצר או GO עצמי; לא נפתח כפיל. הצעד הבא הוא איסוף המסירה, heavy עצמאי על exactSHA, ואחריו קידום פנימי ופריוויו משולב.
+
+
+## C3+S3 — המימוש נמסר לאימות עצמאי
+
+ב-2026-10-16 נמסר קומיט מוצר יחיד `511c7d9a0067283bdb0f585f6580db6cf95ff4d9` על בסיס `85f89973555a95064850d30a2cc0d5626684a33c`. `SessionViewDelivery` מחזיק state קנוני ומוסר frames ל-writer סינכרוני; `Speaker` צורך פורט readonly עם הגנות נפרדות ליעד annotations, רציפות העיבוד וניסיון ההקראה. אלה תוצאות המבצע, עדיין ללא GO עצמאי. קוד/index נקיים; אין דחיפת קוד, מיזוג או production acceptance.
+
+ההורה קרא את דוח המבצע המלא ואימת 352 hashes ו-44 קובצי source מול exactSHA, ללא אי-התאמות. המסירה מדווחת union של 39 קבצים ו-644 בדיקות, fullFE של 217 קבצים ו-2,356 בדיקות, ו-15 מוטציות עם AssertionError ושחזור זהה-בתים. FE Counter נשאר 37 diagnostics, שהם 29E/8W/15, ללא added/removed/touched. VM ירד מ-1613 ל-1433, Local מ-249 ל-221, Remote מ-348 ל-328 ו-Speaker מ-499 ל-469; כלל התחום גדל ב-624 שורות קוד. המודולים האימפרטיביים אינם מתוארים כטהורים. bug98 ממתין לאימות; bug99 נשאר פתוח.
+
+כלב-heavy יחיד `ab21d2e2-d2bb-4d28-9f6a-56ad2a6700ed` שוגר ב-Codex Astra/high לעץ detached על `511c7d9a`, אחרי session_list ואימות הקטלוג. הבחירה מוצדקת במורכבות 10 של publication, lifetime, reentrancy ו-settlement; המבצע נשאר Sol/medium ו-idle לדלתה. צופה קנוני `c3s3-heavy-root-watch` ממתין לדוח `state-transcript-consumers-c3s3-refresh-calev.md`; artifact לבדו אינו GO. אין notifyOnDone או צופה כפול.
+
+המבצע דחף תיעוד ו-walkthrough ב-`a1c4642177e7ece55459a212e983386ba453d51f`: קומיט אחד שלו, אפס של אחרים, ועריכות העמיתים נשמרו מחוץ לקומיט. הכנת launcher מבודד נבדקת בקריאה בלבד על אותו SHA בעץ נפרד; build, BE, מנהרה וקבלת M01–M13 יתחילו רק אחרי GO וקידום פנימי. אין פעולה נדרשת מהמשתמש כעת.
