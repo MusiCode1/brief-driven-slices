@@ -86,7 +86,7 @@ ad-hoc** (OPEN-GAPS פער 9; שלוש ריצות שילמו צנרת על מא�
 
 `idle`/`busy` בלי שינוי ב־git/דוחות/הודעות = תקוע → דחיפה או שחזור.
 מחקר לבריפים/משימות: `docs/investigations/2026-08-31-agent-watch-tick-obligation.md`.
-פירוט + מלכודות צופה: basic-memory `צופה systemd ל-notify של drive-coding — PATH ו-CRLF`.
+פירוט ומלכודות צופה: `docs/investigations/2026-08-31-agent-watch-tick-obligation.md` §4–6 בריפו השיטה.
 
 בגוף הפרומפט לילד — להנחות אותו ל-`notify_parent` בסיום (הסעיף כבר קיים בקובצי הסוכן).
 
