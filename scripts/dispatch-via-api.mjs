@@ -49,8 +49,13 @@ if (cmd === "open") {
   if (!cli || !cwd) die("open: --cli ‏ו---cwd ‏חובה")
   const env = Object.fromEntries(multi("--env").map((e) => { const i = e.indexOf("="); return [e.slice(0, i), e.slice(i + 1)] }))
   // ‏כתובת-החזרה: ‏בלי `DC_PARENT` ‏בסביבה, ‏הילד אינו יודע למי לדווח.
-  if (get("--parent")) { env.DC_PARENT = get("--parent"); env.DC_BASE = BASE }
+  const parent = get("--parent")
+  if (parent) {
+    env.DC_PARENT = parent
+    env.DC_BASE = BASE
+  }
   const created = await post(`${BASE}/api/agents`, { cliKind: cli, cwd,
+    ...(parent ? { parentAgentId: parent } : {}),
     ...(Object.keys(env).length ? { env } : {}),
     ...(get("--permission") ? { permissionPolicy: get("--permission") } : {}) })
   const agent = created.agentId
